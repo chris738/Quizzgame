@@ -25,7 +25,7 @@
         Answer1 VARCHAR(1000) NOT NULL,
         Answer2 VARCHAR(1000) NOT NULL,
         Answer3 VARCHAR(1000) NOT NULL,
-        Answer4 VARCHAR(1000) NOT NULL,         
+        Answer4 VARCHAR(1000) NOT NULL
     );
 
 -- Tabelle: player
