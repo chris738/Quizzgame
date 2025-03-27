@@ -33,7 +33,7 @@
         PlayerID INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(100) NOT NULL,
 		password VARCHAR(1000) NOT NULL,
-        points Int (250) DEFAULT 0
+        points Int (255) DEFAULT 0
     );
 	
 	
@@ -44,7 +44,7 @@ DELIMITER $$
 CREATE PROCEDURE AddPlayer(
     IN p_name VARCHAR(100),
     IN p_password VARCHAR(1000),
-	IN p_points INT(1000)
+	IN p_points INT(255)
 )
 BEGIN
     INSERT INTO player (name, password, points) 
