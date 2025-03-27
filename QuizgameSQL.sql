@@ -33,7 +33,7 @@
         PlayerID INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(100) NOT NULL,
 		password VARCHAR(1000) NOT NULL,
-        points Int (1000) DEFAULT 0,
+        points Int (250) DEFAULT 0
     );
 	
 	
