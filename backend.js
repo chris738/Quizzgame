@@ -48,7 +48,7 @@ function checkAnswer(QuestionID, selectedAnswer) {
         .then(response => response.json())
         .then(data => {
             if (data.info.isCorrect !== undefined) {
-                if (data.info.isCorrect == "true") {
+                if (data.info.isCorrect == true) {
                     alert('Die Antwort ist korrekt!');
                 } else {
                     alert('Leider falsch. Versuche es noch einmal.');
