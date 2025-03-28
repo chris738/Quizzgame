@@ -1,4 +1,11 @@
-const QuestionID = 1;
+let QuestionID = 1;  // Initialer Wert für die Frage-ID
+
+// Funktion, um die Frage-ID zu aktualisieren
+function updateQuestionID() {
+    const input = document.getElementById('questionIdInput');
+    QuestionID = parseInt(input.value, 10);  // Wert aus dem Eingabefeld holen und in eine Zahl umwandeln
+    getQuestions();  // Frage mit der neuen QuestionID laden
+}
 
 
 document.querySelectorAll('.answer').forEach(answer => {
