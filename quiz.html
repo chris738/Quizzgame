@@ -8,12 +8,6 @@
     <script defer src="backend.js"></script>
 </head>
 <body>
-    <div class="input-box">
-        <label for="questionIdInput">Gib eine Zahl für die Frage-ID ein:</label>
-        <input type="number" id="questionIdInput" value="1" min="1">
-        <button onclick="updateQuestionID()">Frage laden</button>
-    </div>
-
     <div class="quiz-container">
         <div class="question-box">
             <h2><span id="Question">Frage</span></h2>
@@ -28,6 +22,11 @@
             <div class="answer" data-color="blue" onclick="handleAnswerClick('answer4')">
                 <span id="blue">Anwort 4</span></div>
         </div>
+    </div>
+    <div class="input-box">
+        <label for="questionIdInput">Gib eine Zahl für die Frage-ID ein:</label>
+        <input type="number" id="questionIdInput" value="1" min="1">
+        <button onclick="updateQuestionID()">Frage laden</button>
     </div>
 </body>
 </html>
