@@ -8,6 +8,23 @@ body {
     margin: 0;
 }
 
+.navbar {
+    background-color: #333;
+    overflow: hidden;
+}
+
+.navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.navbar li {
+    padding: 14px 20px;
+}
+
 .navbar a {
     color: white;
     text-decoration: none;
