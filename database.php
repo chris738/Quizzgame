@@ -1,11 +1,11 @@
 <?php
 
 interface DatabaseInterface {
-    public function getFragen();
+    public function getFragen($frageID);
 }
 
 class Database implements DatabaseInterface {
-    private $host = 'tuxchen.de';
+    private $host = '172.17.0.7';
     private $dbname = 'quizgame';
     private $username = 'quizgame';
     private $password = 'sicheresPasswort';
@@ -20,14 +20,16 @@ class Database implements DatabaseInterface {
         }
     }
 
-    public function getFragen() {
+    public function getFragen($frageID) {
         $sql = "
         SELECT
             Question, Answer1, Answer2, Answer3, Answer4
         FROM 
-            Fragen";
+            Fragen
+        WHERE QuestionID= :frageID";
         
         $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':frageID', $frageID, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

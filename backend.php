@@ -2,35 +2,33 @@
 require_once 'database.php';
 header('Content-Type: text/html; charset=utf-8');
 
-function getFragen() {
+function getFragen($frageID) {
     $database = new Database();
-    $fragen = $database->getFragen();
+    $fragen = $database->getFragen($frageID);
 
     if (!$fragen) {
         return ['error' => 'getFragen konnten nicht abgerufen werden.'];
     }
 
     return [
-        'map' => array_map(function($fragen) {
-            return [
-                'Question' => $fragen['Question'],
-                'Answer1' => $fragen['Answer1'],
-                'Answer1' => $fragen['Answer2'],
-                'Answer1' => $fragen['Answer3'],
-                'Answer1' => $fragen['Answer4']
-            ];
-        }, $fragen),
+    	'fragen' => [
+	        'Question'     => $fragen['Question'],
+            'AnswerGreen'  => $fragen['Answer1'],
+            'AnswerRed'    => $fragen['Answer2'],
+            'AnswerYellow' => $fragen['Answer3'],
+            'AnswerBlue'   => $fragen['Answer4']
+        ];
     ];
 }
 
 // Eingehende Anfrage verarbeiten
 $method = $_SERVER['REQUEST_METHOD'];
-$FrageID = $_GET['FrageID'] ?? null;
+$frageID = $_GET['frageID'] ?? null;
 
 try {
     if ($method === 'GET') {
 
-        $response = ['info' => getFrage()];
+        $response = ['info' => getFrage($frageID)];
 
         echo json_encode($response);
 
