@@ -25,13 +25,13 @@ class Database implements DatabaseInterface {
         SELECT
             Question, Answer1, Answer2, Answer3, Answer4
         FROM 
-            Fragen
+            Question
         WHERE QuestionID= :frageID";
         
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':frageID', $frageID, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }
 

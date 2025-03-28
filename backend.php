@@ -17,7 +17,7 @@ function getFragen($frageID) {
             'AnswerRed'    => $fragen['Answer2'],
             'AnswerYellow' => $fragen['Answer3'],
             'AnswerBlue'   => $fragen['Answer4']
-        ];
+        ]
     ];
 }
 
@@ -28,7 +28,7 @@ $frageID = $_GET['frageID'] ?? null;
 try {
     if ($method === 'GET') {
 
-        $response = ['info' => getFrage($frageID)];
+        $response = ['info' => getFragen($frageID)];
 
         echo json_encode($response);
 

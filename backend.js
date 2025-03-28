@@ -20,4 +20,4 @@ function getQuestions(QuestionID) {
         .catch(error => console.error('Fehler beim Abrufen der Daten in backend.js:', error));
 }
 
-getQuestions(QuestionID);
+getQuestions(1);
