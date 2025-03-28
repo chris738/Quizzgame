@@ -28,13 +28,13 @@ function handleAnswerClick(id) {
     let selectedAnswer = 0;
     
     // Bestimmen, welche Antwort geklickt wurde
-    if(id === 'green') {
+    if(id === 'answer1') {
         selectedAnswer = 1;
-    } else if(id === 'red') {
+    } else if(id === 'answer2') {
         selectedAnswer = 2;
-    } else if(id === 'yellow') {
+    } else if(id === 'answer3') {
         selectedAnswer = 3;
-    } else if(id === 'blue') {
+    } else if(id === 'answer4') {
         selectedAnswer = 4;
     }
     
