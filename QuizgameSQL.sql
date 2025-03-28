@@ -1,44 +1,82 @@
--- Setup
-
-    -- Löschen der bestehenden Datenbank
-    DROP DATABASE IF EXISTS quizgame;
-
-    -- Erstellung einer neuen Datenbank
-    CREATE DATABASE quizgame;
-
-    -- Erstellung eines neuen Benutzers
-    CREATE USER IF NOT EXISTS 'quizgame'@'localhost' IDENTIFIED BY 'sicheresPasswort';
-
-    -- Berechtigungen für den Benutzer
-    GRANT ALL PRIVILEGES ON quizgame.* TO 'quizgame'@'localhost';
-
-    -- Wechsel zur neuen Datenbank
-    USE quizgame;
-
-    -- enable global event scheudler
-    SET GLOBAL event_scheduler = ON;
-
--- Tabelle: Fragen
-    CREATE TABLE Question (
-        QuestionID INT AUTO_INCREMENT PRIMARY KEY,
-        Question VARCHAR(1000) NOT NULL,
-	Category VARCHAR(100) NOT NULL,
-        Answer1 VARCHAR(1000) NOT NULL,
-        Answer2 VARCHAR(1000) NOT NULL,
-        Answer3 VARCHAR(1000) NOT NULL,
-        Answer4 VARCHAR(1000) NOT NULL,
-	correctAnswer VARCHAR(1000) NOT NULL
-    );
-
--- Tabelle: player
-    CREATE TABLE player (
-        PlayerID INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(100) NOT NULL,
-		password VARCHAR(1000) NOT NULL,
-        points Int (255) DEFAULT 0
-    );
+	-- Setup
 	
+	    -- Löschen der bestehenden Datenbank
+	    DROP DATABASE IF EXISTS quizgame;
 	
+	    -- Erstellung einer neuen Datenbank
+	    CREATE DATABASE quizgame;
+	
+	    -- Erstellung eines neuen Benutzers
+	    CREATE USER IF NOT EXISTS 'quizgame'@'localhost' IDENTIFIED BY 'sicheresPasswort';
+	
+	    -- Berechtigungen für den Benutzer
+	    GRANT ALL PRIVILEGES ON quizgame.* TO 'quizgame'@'localhost';
+	
+	    -- Wechsel zur neuen Datenbank
+	    USE quizgame;
+	
+	    -- enable global event scheudler
+	    SET GLOBAL event_scheduler = ON;
+	
+	-- Tabelle: Fragen
+	    CREATE TABLE Question (
+	        QuestionID INT AUTO_INCREMENT PRIMARY KEY,
+	        Question VARCHAR(1000) NOT NULL,
+		Category VARCHAR(100) NOT NULL,
+	        Answer1 VARCHAR(1000) NOT NULL,
+	        Answer2 VARCHAR(1000) NOT NULL,
+	        Answer3 VARCHAR(1000) NOT NULL,
+	        Answer4 VARCHAR(1000) NOT NULL,
+		correctAnswer VARCHAR(1000) NOT NULL
+	    );
+	
+	-- Tabelle: player
+	    CREATE TABLE player (
+	        PlayerID INT AUTO_INCREMENT PRIMARY KEY,
+	        name VARCHAR(100) NOT NULL,
+			password VARCHAR(1000) NOT NULL,
+	        points Int (255) DEFAULT 0
+	    );
+		
+DELIMITER $$
+
+CREATE PROCEDURE InsertNewPlayer(
+    IN player_name VARCHAR(100),
+    IN player_password VARCHAR(1000)
+)
+BEGIN
+    -- Neuen Spieler in die Tabelle 'player' einfügen
+    INSERT INTO player (name, password)
+    VALUES (player_name, player_password);
+
+    -- Rückmeldung
+    SELECT 'Neuer Spieler wurde erfolgreich hinzugefügt!' AS message;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE InsertNewQuestion(
+    IN question_text VARCHAR(1000),
+    IN category VARCHAR(100),
+    IN answer1 VARCHAR(1000),
+    IN answer2 VARCHAR(1000),
+    IN answer3 VARCHAR(1000),
+    IN answer4 VARCHAR(1000),
+    IN correct_answer VARCHAR(1000)
+)
+BEGIN
+    -- Neue Frage in die Tabelle 'Question' einfügen
+    INSERT INTO Question (Question, Category, Answer1, Answer2, Answer3, Answer4, correctAnswer)
+    VALUES (question_text, category, answer1, answer2, answer3, answer4, correct_answer);
+
+    -- Rückmeldung
+    SELECT 'Neue Frage wurde erfolgreich hinzugefügt!' AS message;
+END $$
+
+DELIMITER ;	
+
 -- Prozedur: Spieler erstellen und initialisieren
 
 DELIMITER $$
@@ -55,7 +93,14 @@ END $$
 
 DELIMITER ;
 
+DELIMITER $$
 
+CREATE PROCEDURE GetRandomQuestion()
+BEGIN
+    SELECT * FROM Question ORDER BY RAND() LIMIT 1;
+END $$
+
+DELIMITER ;
 
 -- Prozedur: Neue Fragen und Antworten einfügen
 DELIMITER //
