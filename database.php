@@ -47,13 +47,6 @@ class Database implements DatabaseInterface {
         $stmt->bindParam(':frageID', $frageID, PDO::PARAM_INT);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-        // Prüfen, ob die Antwort korrekt ist
-        if ($result && $result['correctAnswer'] == $answer) {
-            return true;
-        } else {
-            return false;
-        }
     }
     
 }

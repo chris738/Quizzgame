@@ -47,12 +47,14 @@ function checkAnswer(QuestionID, selectedAnswer) {
     fetch(`backend.php?frageID=${QuestionID}&answer=${selectedAnswer}`)
         .then(response => response.json())
         .then(data => {
-            if (data.isCorrect !== undefined) {
-                if (data.isCorrect) {
+            if (data.info.isCorrect !== undefined) {
+                if (data.info.isCorrect) {
                     alert('Die Antwort ist korrekt!');
                 } else {
                     alert('Leider falsch. Versuche es noch einmal.');
                 }
+            } else {
+                alert('Data is undefined.');
             }
         })
         .catch(error => console.error('Fehler beim Überprüfen der Antwort:', error));

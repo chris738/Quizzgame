@@ -23,7 +23,7 @@ function getFragen($frageID) {
 
 function checkAnswer($frageID, $answer) {
     $database = new Database();
-    $correctAnswer = $database->getCorrectAnswer($frageID);
+    $correctAnswer = $database->getAnswer($frageID);
 
     if (!$correctAnswer) {
         return ['error' => 'Antwort konnte nicht abgerufen werden.'];
@@ -40,13 +40,13 @@ function checkAnswer($frageID, $answer) {
 // Eingehende Anfrage verarbeiten
 $method = $_SERVER['REQUEST_METHOD'];
 $frageID = $_GET['frageID'] ?? null;
-$answer = $_GET['UserAnswer'] ?? null; // Antwort des Benutzers
+$answer = $_GET['answer'] ?? null; // Antwort des Benutzers
 
 try {
     if ($method === 'GET') {
         if ($frageID && $answer !== null) {
             // Wenn frageID und UserAnswer angegeben sind, überprüfe die Antwort
-            $response = checkAnswer($frageID, $answer);
+            $response = ['info' => checkAnswer($frageID, $answer)];
             echo json_encode($response);
         } else {
             // Ansonsten rufe die Frage ab
