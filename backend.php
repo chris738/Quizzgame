@@ -40,16 +40,21 @@ function getAnswer($frageID, $answer) {
 // Eingehende Anfrage verarbeiten
 $method = $_SERVER['REQUEST_METHOD'];
 $frageID = $_GET['frageID'] ?? null;
+$answer = $_GET['UserAnswer'] ?? null; // Antwort des Benutzers
 
 try {
     if ($method === 'GET') {
-        $response = ['info' => getFragen($frageID)];
-        echo json_encode($response);
-
+        if ($frageID && $answer !== null) {
+            // Wenn frageID und UserAnswer angegeben sind, überprüfe die Antwort
+            $response = checkAnswer($frageID, $answer);
+            echo json_encode($response);
+        } else {
+            // Ansonsten rufe die Frage ab
+            $response = ['info' => getFragen($frageID)];
+            echo json_encode($response);
+        }
     } elseif ($method === 'POST') {
-        $answer = json_decode(file_get_contents('php://input'), true);
-        echo handleBuildingUpgrade($frageID, $answer);
-
+        // POST-Verarbeitung hier (falls nötig)
     } else {
         echo json_encode(['success' => false, 'message' => 'Methode nicht unterstützt.']);
     }
