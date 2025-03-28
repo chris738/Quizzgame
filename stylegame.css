@@ -17,7 +17,7 @@ body {
     border-radius: 10px;
     text-align: center;
     display: flex;
-    flex-direction: column; /* Stellt sicher, dass die Frage oben ist */
+    flex-direction: column; /* Stellen Sie sicher, dass die Frage, Input und Antworten vertikal angeordnet sind */
     justify-content: space-between;
 }
 
