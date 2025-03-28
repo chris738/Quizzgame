@@ -21,7 +21,7 @@ function getFragen($frageID) {
     ];
 }
 
-function getAnswer($frageID, $answer) {
+function checkAnswer($frageID, $answer) {
     $database = new Database();
     $correctAnswer = $database->getCorrectAnswer($frageID);
 

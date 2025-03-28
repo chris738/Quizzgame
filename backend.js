@@ -44,7 +44,7 @@ function handleAnswerClick(id) {
 
 // Funktion zum Überprüfen, ob die Antwort korrekt ist
 function checkAnswer(QuestionID, selectedAnswer) {
-    fetch(`checkAnswer.php?frageID=${QuestionID}&answer=${selectedAnswer}`)
+    fetch(`backend.php?frageID=${QuestionID}&answer=${selectedAnswer}`)
         .then(response => response.json())
         .then(data => {
             if (data.isCorrect !== undefined) {
