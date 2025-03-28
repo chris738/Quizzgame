@@ -40,7 +40,7 @@ class Database implements DatabaseInterface {
         SELECT
             correctAnswer
         FROM 
-            Questions
+            Question
         WHERE QuestionID = :frageID";
         
         $stmt = $this->conn->prepare($sql);
