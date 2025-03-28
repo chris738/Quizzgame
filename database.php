@@ -46,7 +46,7 @@ class Database implements DatabaseInterface {
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':frageID', $frageID, PDO::PARAM_INT);
         $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return = $stmt->fetch(PDO::FETCH_ASSOC);
     }
     
 }
