@@ -19,13 +19,15 @@
     SET GLOBAL event_scheduler = ON;
 
 -- Tabelle: Fragen
-    CREATE TABLE Fragen (
+    CREATE TABLE Question (
         QuestionID INT AUTO_INCREMENT PRIMARY KEY,
         Question VARCHAR(1000) NOT NULL,
+	Category VARCHAR(100) NOT NULL,
         Answer1 VARCHAR(1000) NOT NULL,
         Answer2 VARCHAR(1000) NOT NULL,
         Answer3 VARCHAR(1000) NOT NULL,
-        Answer4 VARCHAR(1000) NOT NULL
+        Answer4 VARCHAR(1000) NOT NULL,
+	correctAnswer VARCHAR(1000) NOT NULL
     );
 
 -- Tabelle: player
@@ -66,7 +68,7 @@ CREATE PROCEDURE InsertQuestion(
     IN p_Answer4 VARCHAR(1000)
 )
 BEGIN
-    INSERT INTO Fragen (Question, Answer1, Answer2, Answer3, Answer4)
+    INSERT INTO Question (Question, Answer1, Answer2, Answer3, Answer4)
     VALUES (p_Question, p_Answer1, p_Answer2, p_Answer3, p_Answer4);
 END //
 
@@ -97,7 +99,7 @@ CREATE PROCEDURE DeleteQuestion(
     IN p_QuestionID INT
 )
 BEGIN
-    DELETE FROM Fragen WHERE QuestionID = p_QuestionID;
+    DELETE FROM Question WHERE QuestionID = p_QuestionID;
 END //
 
 DELIMITER ;
