@@ -2,6 +2,7 @@
 
 interface DatabaseInterface {
     public function getFragen($frageID);
+    public function getAnswer($frageID, $answer);
 }
 
 class Database implements DatabaseInterface {
@@ -33,6 +34,28 @@ class Database implements DatabaseInterface {
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function getAnswer($frageID, $answer) {
+        $sql = "
+        SELECT
+            correctAnswer
+        FROM 
+            Questions
+        WHERE QuestionID = :frageID";
+        
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':frageID', $frageID, PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        // Prüfen, ob die Antwort korrekt ist
+        if ($result && $result['correctAnswer'] == $answer) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
 }
 
 ?>

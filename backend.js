@@ -1,3 +1,6 @@
+const QuestionID = 1;
+
+
 document.querySelectorAll('.answer').forEach(answer => {
     answer.addEventListener('click', function() {
         document.querySelectorAll('.answer').forEach(a => a.classList.remove('selected'));
@@ -20,19 +23,39 @@ function getQuestions(QuestionID) {
         .catch(error => console.error('Fehler beim Abrufen der Daten in backend.js:', error));
 }
 
+// Funktion, die aufgerufen wird, wenn eine Antwort ausgewählt wird
 function handleAnswerClick(id) {
-    console.log('Button with id ' + id + ' clicked');
-    // You can add your desired behavior here based on the clicked span's id.
-    // For example:
+    let selectedAnswer = 0;
+    
+    // Bestimmen, welche Antwort geklickt wurde
     if(id === 'green') {
-        alert('You selected Berlin!');
+        selectedAnswer = 1;
     } else if(id === 'red') {
-        alert('You selected Madrid!');
+        selectedAnswer = 2;
     } else if(id === 'yellow') {
-        alert('You selected Paris!');
+        selectedAnswer = 3;
     } else if(id === 'blue') {
-        alert('You selected Rom!');
+        selectedAnswer = 4;
     }
+    
+    // Anfrage an den Server, um zu prüfen, ob die Antwort korrekt ist
+    checkAnswer(QuestionID, selectedAnswer);
 }
 
-getQuestions(1);
+// Funktion zum Überprüfen, ob die Antwort korrekt ist
+function checkAnswer(QuestionID, selectedAnswer) {
+    fetch(`checkAnswer.php?frageID=${QuestionID}&answer=${selectedAnswer}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.isCorrect !== undefined) {
+                if (data.isCorrect) {
+                    alert('Die Antwort ist korrekt!');
+                } else {
+                    alert('Leider falsch. Versuche es noch einmal.');
+                }
+            }
+        })
+        .catch(error => console.error('Fehler beim Überprüfen der Antwort:', error));
+}
+
+getQuestions(QuestionID);
