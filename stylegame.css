@@ -11,7 +11,6 @@ body {
 .navbar {
     background-color: #333;
     overflow: hidden;
-    width: 100%;
 }
 
 .navbar ul {
@@ -45,5 +44,80 @@ body {
     padding: 20px;
     background: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius
+    border-radius: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column; /* Stellen Sie sicher, dass die Frage, Input und Antworten vertikal angeordnet sind */
+    justify-content: space-between;
 }
+
+.question-box {
+    background: #ddd;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.input-box {
+    margin-bottom: 20px; /* Abstand zwischen der Eingabe und den Antworten */
+    padding: 10px;
+    background: #f1f1f1;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.input-box input {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 80px;
+    text-align: center;
+}
+
+.input-box button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.input-box button:hover {
+    background-color: #45a049;
+}
+
+.answers {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.answer {
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.answer[data-color="green"] { background: lightgreen; }
+.answer[data-color="red"] { background: lightcoral; }
+.answer[data-color="yellow"] { background: lightyellow; }
+.answer[data-color="blue"] { background: lightblue; }
+
+.answer.selected {
+    font-weight: bold;
+    transform: scale(1.05);
+}
+
+.answer[data-color="green"].selected { background: green; color: white; }
+.answer[data-color="red"].selected { background: red; color: white; }
+.answer[data-color="yellow"].selected { background: gold; color: white; }
+.answer[data-color="blue"].selected { background: blue; color: white; }

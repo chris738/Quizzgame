@@ -7,15 +7,11 @@ function updateQuestionID() {
     getQuestions(QuestionID);  // Frage mit der neuen QuestionID laden
 }
 
-// Initiale Frage laden
-getQuestions(QuestionID);
 
 document.querySelectorAll('.answer').forEach(answer => {
     answer.addEventListener('click', function() {
-        if (!this.classList.contains('disabled')) {
-            document.querySelectorAll('.answer').forEach(a => a.classList.remove('selected'));
-            this.classList.add('selected');
-        }
+        document.querySelectorAll('.answer').forEach(a => a.classList.remove('selected'));
+        this.classList.add('selected');
     });
 });
 
@@ -35,7 +31,20 @@ function getQuestions(QuestionID) {
 }
 
 // Funktion, die aufgerufen wird, wenn eine Antwort ausgewählt wird
-function handleAnswerClick(selectedAnswer) {
+function handleAnswerClick(id) {
+    let selectedAnswer = 0;
+    
+    // Bestimmen, welche Antwort geklickt wurde
+    if(id === 'answer1') {
+        selectedAnswer = 1;
+    } else if(id === 'answer2') {
+        selectedAnswer = 2;
+    } else if(id === 'answer3') {
+        selectedAnswer = 3;
+    } else if(id === 'answer4') {
+        selectedAnswer = 4;
+    }
+    
     // Anfrage an den Server, um zu prüfen, ob die Antwort korrekt ist
     checkAnswer(QuestionID, selectedAnswer);
 }
@@ -46,26 +55,16 @@ function checkAnswer(QuestionID, selectedAnswer) {
         .then(response => response.json())
         .then(data => {
             if (data.info.isCorrect !== undefined) {
-                const answers = document.querySelectorAll('.answer');
-                answers.forEach(answer => answer.classList.add('disabled'));  // Alle Antworten deaktivieren
-
-                if (data.info.isCorrect === true) {
-                    document.querySelector(`#green`).classList.add('correct');
+                if (data.info.isCorrect == true) {
+                    alert('Die Antwort ist korrekt!');
                 } else {
-                    document.querySelector(`#green`).classList.add('correct');
-                    // Hier den Fehlern die Klasse `incorrect` zuweisen
-                    document.querySelector(`#red`).classList.add('incorrect');
-                    document.querySelector(`#yellow`).classList.add('incorrect');
-                    document.querySelector(`#blue`).classList.add('incorrect');
+                    alert('Leider falsch. Versuche es noch einmal.');
                 }
-
-                // Wartet, bevor die Frage neu geladen wird (zur nächsten Frage)
-                setTimeout(() => {
-                    getQuestions(QuestionID);
-                }, 1000); // Verzögerung von 1 Sekunde, bevor die nächste Frage geladen wird
             } else {
-                console.error('Daten sind undefiniert.');
+                alert('Data is undefined.');
             }
         })
         .catch(error => console.error('Fehler beim Überprüfen der Antwort:', error));
 }
+
+getQuestions(QuestionID);
