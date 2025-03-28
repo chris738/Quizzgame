@@ -54,3 +54,37 @@ body {
 .answer[data-color="yellow"].selected { background: gold; color: white; }
 .answer[data-color="blue"].selected { background: blue; color: white; }
 
+.input-box {
+    margin-bottom: 20px; /* Abstand zwischen der Eingabe und den Antworten */
+    padding: 10px;
+    background: #f1f1f1;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.input-box input {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 80px;
+    text-align: center;
+}
+
+.input-box button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.input-box button:hover {
+    background-color: #45a049;
+}

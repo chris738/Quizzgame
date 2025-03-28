@@ -4,7 +4,7 @@ let QuestionID = 1;  // Initialer Wert für die Frage-ID
 function updateQuestionID() {
     const input = document.getElementById('questionIdInput');
     QuestionID = parseInt(input.value, 10);  // Wert aus dem Eingabefeld holen und in eine Zahl umwandeln
-    getQuestions();  // Frage mit der neuen QuestionID laden
+    getQuestions(QuestionID);  // Frage mit der neuen QuestionID laden
 }
 
 
