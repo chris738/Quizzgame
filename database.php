@@ -35,7 +35,7 @@ class Database implements DatabaseInterface {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function getAnswer($frageID, $answer) {
+    public function getAnswer($frageID) {
         $sql = "
         SELECT
             correctAnswer

@@ -8,6 +8,13 @@
     <script defer src="backend.js"></script>
 </head>
 <body>
+    <nav class="navbar">
+        <ul>
+            <li><a href="index.html">Startseite</a></li>
+            <li><a href="admin.html">Admin-Panel</a></li>
+            <li><a href="highscore.html">Highscores</a></li>
+        </ul>
+    </nav>
     <div class="quiz-container">
         <div class="question-box">
             <h2><span id="Question">Frage</span></h2>
@@ -24,7 +31,7 @@
         </div>
     </div>
     <div class="input-box">
-        <label for="questionIdInput">Gib eine Zahl für die Frage-ID ein:</label>
+        <label for="questionIdInput">Frage-ID:</label>
         <input type="number" id="questionIdInput" value="1" min="1">
         <button onclick="updateQuestionID()">Frage laden</button>
     </div>

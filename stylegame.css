@@ -8,6 +8,19 @@ body {
     margin: 0;
 }
 
+.navbar a {
+    color: white;
+    text-decoration: none;
+    font-size: 17px;
+    display: block;
+    text-align: center;
+}
+
+.navbar a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
 .quiz-container {
     width: 60vw;
     height: 60vh;

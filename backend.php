@@ -23,7 +23,7 @@ function getFragen($frageID) {
 
 function checkAnswer($frageID, $answer) {
     $database = new Database();
-    $correctAnswer = $database->getAnswer($frageID, $answer);
+    $correctAnswer = $database->getAnswer($frageID);
 
     if (!$correctAnswer) {
         return ['error' => 'Antwort konnte nicht abgerufen werden.'];
