@@ -20,4 +20,19 @@ function getQuestions(QuestionID) {
         .catch(error => console.error('Fehler beim Abrufen der Daten in backend.js:', error));
 }
 
+function handleAnswerClick(id) {
+    console.log('Button with id ' + id + ' clicked');
+    // You can add your desired behavior here based on the clicked span's id.
+    // For example:
+    if(id === 'green') {
+        alert('You selected Berlin!');
+    } else if(id === 'red') {
+        alert('You selected Madrid!');
+    } else if(id === 'yellow') {
+        alert('You selected Paris!');
+    } else if(id === 'blue') {
+        alert('You selected Rom!');
+    }
+}
+
 getQuestions(1);
