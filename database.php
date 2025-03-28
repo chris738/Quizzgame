@@ -2,7 +2,7 @@
 
 interface DatabaseInterface {
     public function getFragen($frageID);
-    public function getAnswer($frageID, $answer);
+    public function getAnswer($frageID);
 }
 
 class Database implements DatabaseInterface {
