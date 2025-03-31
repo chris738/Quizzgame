@@ -38,7 +38,7 @@ class QuestionManager extends Database {
         }
 
         try {
-            parent::addQuestion($question, $category, $answer1, $answer2, $answer3, $answer4, $correctAnswer);
+            parent::insertQuestion($question, $category, $answer1, $answer2, $answer3, $answer4, $correctAnswer);
             $this->response = ['success' => true, 'message' => 'Frage erfolgreich hinzugefügt'];
         } catch (Exception $e) {
             $this->response = ['success' => false, 'message' => 'Fehler: ' . $e->getMessage()];
