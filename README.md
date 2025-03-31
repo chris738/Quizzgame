@@ -18,3 +18,25 @@ R = Das Ziel ist realisitisch: Die Website sollte in dieser Zeit aufbaubar sein
 
 T = Die Ergebnis-Zeit ist benannt: Bis zum 08.04.2025
 
+# UseCase Diagramm
+
+```mermaid
+%% Use-Case Diagramm für Quizgame
+%% Teilnehmer: Spieler, Admin
+
+actor Spieler
+actor Admin
+
+rectangle QuizGame {
+  Spieler --> (Einloggen)
+  Spieler --> (Registrieren)
+  Spieler --> (Frage beantworten)
+  Spieler --> (Neue Frage laden)
+  Spieler --> (Spielstand speichern)
+  Spieler --> (Punkte einsehen)
+
+  Admin --> (Einloggen)
+  Admin --> (Neue Frage hinzufügen)
+  Admin --> (Fragenliste verwalten)
+  Admin --> (Spielstatistiken ansehen)
+}
