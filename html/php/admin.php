@@ -31,7 +31,7 @@ function addQuestion($data) {
 
     try {
         $database = new Database();
-        $database->addQuestion($question, $category, $a1, $a2, $a3, $a4, $correctAnswer);
+        $database->addQuestion($question, $category, $answer1, $answer2, $answer3, $answer4, $correctAnswer);
         return ['success' => true, 'message' => 'Frage erfolgreich hinzugefügt'];
     } catch (Exception $e) {
         return ['success' => false, 'message' => 'Fehler: ' . $e->getMessage()];
@@ -41,7 +41,7 @@ function addQuestion($data) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = $_POST;
     $response = addQuestion($data);
-    ob_clean();
+    //ob_clean();
     echo json_encode($response);
 }
 
