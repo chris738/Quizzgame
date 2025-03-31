@@ -3,6 +3,7 @@
 interface DatabaseInterface {
     public function getRandomQuestion();
     public function saveGameResult($playerId, $questionId, $selectedAnswer, $correctAnswer);
+    public function addQuestion($question, $category, $a1, $a2, $a3, $a4, $correctAnswer);
 }
 
 class Database implements DatabaseInterface {
@@ -49,6 +50,22 @@ class Database implements DatabaseInterface {
             ':selectedAnswer' => $selectedAnswer,
             ':correctAnswer' => $correctAnswer,
             ':isCorrect' => $isCorrect
+        ]);
+    }
+
+    public function addQuestion($question, $category, $a1, $a2, $a3, $a4, $correctAnswer) {
+        $stmt = $this->conn->prepare("
+            INSERT INTO Question (Question, Category, Answer1, Answer2, Answer3, Answer4, correctAnswer)
+            VALUES (:question, :category, :a1, :a2, :a3, :a4, :correct)
+        ");
+        $stmt->execute([
+            ':question' => $question,
+            ':category' => $category,
+            ':a1' => $a1,
+            ':a2' => $a2,
+            ':a3' => $a3,
+            ':a4' => $a4,
+            ':correct' => $correctAnswer
         ]);
     }
     
