@@ -23,16 +23,9 @@ T = Die Ergebnis-Zeit ist benannt: Bis zum 08.04.2025
 
 
 ```mermaid
-  Spieler[Spieler] --> Einloggen
-  Spieler --> Registrieren
-  Spieler --> "Frage beantworten"
-  Spieler --> "Neue Frage laden"
-  Spieler --> "Spielstand speichern"
-  Spieler --> "Punkte einsehen"
-
-  Administrator[Administrator] --> Einloggen
-  Administrator --> "Neue Frage hinzufügen"
-  Administrator --> "Fragen verwalten"
-  Administrator --> "Spielstatistiken einsehen"
-
-
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+```
