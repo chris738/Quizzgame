@@ -2,6 +2,7 @@
 let currentQuestionID = null;
 let correctAnswer = null;
 let hasAnswered = false; // Merker, ob schon geantwortet wurde
+let currentPlayerId = 1; //speiler variable, muss durch login noch geändert werden
 
 // Frage vom Server holen
 function getQuestions() {
@@ -95,7 +96,6 @@ function handleAnswerClick(spanID) {
 
     saveGameResult(currentPlayerId, currentQuestionId, selectedAnswer, correctAnswer);
 }
-
 
 // Neue Frage laden
 function loadNewQuestion() {
