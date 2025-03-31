@@ -23,20 +23,6 @@ T = Die Ergebnis-Zeit ist benannt: Bis zum 08.04.2025
 
 
 ```mermaid
-graph TB
-  subgraph Quiz-Spiel
-    direction TB
-    Einloggen
-    Registrieren
-    "Frage beantworten"
-    "Neue Frage laden"
-    "Spielstand speichern"
-    "Punkte einsehen"
-    "Neue Frage hinzufügen"
-    "Fragen verwalten"
-    "Spielstatistiken einsehen"
-  end
-
   Spieler[Spieler] --> Einloggen
   Spieler --> Registrieren
   Spieler --> "Frage beantworten"
