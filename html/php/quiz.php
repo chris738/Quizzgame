@@ -15,10 +15,10 @@ function RandomQuestion() {
             'id'      => $fragen['QuestionID'],
             'frage'   => $fragen['Question'],
             'antwort' => [
-                'answer1' => $fragen['Answer1'],
-                'answer2' => $fragen['Answer2'],
-                'answer3' => $fragen['Answer3'],
-                'answer4' => $fragen['Answer4']
+                '1' => $fragen['Answer1'],
+                '2' => $fragen['Answer2'],
+                '3' => $fragen['Answer3'],
+                '4' => $fragen['Answer4']
             ],
             'richtig' => $fragen['correctAnswer']
         ];
