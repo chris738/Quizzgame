@@ -29,19 +29,21 @@ function getQuestions() {
         .catch(error => console.error('Fehler beim Fetch:', error));
 }
 
-// Klick auf eine Antwort
 function handleAnswerClick(spanID) {
-    // Wenn schon beantwortet, nichts mehr tun
+    // Falls schon beantwortet, nichts tun
     if (hasAnswered) return;
 
-    // "answer1" -> wir wollen die Zahl
+    // "answer1" -> wir wollen die Zahl als Integer (1,2,3,4)
     const selectedAnswer = parseInt(spanID.replace('answer',''), 10);
 
-    // Richtig oder falsch?
+    // Das Element für Feedback
+    const feedbackDiv = document.getElementById('feedback');
+
+    // Prüfung, ob richtig
     if (selectedAnswer === correctAnswer) {
         document.querySelector(`[data-color="answer${selectedAnswer}"]`)
                 .classList.add('correct');
-        document.getElementById('feedback').textContent = "Richtig beantwortet!";
+        feedbackDiv.textContent = "Richtig beantwortet!";
     } else {
         // Falsche Antwort rot markieren
         document.querySelector(`[data-color="answer${selectedAnswer}"]`)
@@ -55,14 +57,15 @@ function handleAnswerClick(spanID) {
         feedbackDiv.textContent = "Leider falsch! Die richtige Antwort war: " + correctText;
     }
 
-    // Merken, dass geantwortet wurde
+    // Merken, dass beantwortet wurde
     hasAnswered = true;
 
-    // Button "Neue Frage" sichtbar machen
-    document.getElementById('newQuestionBtn').style.display = 'inline-block';
-    //direkt zur nächsten fragebeim nächsten tabstop springen für die baarirefreiheit
+    // Button "Neue Frage" einblenden und fokussieren
+    const newQuestionBtn = document.getElementById('newQuestionBtn');
+    newQuestionBtn.style.display = 'inline-block';
     newQuestionBtn.focus();
 }
+
 
 // Neue Frage laden
 function loadNewQuestion() {
