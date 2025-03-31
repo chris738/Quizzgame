@@ -57,8 +57,8 @@ class UserManager extends Database {
         parent::__construct();
     }
 
-    private function isValid($username, $email, $password): bool {
-        if (strlen($username) < 3 || !filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($password) < 6) {
+    private function isValid($username, $password): bool {
+        if (strlen($username) < 3 || strlen($password) < 6) {
             $this->response = ['success' => false, 'message' => 'Ungültige Eingabedaten'];
             return false;
         }
@@ -67,45 +67,42 @@ class UserManager extends Database {
 
     public function addUser($data) {
         $username = trim($data['username'] ?? '');
-        $email    = trim($data['email'] ?? '');
         $password = $data['password'] ?? '';
 
-        if (!$this->isValid($username, $email, $password)) {
+        if (!$this->isValid($username, $password)) {
             return;
         }
 
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
         try {
-            parent::insertUser($username, $email, $hashedPassword);
+            parent::insertUser($username, $hashedPassword); // 👈 nur noch 2 Parameter
             $this->response = ['success' => true, 'message' => 'Benutzer erfolgreich hinzugefügt'];
         } catch (Exception $e) {
             $this->response = ['success' => false, 'message' => 'Fehler: ' . $e->getMessage()];
         }
     }
-  
+
     public function getResponse() {
         return $this->response;
     }
 }
 
+
 // Hauptausführung
 // Prüfe, ob eine POST-Anfrage gesendet wurde
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // Fall 1: Eine Frage soll hinzugefügt werden (erkennbar am Feld 'question')
     if (isset($_POST['question'])) {
         $questionManager = new QuestionManager();
         $questionManager->addQuestion($_POST);
         echo json_encode($questionManager->getResponse());
 
-    // Fall 2: Ein neuer Benutzer soll hinzugefügt werden (erkennbar an 'username' und 'email')
-    } elseif (isset($_POST['username']) && isset($_POST['email'])) {
+    } elseif (isset($_POST['username'])) {
         $adminManager = new UserManager();
         $adminManager->addUser($_POST);
         echo json_encode($adminManager->getResponse());
 
-    // Kein gültiger POST-Inhalt übermittelt
     } else {
         echo json_encode([
             'success' => false,
@@ -113,5 +110,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
     }
 }
+
 
 ?>
