@@ -43,21 +43,21 @@ body {
     color: white;
 }
 
-.answer[data-color="green"] {
-    background: #4CAF50;
+.answer[data-color="answer1"] {
+    background: #dfffe0;
 }
 
-.answer[data-color="red"] {
-    background: #f44336;
+.answer[data-color="answer2"] {
+    background: #ffe6e5;
 }
 
-.answer[data-color="yellow"] {
-    background: #ffeb3b;
+.answer[data-color="answer3"] {
+    background: #fffbda;
     color: #333;
 }
 
-.answer[data-color="blue"] {
-    background: #2196F3;
+.answer[data-color="answer4"] {
+    background: #daeeff;
 }
 
 .answer:hover {
