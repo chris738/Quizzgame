@@ -61,9 +61,9 @@ function handleAnswerClick(spanID) {
     hasAnswered = true;
 
     // Button "Neue Frage" einblenden und fokussieren
-    const feedback = document.getElementById('newQuestionBtn');
-    newQuestionBtn.style.display = 'inline-block';
     const newQuestionBtn = document.getElementById('newQuestionBtn');
+    newQuestionBtn.style.display = 'inline-block';
+    const feedback = document.getElementById('feedback');
     feedback.focus();
 }
 
