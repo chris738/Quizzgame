@@ -20,14 +20,13 @@ T = Die Ergebnis-Zeit ist benannt: Bis zum 08.04.2025
 
 # UseCase Diagramm
 
+
 ```mermaid
-%% Use-Case Diagramm für Quizgame
-%% Teilnehmer: Spieler, Admin
-
+%%{init: {'theme': 'default'}}%%
 actor Spieler
-actor Admin
+actor Administrator
 
-rectangle QuizGame {
+rectangle "Quiz-Spiel" {
   Spieler --> (Einloggen)
   Spieler --> (Registrieren)
   Spieler --> (Frage beantworten)
@@ -35,8 +34,9 @@ rectangle QuizGame {
   Spieler --> (Spielstand speichern)
   Spieler --> (Punkte einsehen)
 
-  Admin --> (Einloggen)
-  Admin --> (Neue Frage hinzufügen)
-  Admin --> (Fragenliste verwalten)
-  Admin --> (Spielstatistiken ansehen)
+  Administrator --> (Einloggen)
+  Administrator --> (Neue Frage hinzufügen)
+  Administrator --> (Fragen verwalten)
+  Administrator --> (Spielstatistiken einsehen)
 }
+
