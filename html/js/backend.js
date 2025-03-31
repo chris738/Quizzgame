@@ -5,7 +5,7 @@ let hasAnswered = false; // Merker, ob bereits geantwortet wurde
 
 // Frage vom Server holen
 function getQuestions() {
-    fetch(`backend.php`)
+    fetch(`php/backend.php`)
         .then(response => response.json())
         .then(data => {
             if (data.info) {
