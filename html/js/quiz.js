@@ -65,6 +65,9 @@ function handleAnswerClick(spanID) {
     newQuestionBtn.style.display = 'inline-block';
     const feedback = document.getElementById('feedback');
     feedback.focus();
+
+    feedbackDiv.setAttribute('tabindex', '0');
+    newQuestionBtn.setAttribute('tabindex', '1');
 }
 
 
