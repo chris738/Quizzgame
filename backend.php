@@ -2,24 +2,33 @@
 require_once 'database.php';
 header('Content-Type: text/html; charset=utf-8');
 
-function getFragen($frageID) {
-    $database = new Database();
-    $fragen = $database->getFragen($frageID);
+function RandomQuestion() {
+    try {
+        $database = new Database();
+        $fragen = $database->getRandomQuestion();
 
-    if (!$fragen) {
-        return ['error' => 'getFragen konnten nicht abgerufen werden.'];
+        if (!$fragen || empty($fragen['Question'])) {
+            return ['error' => 'Keine gültige Frage gefunden.'];
+        }
+
+        return [
+            'id'      => $fragen['QuestionID'],
+            'frage'   => $fragen['Question'],
+            'antwort' => [
+                'answer1' => $fragen['Answer1'],
+                'answer2' => $fragen['Answer2'],
+                'answer3' => $fragen['Answer3'],
+                'answer4' => $fragen['Answer4']
+            ],
+            'richtig' => $fragen['correctAnswer']
+        ];
+    } catch (PDOException $e) {
+        return ['error' => 'Datenbankfehler: ' . $e->getMessage()];
+    } catch (Exception $e) {
+        return ['error' => 'Unbekannter Fehler: ' . $e->getMessage()];
     }
-
-    return [
-    	'fragen' => [
-	        'Question'     => $fragen['Question'],
-            'AnswerGreen'  => $fragen['Answer1'],
-            'AnswerRed'    => $fragen['Answer2'],
-            'AnswerYellow' => $fragen['Answer3'],
-            'AnswerBlue'   => $fragen['Answer4']
-        ]
-    ];
 }
+
 
 function checkAnswer($frageID, $answer) {
     $database = new Database();
@@ -41,6 +50,7 @@ function checkAnswer($frageID, $answer) {
 $method = $_SERVER['REQUEST_METHOD'];
 $frageID = $_GET['frageID'] ?? null;
 $answer = $_GET['answer'] ?? null; // Antwort des Benutzers
+$randomquestion = $_GET['randomquestion'] ?? null;
 
 try {
     if ($method === 'GET') {
@@ -48,9 +58,11 @@ try {
             // Wenn frageID und UserAnswer angegeben sind, überprüfe die Antwort
             $response = ['info' => checkAnswer($frageID, $answer)];
             echo json_encode($response);
+        } elseif ($randomquestion) {
+            $response = RandomQuestion();
         } else {
             // Ansonsten rufe die Frage ab
-            $response = ['info' => getFragen($frageID)];
+            $response = ['info' => RandomQuestion()];
             echo json_encode($response);
         }
     } elseif ($method === 'POST') {

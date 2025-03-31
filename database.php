@@ -3,6 +3,7 @@
 interface DatabaseInterface {
     public function getFragen($frageID);
     public function getAnswer($frageID);
+    public function getRandomQuestion();
 }
 
 class Database implements DatabaseInterface {
@@ -31,6 +32,21 @@ class Database implements DatabaseInterface {
         
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':frageID', $frageID, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getRandomQuestion() {
+        $sql = "
+        SELECT 
+            QuestionID, Question, Answer1, Answer2, Answer3, Answer4, correctAnswer
+        FROM 
+            Question
+        ORDER BY 
+            RAND() 
+        LIMIT 1";
+
+        $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }

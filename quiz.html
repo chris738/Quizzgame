@@ -30,11 +30,10 @@
             <div class="answer" data-color="answer4" onclick="handleAnswerClick('answer4')">
                 <span id="answer4">Anwort 4</span></div>
         </div>
+        <button id="newQuestionBtn" onclick="loadNewQuestion()" style="display:none; margin-top:20px;">
+            Neue Frage
+        </button>
     </div>
-    <div class="input-box">
-        <label for="questionIdInput">Frage-ID:</label>
-        <input type="number" id="questionIdInput" value="1" min="1">
-        <button onclick="updateQuestionID()">Frage laden</button>
-    </div>
+
 </body>
 </html>
