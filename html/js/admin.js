@@ -7,7 +7,7 @@ function initAddQuestionForm() {
         const formData = new FormData(form);
 
         try {
-            const response = await fetch("admin.php", {
+            const response = await fetch("php/admin.php", {
                 method: "POST",
                 body: formData
             });

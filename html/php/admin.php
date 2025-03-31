@@ -41,6 +41,7 @@ function addQuestion($data) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = $_POST;
     $response = addQuestion($data);
+    ob_clean();
     echo json_encode($response);
 }
 
