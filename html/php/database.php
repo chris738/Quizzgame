@@ -72,7 +72,7 @@ class Database implements DatabaseInterface {
 
     public function insertUser($username, $hashedPassword) {
         $stmt = $this->conn->prepare("
-            INSERT INTO player (username, password)
+            INSERT INTO player (name, password)
             VALUES (:username, :password)
         ");
         $stmt->execute([
