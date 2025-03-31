@@ -29,22 +29,6 @@ function RandomQuestion() {
     }
 }
 
-function checkAnswer($frageID, $answer) {
-    $database = new Database();
-    $correctAnswer = $database->getAnswer($frageID);
-
-    if (!$correctAnswer) {
-        return ['error' => 'Antwort konnte nicht abgerufen werden.'];
-    }
-
-    // Überprüfen, ob die Antwort korrekt ist
-    if ($correctAnswer['correctAnswer'] == $answer) {
-        return ['isCorrect' => true];
-    } else {
-        return ['isCorrect' => false];
-    }
-}
-
 // Eingehende Anfrage verarbeiten
 $method = $_SERVER['REQUEST_METHOD'];
 //$random = $_GET['random'] ?? null;

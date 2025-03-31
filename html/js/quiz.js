@@ -1,17 +1,17 @@
 // Globale Variablen
 let currentQuestionID = null;
-let correctAnswerKey = null;  // speichert den korrekten Key (1, 2, 3, oder 4)
-let hasAnswered = false;      // Merker, ob bereits geantwortet wurde
+let correctAnswer = null;
+let hasAnswered = false; // Merker, ob schon geantwortet wurde
 
 // Frage vom Server holen
 function getQuestions() {
-    fetch('php/quiz.php')  // Pfad ggf. anpassen
+    fetch('php/quiz.php')
         .then(response => response.json())
         .then(data => {
             if (data.info && !data.info.error) {
                 // ID und richtige Antwort aus JSON merken
                 currentQuestionID = data.info.id;
-                correctAnswerKey = data.info.richtig;  // z.B. "1", "2", "3" oder "4"
+                correctAnswer = parseInt(data.info.richtig, 10);
 
                 // Frage-Text und Antworten befüllen
                 document.getElementById('Question').textContent = data.info.frage;
@@ -23,59 +23,60 @@ function getQuestions() {
                 // UI zurücksetzen
                 resetUI();
             } else {
-                console.error('Fehler im JSON oder keine Frage gefunden:', data.info.error);
+                console.error('Fehler:', data.info ? data.info.error : data);
             }
         })
-        .catch(error => console.error('Fehler beim Abrufen der Daten:', error));
+        .catch(error => console.error('Fehler beim Fetch:', error));
 }
 
 // Klick auf eine Antwort
 function handleAnswerClick(spanID) {
-    // Wenn schon beantwortet, nicht erneut prüfen
+    // Wenn schon beantwortet, nichts mehr tun
     if (hasAnswered) return;
 
-    // Bsp: "answer1" -> wir wollen die Zahl am Ende
-    const selectedAnswerKey = spanID.replace('answer', ''); // "1", "2", ...
+    // "answer1" -> wir wollen die Zahl
+    const selectedAnswer = parseInt(spanID.replace('answer',''), 10);
 
-    // Antwort auswerten (clientseitig)
-    checkClientSideAnswer(selectedAnswerKey);
-}
-
-// Clientseitige Prüfung
-function checkClientSideAnswer(selectedAnswerKey) {
-    hasAnswered = true;
-
-    if (selectedAnswerKey === correctAnswerKey) {
-        // Richtige Antwort
-        document.querySelector(`[data-color="answer${selectedAnswerKey}"]`)
+    // Richtig oder falsch?
+    if (selectedAnswer === correctAnswer) {
+        document.querySelector(`[data-color="answer${selectedAnswer}"]`)
                 .classList.add('correct');
+        document.getElementById('feedback').textContent = "Richtig beantwortet!";
     } else {
-        // Falsche Antwort
-        document.querySelector(`[data-color="answer${selectedAnswerKey}"]`)
+        document.querySelector(`[data-color="answer${selectedAnswer}"]`)
                 .classList.add('wrong');
-
-        // Richtige Antwort hervorheben
-        document.querySelector(`[data-color="answer${correctAnswerKey}"]`)
+        document.querySelector(`[data-color="answer${correctAnswer}"]`)
                 .classList.add('correct');
+        document.getElementById('feedback').textContent = "Leider falsch!";
     }
 
-    // Button "Neue Frage" einblenden
+    // Merken, dass geantwortet wurde
+    hasAnswered = true;
+
+    // Button "Neue Frage" sichtbar machen
     document.getElementById('newQuestionBtn').style.display = 'inline-block';
 }
 
-// Neue Frage laden (Button klick)
+// Neue Frage laden
 function loadNewQuestion() {
     getQuestions();
 }
 
-// UI zurücksetzen, damit bei neuer Frage kein altes CSS hängenbleibt
+// Zurücksetzen, damit bei neuer Frage kein altes CSS hängenbleibt
 function resetUI() {
+    // CSS-Klassen entfernen
     document.querySelectorAll('.answer').forEach(answerDiv => {
-        answerDiv.classList.remove('correct', 'wrong', 'selected');
+        answerDiv.classList.remove('correct', 'wrong');
     });
+    // Feedback löschen
+    document.getElementById('feedback').textContent = '';
+    // Merker zurücksetzen
     hasAnswered = false;
+    // Button ausblenden
     document.getElementById('newQuestionBtn').style.display = 'none';
 }
 
-// Beim Laden der Seite gleich die erste Frage holen
-getQuestions();
+// Beim Laden der Seite die erste Frage holen
+document.addEventListener('DOMContentLoaded', () => {
+    getQuestions();
+});

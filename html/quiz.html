@@ -1,39 +1,74 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Barrierearmes Quiz</title>
     <link rel="stylesheet" href="css/quiz.css">
     <link rel="stylesheet" href="css/navbar.css">
+    <!-- Dein JavaScript, das das Quiz steuert -->
     <script defer src="js/quiz.js"></script>
 </head>
 <body>
-    <nav class="navbar">
+    <!-- Navigation -->
+    <nav class="navbar" aria-label="Hauptnavigation">
         <ul>
             <li><a href="index.html">Startseite</a></li>
             <li><a href="admin.html">Admin-Panel</a></li>
             <li><a href="highscore.html">Highscores</a></li>
         </ul>
     </nav>
-    <div class="quiz-container">
+
+    <!-- Hauptinhalt -->
+    <main class="quiz-container" id="mainContent">
         <div class="question-box">
-            <h2><span id="Question">Frage</span></h2>
+            <!-- Überschrift zur Frage -->
+            <h1 id="Question">Frage</h1>
         </div>
+
+        <!-- Antwortmöglichkeiten mit Klick-Handler -->
         <div class="answers">
-            <div class="answer" data-color="answer1" onclick="handleAnswerClick('answer1')">
-                <span id="answer1">Anwort 1</span></div>
-            <div class="answer" data-color="answer2" onclick="handleAnswerClick('answer2')">
-                <span id="answer2">Anwort 2</span></div>
-            <div class="answer" data-color="answer3" onclick="handleAnswerClick('answer3')">
-                <span id="answer3">Anwort 3</span></div>
-            <div class="answer" data-color="answer4" onclick="handleAnswerClick('answer4')">
-                <span id="answer4">Anwort 4</span></div>
+            <div class="answer"
+                 data-color="answer1"
+                 role="button"
+                 tabindex="0"
+                 onclick="handleAnswerClick('answer1')"
+                 onkeydown="if (event.key === 'Enter' || event.key === ' ') handleAnswerClick('answer1')">
+                <span id="answer1">Antwort 1</span>
+            </div>
+            <div class="answer"
+                 data-color="answer2"
+                 role="button"
+                 tabindex="0"
+                 onclick="handleAnswerClick('answer2')"
+                 onkeydown="if (event.key === 'Enter' || event.key === ' ') handleAnswerClick('answer2')">
+                <span id="answer2">Antwort 2</span>
+            </div>
+            <div class="answer"
+                 data-color="answer3"
+                 role="button"
+                 tabindex="0"
+                 onclick="handleAnswerClick('answer3')"
+                 onkeydown="if (event.key === 'Enter' || event.key === ' ') handleAnswerClick('answer3')">
+                <span id="answer3">Antwort 3</span>
+            </div>
+            <div class="answer"
+                 data-color="answer4"
+                 role="button"
+                 tabindex="0"
+                 onclick="handleAnswerClick('answer4')"
+                 onkeydown="if (event.key === 'Enter' || event.key === ' ') handleAnswerClick('answer4')">
+                <span id="answer4">Antwort 4</span>
+            </div>
         </div>
+
+        <!-- Barrierefreie Rückmeldung -->
+        <div id="feedback" role="status" aria-live="polite"></div>
+
+        <!-- Button für neue Frage -->
         <button id="newQuestionBtn" onclick="loadNewQuestion()" style="display:none; margin-top:20px;">
             Neue Frage
         </button>
-    </div>
-
+    </main>
 </body>
 </html>
