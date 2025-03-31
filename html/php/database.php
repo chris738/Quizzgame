@@ -4,6 +4,7 @@ interface DatabaseInterface {
     public function getRandomQuestion();
     public function saveGameResult($playerId, $questionId, $selectedAnswer, $correctAnswer);
     public function addQuestion($question, $category, $a1, $a2, $a3, $a4, $correctAnswer);
+    public function addUser($username, $email, $hashedPassword); 
 }
 
 class Database implements DatabaseInterface {
@@ -68,6 +69,18 @@ class Database implements DatabaseInterface {
             ':correct' => $correctAnswer
         ]);
     }
+
+    public function addUser($username, $hashedPassword) {
+        $stmt = $this->conn->prepare("
+            INSERT INTO player (username, password)
+            VALUES (:username, :password)
+        ");
+        $stmt->execute([
+            ':username' => $username,
+            ':password' => $hashedPassword
+        ]);
+    }
+    
     
 }
 
