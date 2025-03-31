@@ -43,11 +43,16 @@ function handleAnswerClick(spanID) {
                 .classList.add('correct');
         document.getElementById('feedback').textContent = "Richtig beantwortet!";
     } else {
+        // Falsche Antwort rot markieren
         document.querySelector(`[data-color="answer${selectedAnswer}"]`)
                 .classList.add('wrong');
+        // Richtige Antwort grün markieren
         document.querySelector(`[data-color="answer${correctAnswer}"]`)
                 .classList.add('correct');
-        document.getElementById('feedback').textContent = "Leider falsch!";
+
+        // Zusätzlich: Text zur richtigen Antwort aus dem DOM auslesen
+        const correctText = document.getElementById(`answer${correctAnswer}`).textContent;
+        feedbackDiv.textContent = "Leider falsch! Die richtige Antwort war: " + correctText;
     }
 
     // Merken, dass geantwortet wurde
@@ -55,6 +60,8 @@ function handleAnswerClick(spanID) {
 
     // Button "Neue Frage" sichtbar machen
     document.getElementById('newQuestionBtn').style.display = 'inline-block';
+    //direkt zur nächsten fragebeim nächsten tabstop springen für die baarirefreiheit
+    newQuestionBtn.focus();
 }
 
 // Neue Frage laden
