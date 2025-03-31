@@ -31,12 +31,13 @@
 	    );
 	
 	-- Tabelle: player
-	    CREATE TABLE player (
-	        PlayerID INT AUTO_INCREMENT PRIMARY KEY,
-	        name VARCHAR(100) NOT NULL,
-			password VARCHAR(1000) NOT NULL,
-	        points Int (255) DEFAULT 0
-	    );
+    CREATE TABLE player (
+        PlayerID INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(100) NOT NULL UNIQUE,
+        password VARCHAR(1000) NOT NULL,
+        points INT DEFAULT 0
+    );
+
 
 
     -- Neue Tabelle: Game (gespielte Spiele)
