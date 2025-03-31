@@ -52,6 +52,7 @@ body {
 
 .answer:hover {
     opacity: 0.8;
+    background: #47acff;
 }
 
 /* Input-Bereich */
