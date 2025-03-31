@@ -74,6 +74,10 @@ function resetUI() {
     hasAnswered = false;
     // Button ausblenden
     document.getElementById('newQuestionBtn').style.display = 'none';
+
+    //focus auf das erste element setzen
+    const questionHeading = document.getElementById('Question');
+    questionHeading.focus();
 }
 
 // Beim Laden der Seite die erste Frage holen
