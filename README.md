@@ -23,32 +23,30 @@ T = Die Ergebnis-Zeit ist benannt: Bis zum 08.04.2025
 
 
 ```mermaid
-graph TD;
-    subgraph "Quiz-Spiel"
-        direction TB
-        Einloggen
-        Registrieren
-        "Frage beantworten"
-        "Neue Frage laden"
-        "Spielstand speichern"
-        "Punkte einsehen"
-        "Neue Frage hinzufügen"
-        "Fragen verwalten"
-        "Spielstatistiken einsehen"
-    end
+graph TB
+  subgraph Quiz-Spiel
+    direction TB
+    Einloggen
+    Registrieren
+    "Frage beantworten"
+    "Neue Frage laden"
+    "Spielstand speichern"
+    "Punkte einsehen"
+    "Neue Frage hinzufügen"
+    "Fragen verwalten"
+    "Spielstatistiken einsehen"
+  end
 
-    Spieler[["Spieler"]]
-    Admin[["Administrator"]]
+  Spieler[Spieler] --> Einloggen
+  Spieler --> Registrieren
+  Spieler --> "Frage beantworten"
+  Spieler --> "Neue Frage laden"
+  Spieler --> "Spielstand speichern"
+  Spieler --> "Punkte einsehen"
 
-    Spieler --> Einloggen
-    Spieler --> Registrieren
-    Spieler --> "Frage beantworten"
-    Spieler --> "Neue Frage laden"
-    Spieler --> "Spielstand speichern"
-    Spieler --> "Punkte einsehen"
+  Administrator[Administrator] --> Einloggen
+  Administrator --> "Neue Frage hinzufügen"
+  Administrator --> "Fragen verwalten"
+  Administrator --> "Spielstatistiken einsehen"
 
-    Admin --> Einloggen
-    Admin --> "Neue Frage hinzufügen"
-    Admin --> "Fragen verwalten"
-    Admin --> "Spielstatistiken einsehen"
 
