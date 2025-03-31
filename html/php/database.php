@@ -1,8 +1,6 @@
 <?php
 
 interface DatabaseInterface {
-    public function getFragen($frageID);
-    public function getAnswer($frageID);
     public function getRandomQuestion();
 }
 
@@ -22,20 +20,6 @@ class Database implements DatabaseInterface {
         }
     }
 
-    public function getFragen($frageID) {
-        $sql = "
-        SELECT
-            Question, Answer1, Answer2, Answer3, Answer4
-        FROM 
-            Question
-        WHERE QuestionID= :frageID";
-        
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':frageID', $frageID, PDO::PARAM_INT);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
     public function getRandomQuestion() {
         $sql = "
         SELECT 
@@ -50,21 +34,6 @@ class Database implements DatabaseInterface {
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-
-    public function getAnswer($frageID) {
-        $sql = "
-        SELECT
-            correctAnswer
-        FROM 
-            Question
-        WHERE QuestionID = :frageID";
-        
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':frageID', $frageID, PDO::PARAM_INT);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-    
 }
 
 ?>

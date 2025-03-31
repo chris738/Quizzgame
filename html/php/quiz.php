@@ -29,7 +29,6 @@ function RandomQuestion() {
     }
 }
 
-
 function checkAnswer($frageID, $answer) {
     $database = new Database();
     $correctAnswer = $database->getAnswer($frageID);
@@ -48,23 +47,12 @@ function checkAnswer($frageID, $answer) {
 
 // Eingehende Anfrage verarbeiten
 $method = $_SERVER['REQUEST_METHOD'];
-$frageID = $_GET['frageID'] ?? null;
-$answer = $_GET['answer'] ?? null; // Antwort des Benutzers
-$randomquestion = $_GET['randomquestion'] ?? null;
+//$random = $_GET['random'] ?? null;
 
 try {
     if ($method === 'GET') {
-        if ($frageID && $answer !== null) {
-            // Wenn frageID und UserAnswer angegeben sind, überprüfe die Antwort
-            $response = ['info' => checkAnswer($frageID, $answer)];
-            echo json_encode($response);
-        } elseif ($randomquestion) {
-            $response = RandomQuestion();
-        } else {
-            // Ansonsten rufe die Frage ab
-            $response = ['info' => RandomQuestion()];
-            echo json_encode($response);
-        }
+        $response = ['info' => RandomQuestion()];
+        echo json_encode($response);
     } elseif ($method === 'POST') {
         // POST-Verarbeitung hier (falls nötig)
     } else {

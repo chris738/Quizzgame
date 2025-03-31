@@ -1,17 +1,17 @@
 // Globale Variablen
 let currentQuestionID = null;
-let correctAnswer = null;
-let hasAnswered = false; // Merker, ob bereits geantwortet wurde
+let correctAnswerKey = null;  // speichert den korrekten Key (1, 2, 3, oder 4)
+let hasAnswered = false;      // Merker, ob bereits geantwortet wurde
 
 // Frage vom Server holen
 function getQuestions() {
-    fetch(`php/quiz.php`)
+    fetch('php/quiz.php')  // Pfad ggf. anpassen
         .then(response => response.json())
         .then(data => {
-            if (data.info) {
+            if (data.info && !data.info.error) {
                 // ID und richtige Antwort aus JSON merken
                 currentQuestionID = data.info.id;
-                correctAnswer = parseInt(data.info.richtig, 10);
+                correctAnswerKey = data.info.richtig;  // z.B. "1", "2", "3" oder "4"
 
                 // Frage-Text und Antworten befüllen
                 document.getElementById('Question').textContent = data.info.frage;
@@ -20,8 +20,10 @@ function getQuestions() {
                 document.getElementById('answer3').textContent = data.info.antwort["3"];
                 document.getElementById('answer4').textContent = data.info.antwort["4"];
 
-                // Alles zurücksetzen
+                // UI zurücksetzen
                 resetUI();
+            } else {
+                console.error('Fehler im JSON oder keine Frage gefunden:', data.info.error);
             }
         })
         .catch(error => console.error('Fehler beim Abrufen der Daten:', error));
@@ -29,60 +31,51 @@ function getQuestions() {
 
 // Klick auf eine Antwort
 function handleAnswerClick(spanID) {
-    // Wenn schon beantwortet, nichts mehr tun
+    // Wenn schon beantwortet, nicht erneut prüfen
     if (hasAnswered) return;
 
-    // "answer1" -> wir wollen die Zahl am Ende als Number
-    const selectedAnswer = parseInt(spanID.replace('answer',''), 10);
+    // Bsp: "answer1" -> wir wollen die Zahl am Ende
+    const selectedAnswerKey = spanID.replace('answer', ''); // "1", "2", ...
 
-    // Antwort auswerten
-    checkAnswer(currentQuestionID, selectedAnswer);
+    // Antwort auswerten (clientseitig)
+    checkClientSideAnswer(selectedAnswerKey);
 }
 
-// Antwort prüfen und einfärben
-function checkAnswer(questionID, selectedAnswer) {
-    // Merken: Es wurde geantwortet, keine zweite Auswahl mehr
+// Clientseitige Prüfung
+function checkClientSideAnswer(selectedAnswerKey) {
     hasAnswered = true;
 
-    // Zuerst alle "selected"-Markierungen entfernen (optional, falls du sie verwendest)
-    document.querySelectorAll('.answer').forEach(answerDiv => {
-        answerDiv.classList.remove('selected');
-    });
-
-    // Richtig oder falsch?
-    if (selectedAnswer === correctAnswer) {
-        document.querySelector(`[data-color="answer${selectedAnswer}"]`)
+    if (selectedAnswerKey === correctAnswerKey) {
+        // Richtige Antwort
+        document.querySelector(`[data-color="answer${selectedAnswerKey}"]`)
                 .classList.add('correct');
     } else {
-        // Falsche Antwort -> rot
-        document.querySelector(`[data-color="answer${selectedAnswer}"]`)
+        // Falsche Antwort
+        document.querySelector(`[data-color="answer${selectedAnswerKey}"]`)
                 .classList.add('wrong');
 
-        // Richtige Antwort -> grün
-        document.querySelector(`[data-color="answer${correctAnswer}"]`)
+        // Richtige Antwort hervorheben
+        document.querySelector(`[data-color="answer${correctAnswerKey}"]`)
                 .classList.add('correct');
     }
 
-    // Button "Neue Frage" sichtbar machen
+    // Button "Neue Frage" einblenden
     document.getElementById('newQuestionBtn').style.display = 'inline-block';
 }
 
-// Neue Frage laden (wird vom Button aufgerufen)
+// Neue Frage laden (Button klick)
 function loadNewQuestion() {
     getQuestions();
 }
 
-// Zurücksetzen, damit bei neuer Frage kein altes CSS hängenbleibt
+// UI zurücksetzen, damit bei neuer Frage kein altes CSS hängenbleibt
 function resetUI() {
-    // Falls wir alle Klasseneinträge (correct, wrong) entfernen möchten:
     document.querySelectorAll('.answer').forEach(answerDiv => {
         answerDiv.classList.remove('correct', 'wrong', 'selected');
     });
-    // Merker zurücksetzen
     hasAnswered = false;
-    // Button ausblenden
     document.getElementById('newQuestionBtn').style.display = 'none';
 }
 
-// Beim Laden der Seite: direkt die erste Frage holen
+// Beim Laden der Seite gleich die erste Frage holen
 getQuestions();
