@@ -22,9 +22,12 @@ body {
     text-align: center;
 }
 
-.question-box h2 {
-    margin-bottom: 20px;
+.question-text {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
 }
+
 
 /* Antwort-Box um die Buttons */
 .answers {
