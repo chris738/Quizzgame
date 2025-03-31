@@ -29,6 +29,30 @@ function getQuestions() {
         .catch(error => console.error('Fehler beim Fetch:', error));
 }
 
+function saveGameResult(playerId, questionId, selectedAnswer, correctAnswer) {
+    fetch('quiz.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            playerId: playerId,
+            questionId: questionId,
+            selectedAnswer: selectedAnswer,
+            correctAnswer: correctAnswer
+        })
+    }).then(response => response.json())
+      .then(data => {
+          if (!data.success) {
+              console.error("Fehler beim Speichern des Spiels:", data.message);
+          }
+      })
+      .catch(error => {
+          console.error("Netzwerkfehler:", error);
+      });
+}
+
+
 function handleAnswerClick(spanID) {
     // Falls schon beantwortet, nichts tun
     if (hasAnswered) return;
@@ -68,6 +92,8 @@ function handleAnswerClick(spanID) {
 
     feedbackDiv.setAttribute('tabindex', '0');
     newQuestionBtn.setAttribute('tabindex', '1');
+
+    saveGameResult(currentPlayerId, currentQuestionId, selectedAnswer, correctAnswer);
 }
 
 

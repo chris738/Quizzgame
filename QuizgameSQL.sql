@@ -22,7 +22,7 @@
 	    CREATE TABLE Question (
 	        QuestionID INT AUTO_INCREMENT PRIMARY KEY,
 	        Question VARCHAR(1000) NOT NULL,
-		Category VARCHAR(100) NOT NULL,
+		    Category VARCHAR(100) NOT NULL,
 	        Answer1 VARCHAR(1000) NOT NULL,
 	        Answer2 VARCHAR(1000) NOT NULL,
 	        Answer3 VARCHAR(1000) NOT NULL,
@@ -37,6 +37,20 @@
 			password VARCHAR(1000) NOT NULL,
 	        points Int (255) DEFAULT 0
 	    );
+
+
+    -- Neue Tabelle: Game (gespielte Spiele)
+    CREATE TABLE Game (
+        GameID INT AUTO_INCREMENT PRIMARY KEY,
+        PlayerID INT NOT NULL,
+        QuestionID INT NOT NULL,
+        SelectedAnswer INT NOT NULL,
+        CorrectAnswer INT NOT NULL,
+        IsCorrect BOOLEAN NOT NULL,
+        Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (PlayerID) REFERENCES player(PlayerID),
+        FOREIGN KEY (QuestionID) REFERENCES Question(QuestionID)
+    );
 		
 DELIMITER $$
 

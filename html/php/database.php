@@ -2,6 +2,7 @@
 
 interface DatabaseInterface {
     public function getRandomQuestion();
+    public function saveGameResult($playerId, $questionId, $selectedAnswer, $correctAnswer);
 }
 
 class Database implements DatabaseInterface {
@@ -34,6 +35,23 @@ class Database implements DatabaseInterface {
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function saveGameResult($playerId, $questionId, $selectedAnswer, $correctAnswer) {
+        $isCorrect = ($selectedAnswer === $correctAnswer) ? 1 : 0;
+    
+        $sql = "
+                INSERT INTO Game (PlayerID, QuestionID, SelectedAnswer, CorrectAnswer, IsCorrect)
+                VALUES (:playerId, :questionId, :selectedAnswer, :correctAnswer, :isCorrect)";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            ':playerId' => $playerId,
+            ':questionId' => $questionId,
+            ':selectedAnswer' => $selectedAnswer,
+            ':correctAnswer' => $correctAnswer,
+            ':isCorrect' => $isCorrect
+        ]);
+    }
+    
 }
 
 ?>

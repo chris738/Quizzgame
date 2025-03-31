@@ -38,7 +38,20 @@ try {
         $response = ['info' => RandomQuestion()];
         echo json_encode($response);
     } elseif ($method === 'POST') {
-        // POST-Verarbeitung hier (falls nötig)
+        $data = json_decode(file_get_contents("php://input"), true);
+        
+        $playerId = $data['playerId'] ?? null;
+        $questionId = $data['questionId'] ?? null;
+        $selectedAnswer = $data['selectedAnswer'] ?? null;
+        $correctAnswer = $data['correctAnswer'] ?? null;
+    
+        if ($playerId && $questionId && $selectedAnswer && $correctAnswer !== null) {
+            $database = new Database();
+            $database->saveGameResult((int)$playerId, (int)$questionId, (int)$selectedAnswer, (int)$correctAnswer);
+            echo json_encode(['success' => true]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Ungültige Daten']);
+        }
     } else {
         echo json_encode(['success' => false, 'message' => 'Methode nicht unterstützt.']);
     }
