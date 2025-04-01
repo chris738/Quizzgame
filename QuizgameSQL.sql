@@ -54,6 +54,18 @@
         FOREIGN KEY (QuestionID) REFERENCES Question(QuestionID)
     );
 		
+
+    CREATE OR REPLACE VIEW TopHighscores AS
+    SELECT 
+        p.name AS username,
+        SUM(g.Score) AS totalScore
+    FROM Game g
+    JOIN player p ON g.PlayerID = p.PlayerID
+    WHERE g.Score IS NOT NULL
+    GROUP BY g.PlayerID
+    ORDER BY totalScore DESC;
+
+
 DELIMITER $$
 
 CREATE PROCEDURE InsertNewPlayer(
