@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Barrierearmes Quiz</title>
+    <title>Quiz</title>
     <link rel="stylesheet" href="css/quiz.css">
     <link rel="stylesheet" href="css/navbar.css">
     <script defer src="js/quiz.js"></script>
@@ -69,15 +69,13 @@
         <div id="feedback" role="status" aria-live="polite"></div>
 
         <!-- Button für neue Frage -->
-        <div id="newQuestionBtn"
-            class="answer"
-            role="button"
-            tabindex="0"
-            style="display:none; margin-top:20px;"
-            onclick="loadNewQuestion()"
-            onkeydown="if (event.key === 'Enter' || event.key === ' ') loadNewQuestion()">
-       <span>Neue Frage</span>
-   </div>
+        <div class="button"
+             role="button"
+             style="display:none; margin-top:20px;"
+             onclick="loadNewQuestion()"
+             onkeydown="if (event.key === 'Enter' || event.key === ' ') loadNewQuestion()">
+            <span id="newQuestionBtn" >Neue Frage</span>
+        </div>
    
     </main>
 </body>
