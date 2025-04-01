@@ -53,14 +53,6 @@ function saveGameResult(playerId, currentQuestionID, selectedAnswer, correctAnsw
             correctAnswer: correctAnswer,
             score: score
         })
-        console.log("Sende an PHP:", {
-            playerId: playerId,
-            questionId: currentQuestionID,
-            selectedAnswer: selectedAnswer,
-            correctAnswer: correctAnswer,
-            score: score
-        });
-        
     }).then(response => response.json())
       .then(data => {
           if (!data.success) {
@@ -70,6 +62,14 @@ function saveGameResult(playerId, currentQuestionID, selectedAnswer, correctAnsw
       .catch(error => {
           console.error("Netzwerkfehler:", error);
       });
+      console.log("Sende an PHP:", {
+        playerId: playerId,
+        questionId: currentQuestionID,
+        selectedAnswer: selectedAnswer,
+        correctAnswer: correctAnswer,
+        score: score
+    });
+    
 }
 
 function handleAnswerClick(spanID) {
