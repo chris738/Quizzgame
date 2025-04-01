@@ -102,7 +102,6 @@ function handleAnswerClick(spanID) {
     // Button "Neue Frage" einblenden und fokussieren
     const newQuestionBtn = document.getElementById('newQuestionBtn');
     newQuestionBtn.style.display = 'inline-block';
-    const feedback = document.getElementById('feedback');
     feedback.focus();
 
     feedbackDiv.setAttribute('tabindex', '0');
