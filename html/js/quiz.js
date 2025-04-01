@@ -38,7 +38,7 @@ function saveGameResult(playerId, currentQuestionID, selectedAnswer, correctAnsw
         },
         body: JSON.stringify({
             playerId: playerId,
-            questionId: questionId,
+            questionId: currentQuestionID,
             selectedAnswer: selectedAnswer,
             correctAnswer: correctAnswer
         })
