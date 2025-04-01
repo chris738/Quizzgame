@@ -2,7 +2,7 @@
 let currentQuestionID = null;
 let correctAnswer = null;
 let hasAnswered = false; // Merker, ob schon geantwortet wurde
-let currentPlayerId = 1; //speiler variable, muss durch login noch geändert werden
+let currentPlayerId = parseInt(localStorage.getItem('playerId')) || 0;
 let questionStartTime = null; // Startzeit merken
 
 // Frage vom Server holen
@@ -64,12 +64,9 @@ function saveGameResult(playerId, currentQuestionID, selectedAnswer, correctAnsw
       });
 }
 
-
 function handleAnswerClick(spanID) {
     // Falls schon beantwortet, nichts tun
     if (hasAnswered) return;
-
-
 
     // "answer1" -> wir wollen die Zahl als Integer (1,2,3,4)
     const selectedAnswer = parseInt(spanID.replace('answer',''), 10);
