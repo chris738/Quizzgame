@@ -22,7 +22,7 @@
 
     <!-- Hauptinhalt -->
     <main class="quiz-container" id="mainContent">
-        <div id="Question" class="question-text" tabindex="-1">Frage</div>
+        <div id="Question" class="question-text" tabindex="-1" aria-live="polite">Frage</div>
 
         <!-- Antwortmöglichkeiten mit Klick-Handler -->
         <div class="answers">
@@ -64,9 +64,16 @@
         <div id="feedback" role="status" aria-live="polite"></div>
 
         <!-- Button für neue Frage -->
-        <button id="newQuestionBtn" onclick="loadNewQuestion()" style="display:none; margin-top:20px;">
-            Neue Frage
-        </button>
+        <div id="newQuestionBtn"
+            class="answer"
+            role="button"
+            tabindex="0"
+            style="display:none; margin-top:20px;"
+            onclick="loadNewQuestion()"
+            onkeydown="if (event.key === 'Enter' || event.key === ' ') loadNewQuestion()">
+       <span>Neue Frage</span>
+   </div>
+   
     </main>
 </body>
 </html>
