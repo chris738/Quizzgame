@@ -74,11 +74,15 @@ function handleAnswerClick(spanID) {
     // Das Element für Feedback
     const feedbackDiv = document.getElementById('feedback');
 
+    //berechnet den score
+    const isCorrect = selectedAnswer === correctAnswer;
+    const score = calculateScore(isCorrect);
+
     // Prüfung, ob richtig
     if (selectedAnswer === correctAnswer) {
         document.querySelector(`[data-color="answer${selectedAnswer}"]`)
                 .classList.add('correct');
-        feedbackDiv.textContent = "Richtig beantwortet!";
+                feedbackDiv.textContent = `Richtig beantwortet! Dein Score: ${score}`;
     } else {
         // Falsche Antwort rot markieren
         document.querySelector(`[data-color="answer${selectedAnswer}"]`)
@@ -103,9 +107,6 @@ function handleAnswerClick(spanID) {
 
     feedbackDiv.setAttribute('tabindex', '0');
     newQuestionBtn.setAttribute('tabindex', '1');
-
-    const isCorrect = selectedAnswer === correctAnswer;
-    const score = calculateScore(isCorrect);
 
     saveGameResult(currentPlayerId, currentQuestionID, selectedAnswer, correctAnswer, score);
 }
