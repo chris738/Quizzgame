@@ -69,13 +69,16 @@
         <div id="feedback" role="status" aria-live="polite"></div>
 
         <!-- Button für neue Frage -->
-        <div class="button"
-             role="button"
-             style="display:none; margin-top:20px;"
-             onclick="loadNewQuestion()"
-             onkeydown="if (event.key === 'Enter' || event.key === ' ') loadNewQuestion()">
-            <span id="newQuestionBtn" >Neue Frage</span>
+        <div id="newQuestionBtn"
+            class="button"
+            role="button"
+            tabindex="0"
+            style="display: none; margin-top: 20px;"
+            onclick="loadNewQuestion()"
+            onkeydown="if (event.key === 'Enter' || event.key === ' ') loadNewQuestion()">
+            Neue Frage
         </div>
+
    
     </main>
 </body>
