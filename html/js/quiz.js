@@ -31,7 +31,7 @@ function getQuestions() {
 }
 
 function saveGameResult(playerId, currentQuestionID, selectedAnswer, correctAnswer) {
-    fetch('quiz.php', {
+    fetch('php/quiz.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
