@@ -61,13 +61,15 @@ class QuizHandler extends Database {
         $questionId     = $data['questionId'] ?? null;
         $selectedAnswer = $data['selectedAnswer'] ?? null;
         $correctAnswer  = $data['correctAnswer'] ?? null;
-
-        if ($playerId && $questionId && $selectedAnswer && $correctAnswer !== null) {
+        $score          = $data['score'] ?? null;
+    
+        if ($playerId && $questionId && $selectedAnswer !== null && $correctAnswer !== null) {
             $this->saveGameResult(
                 (int) $playerId,
                 (int) $questionId,
                 (int) $selectedAnswer,
-                (int) $correctAnswer
+                (int) $correctAnswer,
+                is_numeric($score) ? (int) $score : null
             );
             return ['success' => true];
         } else {

@@ -48,6 +48,7 @@
         SelectedAnswer INT NOT NULL,
         CorrectAnswer INT NOT NULL,
         IsCorrect BOOLEAN NOT NULL,
+        Score INT NULL,
         Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (PlayerID) REFERENCES player(PlayerID),
         FOREIGN KEY (QuestionID) REFERENCES Question(QuestionID)

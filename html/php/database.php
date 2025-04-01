@@ -2,7 +2,7 @@
 
 interface DatabaseInterface {
     public function getRandomQuestion();
-    public function saveGameResult($playerId, $questionId, $selectedAnswer, $correctAnswer);
+    public function saveGameResult($playerId, $questionId, $selectedAnswer, $correctAnswer, $score);
     public function insertQuestion($question, $category, $a1, $a2, $a3, $a4, $correctAnswer);
     public function insertUser($username, $hashedPassword); 
 }
@@ -38,19 +38,20 @@ class Database implements DatabaseInterface {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function saveGameResult($playerId, $questionId, $selectedAnswer, $correctAnswer) {
+    public function saveGameResult($playerId, $questionId, $selectedAnswer, $correctAnswer, $score = null) {
         $isCorrect = ($selectedAnswer === $correctAnswer) ? 1 : 0;
     
         $sql = "
-                INSERT INTO Game (PlayerID, QuestionID, SelectedAnswer, CorrectAnswer, IsCorrect)
-                VALUES (:playerId, :questionId, :selectedAnswer, :correctAnswer, :isCorrect)";
+            INSERT INTO Game (PlayerID, QuestionID, SelectedAnswer, CorrectAnswer, IsCorrect, Score)
+            VALUES (:playerId, :questionId, :selectedAnswer, :correctAnswer, :isCorrect, :score)";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([
             ':playerId' => $playerId,
             ':questionId' => $questionId,
             ':selectedAnswer' => $selectedAnswer,
             ':correctAnswer' => $correctAnswer,
-            ':isCorrect' => $isCorrect
+            ':isCorrect' => $isCorrect,
+            ':score' => $score
         ]);
     }
 

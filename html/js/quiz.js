@@ -3,6 +3,7 @@ let currentQuestionID = null;
 let correctAnswer = null;
 let hasAnswered = false; // Merker, ob schon geantwortet wurde
 let currentPlayerId = 1; //speiler variable, muss durch login noch geändert werden
+let questionStartTime = null; // Startzeit merken
 
 // Frage vom Server holen
 function getQuestions() {
@@ -23,6 +24,7 @@ function getQuestions() {
 
                 // UI zurücksetzen
                 resetUI();
+                questionStartTime = Date.now();
             } else {
                 console.error('Fehler:', data.info ? data.info.error : data);
             }
@@ -30,7 +32,15 @@ function getQuestions() {
         .catch(error => console.error('Fehler beim Fetch:', error));
 }
 
-function saveGameResult(playerId, currentQuestionID, selectedAnswer, correctAnswer) {
+function calculateScore(isCorrect) {
+    if (!isCorrect) return 0;
+    const responseTime = Math.floor((Date.now() - questionStartTime) / 1000); // in Sekunden
+    const basePoints = 100;
+    const bonusPoints = Math.max(0, 100 - responseTime * (100 / 60));
+    return Math.round(basePoints + bonusPoints);
+}
+
+function saveGameResult(playerId, currentQuestionID, selectedAnswer, correctAnswer, score) {
     fetch('php/quiz.php', {
         method: 'POST',
         headers: {
@@ -40,7 +50,8 @@ function saveGameResult(playerId, currentQuestionID, selectedAnswer, correctAnsw
             playerId: playerId,
             questionId: currentQuestionID,
             selectedAnswer: selectedAnswer,
-            correctAnswer: correctAnswer
+            correctAnswer: correctAnswer,
+            score: score
         })
     }).then(response => response.json())
       .then(data => {
@@ -57,6 +68,9 @@ function saveGameResult(playerId, currentQuestionID, selectedAnswer, correctAnsw
 function handleAnswerClick(spanID) {
     // Falls schon beantwortet, nichts tun
     if (hasAnswered) return;
+
+    const isCorrect = selectedAnswer === correctAnswer;
+    const score = calculateScore(isCorrect);
 
     // "answer1" -> wir wollen die Zahl als Integer (1,2,3,4)
     const selectedAnswer = parseInt(spanID.replace('answer',''), 10);
@@ -94,7 +108,7 @@ function handleAnswerClick(spanID) {
     feedbackDiv.setAttribute('tabindex', '0');
     newQuestionBtn.setAttribute('tabindex', '1');
 
-    saveGameResult(currentPlayerId, currentQuestionID, selectedAnswer, correctAnswer);
+    saveGameResult(currentPlayerId, currentQuestionID, selectedAnswer, correctAnswer, score);
 }
 
 // Neue Frage laden
