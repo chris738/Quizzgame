@@ -6,6 +6,7 @@ interface DatabaseInterface {
     public function insertQuestion($question, $category, $a1, $a2, $a3, $a4, $correctAnswer);
     public function insertUser($username, $hashedPassword);
     public function getUserByName($name);
+    public function getTopHighscores($limit);
 }
 
 class Database implements DatabaseInterface {
@@ -87,6 +88,17 @@ class Database implements DatabaseInterface {
         $stmt = $this->conn->prepare("SELECT PlayerID, password FROM player WHERE name = :name");
         $stmt->execute([':name' => $name]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getTopHighscores($limit = 20) {
+        $stmt = $this->conn->prepare("
+            SELECT username, totalScore
+            FROM TopHighscores
+            LIMIT :limit
+        ");
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
 
