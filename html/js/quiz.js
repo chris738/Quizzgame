@@ -103,11 +103,12 @@ function handleAnswerClick(spanID) {
     const newQuestionBtn = document.getElementById('newQuestionBtn');
     newQuestionBtn.style.display = 'inline-block';
 
+    // ändere Tabstop und focus für die Baarierfreiheit
     feedbackDiv.setAttribute('tabindex', '0');
     newQuestionBtn.setAttribute('tabindex', '1');
-    
     feedback.focus();
 
+    //speichere den spielstand auf den Server
     saveGameResult(currentPlayerId, currentQuestionID, selectedAnswer, correctAnswer, score);
 }
 
@@ -124,8 +125,10 @@ function resetUI() {
     });
     // Feedback löschen
     document.getElementById('feedback').textContent = '';
+
     // Merker zurücksetzen
     hasAnswered = false;
+    
     // Button ausblenden
     document.getElementById('newQuestionBtn').style.display = 'none';
 
