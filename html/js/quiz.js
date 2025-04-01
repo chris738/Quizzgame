@@ -53,6 +53,14 @@ function saveGameResult(playerId, currentQuestionID, selectedAnswer, correctAnsw
             correctAnswer: correctAnswer,
             score: score
         })
+        console.log("Sende an PHP:", {
+            playerId: playerId,
+            questionId: currentQuestionID,
+            selectedAnswer: selectedAnswer,
+            correctAnswer: correctAnswer,
+            score: score
+        });
+        
     }).then(response => response.json())
       .then(data => {
           if (!data.success) {
