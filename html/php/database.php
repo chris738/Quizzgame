@@ -4,7 +4,8 @@ interface DatabaseInterface {
     public function getRandomQuestion();
     public function saveGameResult($playerId, $questionId, $selectedAnswer, $correctAnswer, $score);
     public function insertQuestion($question, $category, $a1, $a2, $a3, $a4, $correctAnswer);
-    public function insertUser($username, $hashedPassword); 
+    public function insertUser($username, $hashedPassword);
+    public function getUserByName($name);
 }
 
 class Database implements DatabaseInterface {
@@ -82,7 +83,11 @@ class Database implements DatabaseInterface {
         ]);
     }
     
-    
+    public function getUserByName($name) {
+        $stmt = $this->conn->prepare("SELECT PlayerID, password FROM player WHERE name = :name");
+        $stmt->execute([':name' => $name]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
 
 ?>
