@@ -69,8 +69,7 @@ function handleAnswerClick(spanID) {
     // Falls schon beantwortet, nichts tun
     if (hasAnswered) return;
 
-    const isCorrect = selectedAnswer === correctAnswer;
-    const score = calculateScore(isCorrect);
+
 
     // "answer1" -> wir wollen die Zahl als Integer (1,2,3,4)
     const selectedAnswer = parseInt(spanID.replace('answer',''), 10);
@@ -107,6 +106,9 @@ function handleAnswerClick(spanID) {
 
     feedbackDiv.setAttribute('tabindex', '0');
     newQuestionBtn.setAttribute('tabindex', '1');
+
+    const isCorrect = selectedAnswer === correctAnswer;
+    const score = calculateScore(isCorrect);
 
     saveGameResult(currentPlayerId, currentQuestionID, selectedAnswer, correctAnswer, score);
 }
