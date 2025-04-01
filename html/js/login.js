@@ -1,7 +1,3 @@
-//document.addEventListener('DOMContentLoaded', () => {
-//    document.getElementById('loginButton').addEventListener('click', handleLogin);
-//  });
-  
 async function login(name, password) {
     const response = await fetch('php/login.php', {
       method: 'POST',
