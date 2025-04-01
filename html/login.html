@@ -18,11 +18,14 @@
         </ul>
     </nav>
     
-  <h1>Login</h1>
-  <input type="text" id="name" placeholder="Name" />
-  <br />
-  <input type="password" id="password" placeholder="Passwort" />
-  <br />
-  <button id="loginButton">Einloggen</button>
-  </body>
+        <div class="container">
+          <h1>Login</h1>
+          <form onsubmit="handleLogin(); return false;">
+            <input type="text" id="name" placeholder="Name" required />
+            <input type="password" id="password" placeholder="Passwort" required />
+            <button type="submit">Einloggen</button>
+          </form>
+        </div>
+      </body>
+      
 </html>
