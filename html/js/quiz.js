@@ -30,7 +30,7 @@ function getQuestions() {
         .catch(error => console.error('Fehler beim Fetch:', error));
 }
 
-function saveGameResult(playerId, questionId, selectedAnswer, correctAnswer) {
+function saveGameResult(playerId, currentQuestionID, selectedAnswer, correctAnswer) {
     fetch('quiz.php', {
         method: 'POST',
         headers: {
@@ -94,7 +94,7 @@ function handleAnswerClick(spanID) {
     feedbackDiv.setAttribute('tabindex', '0');
     newQuestionBtn.setAttribute('tabindex', '1');
 
-    saveGameResult(currentPlayerId, currentQuestionId, selectedAnswer, correctAnswer);
+    saveGameResult(currentPlayerId, currentQuestionID, selectedAnswer, correctAnswer);
 }
 
 // Neue Frage laden
