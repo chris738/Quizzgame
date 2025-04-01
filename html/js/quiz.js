@@ -102,10 +102,11 @@ function handleAnswerClick(spanID) {
     // Button "Neue Frage" einblenden und fokussieren
     const newQuestionBtn = document.getElementById('newQuestionBtn');
     newQuestionBtn.style.display = 'inline-block';
-    feedback.focus();
 
     feedbackDiv.setAttribute('tabindex', '0');
     newQuestionBtn.setAttribute('tabindex', '1');
+    
+    feedback.focus();
 
     saveGameResult(currentPlayerId, currentQuestionID, selectedAnswer, correctAnswer, score);
 }
