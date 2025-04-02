@@ -111,6 +111,8 @@ function nextQuestion() {
 }
 
 function showHighscoreSection() {
+    loadHighscore();
+    
     const section = document.getElementById('highscoreSection');
     section.style.display = 'block';
 
