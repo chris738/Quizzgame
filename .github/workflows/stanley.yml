@@ -28,5 +28,5 @@ jobs:
               && sudo chmod 777 /var/dev/quizzgame \
               && git clone -b stanley --single-branch git@github.com:chris738/Quizzgame.git /var/dev/quizzgame \
               && sudo chmod -R 777 /var/dev/quizzgame \
-              && sudo docker restart Quizzgame_Webserver_SQL
+              && sudo docker restart Quizzgame_Webserver_SQL_Dev
             )
