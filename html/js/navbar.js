@@ -1,5 +1,8 @@
-// Navbar automatisch einfügen
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', () => {
+    loadNavbar();
+  });
+  
+  async function loadNavbar() {
     const container = document.getElementById('navbar-container');
     if (!container) return;
   
@@ -8,17 +11,38 @@ document.addEventListener('DOMContentLoaded', async () => {
       const html = await response.text();
       container.innerHTML = html;
   
-      // Nach dem Einfügen: aktiven Link markieren
-      const links = container.querySelectorAll('.navbar a');
-      const current = location.pathname.split('/').pop();
-  
-      links.forEach(link => {
-        if (link.getAttribute('href') === current) {
-          link.classList.add('active');
-        }
-      });
+      markActiveLink(container);
+      loadUsername();
     } catch (err) {
       console.error('Fehler beim Laden der Navbar:', err);
     }
-  });
+  }
+  
+  function markActiveLink(container) {
+    const links = container.querySelectorAll('.navbar a');
+    const current = location.pathname.split('/').pop();
+  
+    links.forEach(link => {
+      if (link.getAttribute('href') === current) {
+        link.classList.add('active');
+      }
+    });
+  }
+  
+  function loadUsername() {
+    const playerId = parseInt(localStorage.getItem('playerId')) || 0;
+    if (playerId <= 0) return;
+  
+    fetch(`php/login.php?playerId=${playerId}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.username) {
+          const userElement = document.getElementById('nav-username');
+          if (userElement) {
+            userElement.textContent = '👤 ' + data.username;
+          }
+        }
+      })
+      .catch(err => console.error('Fehler beim Laden des Benutzernamens:', err));
+  }
   
