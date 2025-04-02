@@ -94,7 +94,14 @@
     <div id="gameResult" style="display:none; text-align: center;">
         <h2>Spiel beendet!</h2>
         <p id="finalScore"></p>
-        <button onclick="resetGame()">Nochmal spielen</button>
+        <div id="restartBtn"
+             class="button"
+             role="button"
+             style="display: none; margin-top: 20px;"
+             onclick="resetGame()"
+             onkeydown="if (event.key === 'Enter' || event.key === ' ') resetGame()">
+            Nochmal spielen
+        </div>
     </div>
 
     <!-- 4) Highscore-Bereich (zunächst versteckt) -->

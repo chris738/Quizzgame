@@ -12,9 +12,6 @@ let questionCount = 0;          // wie viele Fragen wurden schon gestellt?
 const maxQuestions = 4;         // wie viele Fragen pro Spiel?
 let totalScore = 0;             // gesamter Score über alle Fragen
 
-// --------------------
-// Kategorie auswählen
-// --------------------
 function selectCategory(categoryName) {
     // Speichere die Auswahl
     selectedCategory = categoryName;
@@ -31,9 +28,6 @@ function selectCategory(categoryName) {
     loadNewQuestion();
 }
 
-// --------------------
-// Neue Frage laden
-// --------------------
 function loadNewQuestion() {
     let url = 'php/quiz.php';
     if (selectedCategory) {
@@ -68,9 +62,6 @@ function loadNewQuestion() {
         .catch(error => console.error('Fehler beim Fetch:', error));
 }
 
-// --------------------
-// Antwortklick
-// --------------------
 function handleAnswerClick(spanID) {
     if (hasAnswered) return;
 
@@ -110,9 +101,6 @@ function handleAnswerClick(spanID) {
     saveGameResult(currentPlayerId, currentQuestionID, selectedAnswer, correctAnswer, score);
 }
 
-// --------------------
-// Aufruf durch "Nächste Frage" Button
-// --------------------
 function nextQuestion() {
     // Wenn wir unsere max. Anzahl an Fragen erreicht haben, dann Endergebnis anzeigen
     if (questionCount >= maxQuestions) {
@@ -128,11 +116,10 @@ function showHighscoreSection() {
 
     // Optional: Scroll zum Highscore-Bereich
     section.scrollIntoView({ behavior: 'smooth' });
+
+    document.getElementById('gameResult').focus();
 }
 
-// --------------------
-// Endergebnis anzeigen
-// --------------------
 function showFinalScore() {
     // Quiz-Bereich ausblenden
     document.getElementById('quizContainer').style.display = 'none';
@@ -145,19 +132,17 @@ function showFinalScore() {
     showHighscoreSection();
 }
 
-// --------------------
-// Spiel neu starten
-// --------------------
 function resetGame() {
     // Ergebnis-Bereich ausblenden
     document.getElementById('gameResult').style.display = 'none';
     // Kategorieauswahl wieder anzeigen
     document.getElementById('categorySelection').style.display = 'block';
+    // Highscore wieder ausblenden
+    document.getElementById('highscoreSection').style.display = 'none';;
+    // Focus auf die Kategorien
+    document.getElementById('categorySelection').focus();
 }
 
-// --------------------
-// Punkte berechnen
-// --------------------
 function calculateScore(isCorrect) {
     if (!isCorrect) return 0;
     const responseTime = Math.floor((Date.now() - questionStartTime) / 1000);
@@ -167,9 +152,6 @@ function calculateScore(isCorrect) {
     return Math.round(basePoints + bonusPoints);
 }
 
-// --------------------
-// Spielstand speichern
-// --------------------
 function saveGameResult(playerId, questionID, selectedAnswer, correctAnswer, score) {
     fetch('php/quiz.php', {
         method: 'POST',
@@ -195,9 +177,6 @@ function saveGameResult(playerId, questionID, selectedAnswer, correctAnswer, sco
     });
 }
 
-// --------------------
-// UI (Antwortfarben, Feedback) zurücksetzen
-// --------------------
 function resetUI() {
     // CSS-Klassen entfernen
     document.querySelectorAll('.answer').forEach(answerDiv => {
@@ -215,12 +194,9 @@ function resetUI() {
 
     setTimeout(() => {
         questionHeading.focus();
-    }, 300);
+    }, 250);
 }
 
-// --------------------
-// Seite fertig geladen
-// --------------------
 document.addEventListener('DOMContentLoaded', () => {
     // Zu Beginn: erst mal nur Kategorie-Auswahl anzeigen.
     // => categorySelection ist schon sichtbar (per CSS),
