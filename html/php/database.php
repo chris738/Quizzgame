@@ -1,7 +1,7 @@
 <?php
 
 interface DatabaseInterface {
-    public function getRandomQuestion();
+    public function getRandomQuestion($category);
     public function saveGameResult($playerId, $questionId, $selectedAnswer, $correctAnswer, $score);
     public function insertQuestion($question, $category, $a1, $a2, $a3, $a4, $correctAnswer);
     public function insertUser($username, $hashedPassword);
@@ -25,20 +25,34 @@ class Database implements DatabaseInterface {
         }
     }
 
-    public function getRandomQuestion() {
-        $sql = "
-        SELECT 
-            QuestionID, Question, Answer1, Answer2, Answer3, Answer4, correctAnswer
-        FROM 
-            Question
-        ORDER BY 
-            RAND() 
-        LIMIT 1";
-
+    public function getRandomQuestion($category = null) {
+        if ($category) {
+            $sql = "
+            SELECT 
+                QuestionID, Question, Answer1, Answer2, Answer3, Answer4, correctAnswer
+            FROM 
+                Question
+            WHERE 
+                Category = :category
+            ORDER BY 
+                RAND() 
+            LIMIT 1";
+            $stmt->bindParam(':category', $category);
+        } else {
+            $sql = "
+            SELECT 
+                QuestionID, Question, Answer1, Answer2, Answer3, Answer4, correctAnswer
+            FROM 
+                Question
+            ORDER BY 
+                RAND() 
+            LIMIT 1";
+        }
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+    
 
     public function saveGameResult($playerId, $questionId, $selectedAnswer, $correctAnswer, $score = null) {
         $isCorrect = ($selectedAnswer === $correctAnswer) ? 1 : 0;

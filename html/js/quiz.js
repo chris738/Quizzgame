@@ -6,8 +6,13 @@ let currentPlayerId = parseInt(localStorage.getItem('playerId')) || 0;
 let questionStartTime = null; // Startzeit merken
 
 // Frage vom Server holen
-function getQuestions() {
-    fetch('php/quiz.php')
+function getQuestions(category = null) {
+    let url = 'php/quiz.php';
+    if (category) {
+        url += '?category=' + encodeURIComponent(category);
+    }
+
+    fetch(url)
         .then(response => response.json())
         .then(data => {
             if (data.info && !data.info.error) {
@@ -31,6 +36,7 @@ function getQuestions() {
         })
         .catch(error => console.error('Fehler beim Fetch:', error));
 }
+
 
 function calculateScore(isCorrect) {
     if (!isCorrect) return 0;
@@ -114,7 +120,9 @@ function handleAnswerClick(spanID) {
 
 // Neue Frage laden
 function loadNewQuestion() {
-    getQuestions();
+    const categorySelect = document.getElementById('categorySelect');
+    const selectedCategory = categorySelect ? categorySelect.value : null;
+    getQuestions(selectedCategory);
 }
 
 // Zurücksetzen, damit bei neuer Frage kein altes CSS hängenbleibt

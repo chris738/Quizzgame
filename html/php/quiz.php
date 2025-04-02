@@ -22,7 +22,8 @@ class QuizHandler extends Database {
     }
 
     private function handleGet(): void {
-        $this->response = $this->loadRandomQuestion();
+        $category = $_GET['category'] ?? null;
+        $this->response = $this->loadRandomQuestion($category);
     }
 
     private function handlePost(): void {
@@ -30,14 +31,14 @@ class QuizHandler extends Database {
         $this->response = $this->saveGameResultFromRequest($data);
     }
 
-    private function loadRandomQuestion(): array {
+    private function loadRandomQuestion(string $category = null): array {
         try {
-            $frage = $this->getRandomQuestion();
-
+            $frage = $this->getRandomQuestion($category);
+    
             if (!$frage || empty($frage['Question'])) {
                 return ['error' => 'Keine gültige Frage gefunden.'];
             }
-
+    
             return [
                 'info' => [
                     'id'      => $frage['QuestionID'],
@@ -55,6 +56,7 @@ class QuizHandler extends Database {
             return ['error' => 'Datenbankfehler: ' . $e->getMessage()];
         }
     }
+    
 
     private function saveGameResultFromRequest(array $data): array {
         $playerId       = $data['playerId'] ?? null;
