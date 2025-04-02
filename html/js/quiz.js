@@ -130,8 +130,8 @@ function showFinalScore() {
     section.scrollIntoView({ behavior: 'smooth' });
 
     setTimeout(() => {
-        document.getElementById('gameResult').focus();
-    }, 250);
+        document.getElementById('finalScore').focus();
+    }, 400);
 }
 
 function resetGame() {
