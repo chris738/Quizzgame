@@ -1,19 +1,15 @@
-name: Deploy on Push (stanley)
+name: Deploy Stanley Branch
 
 on:
   push:
     branches:
-      - stanley  # Bei Pushes auf Branch "stanley" auslösen
+      - stanley
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
-    steps:
-      # (Optional) Checkout-Schritt – nur erforderlich, falls du Code in diesem Workflow selbst benötigst
-      - name: Check out code
-        uses: actions/checkout@v3
 
+<<<<<<< HEAD
       # SSH in den Server und führe dort die Deployment-Befehle aus
       - name: SSH Deploy
         uses: appleboy/ssh-action@v0.1.8
@@ -41,6 +37,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+=======
+>>>>>>> main
     steps:
     - name: Checkout Code
       uses: actions/checkout@v3

@@ -20,8 +20,6 @@ T = Die Ergebnis-Zeit ist benannt: Bis zum 08.04.2025
 
 # UseCase Diagramm
 
-
-
 ```mermaid
 graph TD;
     Spieler[Spieler] -->|meldet sich an| Einloggen[Einloggen];
@@ -36,3 +34,4 @@ graph TD;
     Administrator -->|sieht Spielstatistiken ein| SpielstatistikenEinsehen[Spielstatistiken einsehen];
 
 ```
+# Klassen Diagram

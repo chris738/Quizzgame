@@ -19,4 +19,8 @@ jobs:
         host: tuxchen.de
         username: deploy
         key: ${{ secrets.SERVER_SSH_KEY }}
+<<<<<<< HEAD
         script: /usr/local/bin/deploy-main.sh
+=======
+        script: /usr/local/bin/deploy-main.sh
+>>>>>>> main
