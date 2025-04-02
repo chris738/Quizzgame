@@ -110,16 +110,6 @@ function nextQuestion() {
     }
 }
 
-function showHighscoreSection() {
-    loadHighscore();
-
-    const section = document.getElementById('highscoreSection');
-    section.style.display = 'block';
-
-    // Optional: Scroll zum Highscore-Bereich
-    section.scrollIntoView({ behavior: 'smooth' });
-}
-
 function showFinalScore() {
     // Quiz-Bereich ausblenden
     document.getElementById('quizContainer').style.display = 'none';
@@ -130,7 +120,14 @@ function showFinalScore() {
     document.getElementById('finalScore').textContent = 
         `Du hast ${maxQuestions} Fragen beantwortet und insgesamt ${totalScore} Punkte erreicht!`;
 
-    showHighscoreSection();
+    //lade den hightscore aus der js/hightscore.js
+    loadHighscore();
+
+    const section = document.getElementById('highscoreSection');
+    section.style.display = 'block';
+    
+    // Optional: Scroll zum Highscore-Bereich
+    section.scrollIntoView({ behavior: 'smooth' });
 
     setTimeout(() => {
         document.getElementById('gameResult').focus();
