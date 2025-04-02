@@ -1,1 +1,22 @@
+name: Deploy Stanley Branch
 
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Execute Remote Deploy
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: tuxchen.de
+        username: deploy
+        key: ${{ secrets.SSH_KEY }}
+        script: /usr/local/bin/deploy-main.sh
