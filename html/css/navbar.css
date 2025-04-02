@@ -27,3 +27,9 @@
     background-color: #ddd;
     color: black;
 }
+
+.navbar a.active {
+    font-weight: bold;
+    text-decoration: underline;
+    color: #ff6600;
+  }

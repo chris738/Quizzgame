@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-  <meta charset="UTF-8" />
-  <title>Navigation</title>
-  <link rel="stylesheet" href="css/navbar.css">
-</head>
-<body>
+<!-- navbar.html -->
+<style>
+    @import url('css/navbar.css');
+  </style>
+  
   <nav class="navbar" aria-label="Hauptnavigation">
     <ul>
       <li><a href="index.html">Startseite</a></li>
@@ -15,5 +12,16 @@
       <li><a href="login.html">Login</a></li>
     </ul>
   </nav>
-</body>
-</html>
+  
+  <script>
+    // Markiere die aktuelle Seite automatisch
+    const links = document.querySelectorAll('.navbar a');
+    const path = location.pathname.split('/').pop();
+  
+    links.forEach(link => {
+      if (link.getAttribute('href') === path) {
+        link.classList.add('active');
+      }
+    });
+  </script>
+  
