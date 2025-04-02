@@ -126,6 +126,7 @@ function showFinalScore() {
 
     // Ergebnis-Bereich sichtbar machen
     document.getElementById('gameResult').style.display = 'block';
+    document.getElementById('restartBtn').style.display = 'block';
     document.getElementById('finalScore').textContent = 
         `Du hast ${maxQuestions} Fragen beantwortet und insgesamt ${totalScore} Punkte erreicht!`;
 
