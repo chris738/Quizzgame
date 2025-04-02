@@ -26,6 +26,7 @@ function selectCategory(categoryName) {
     questionCount = 0;
     totalScore = 0;      // Score zurücksetzen, falls noch was vom letzten Spiel war
     loadNewQuestion();
+    setNavVisibility(false);
 }
 
 function loadNewQuestion() {
@@ -135,6 +136,8 @@ function showFinalScore() {
 }
 
 function resetGame() {
+    // Navigations bereich wieder einblenden
+    setNavVisibility(true);
     // Ergebnis-Bereich ausblenden
     document.getElementById('gameResult').style.display = 'none';
     // Kategorieauswahl wieder anzeigen
@@ -199,7 +202,19 @@ function resetUI() {
     }, 250);
 }
 
+function setNavVisibility(visible) {
+    const hiddenLinks = document.querySelectorAll('nav[aria-label="Hauptnavigation"] a[aria-hidden="true"]');
+    hiddenLinks.forEach(link => {
+      if (visible) {
+        link.removeAttribute('aria-hidden');
+      } else {
+        link.setAttribute('aria-hidden', 'true');
+      }
+    });
+  }
+
 document.addEventListener('DOMContentLoaded', () => {
+    setNavVisibility(false);
     // Zu Beginn: erst mal nur Kategorie-Auswahl anzeigen.
     // => categorySelection ist schon sichtbar (per CSS),
     //    quizContainer & gameResult sind hidden.
