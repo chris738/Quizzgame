@@ -121,6 +121,14 @@ function nextQuestion() {
     }
 }
 
+function showHighscoreSection() {
+    const section = document.getElementById('highscoreSection');
+    section.style.display = 'block';
+
+    // Optional: Scroll zum Highscore-Bereich
+    section.scrollIntoView({ behavior: 'smooth' });
+}
+
 // --------------------
 // Endergebnis anzeigen
 // --------------------
@@ -132,6 +140,8 @@ function showFinalScore() {
     document.getElementById('gameResult').style.display = 'block';
     document.getElementById('finalScore').textContent = 
         `Du hast ${maxQuestions} Fragen beantwortet und insgesamt ${totalScore} Punkte erreicht!`;
+
+    showHighscoreSection();
 }
 
 // --------------------
