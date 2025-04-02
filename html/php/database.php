@@ -37,8 +37,8 @@ class Database implements DatabaseInterface {
             ORDER BY 
                 RAND() 
             LIMIT 1";
-            $stmt->bindParam(':category', $category);
             $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':category', $category);
         } else {
             $sql = "
             SELECT 
