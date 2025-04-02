@@ -22,7 +22,7 @@
 	    CREATE TABLE Question (
 	        QuestionID INT AUTO_INCREMENT PRIMARY KEY,
 	        Question VARCHAR(1000) NOT NULL,
-		Category VARCHAR(100) NOT NULL,
+		    Category VARCHAR(100) NOT NULL,
 	        Answer1 VARCHAR(1000) NOT NULL,
 	        Answer2 VARCHAR(1000) NOT NULL,
 	        Answer3 VARCHAR(1000) NOT NULL,
@@ -31,13 +31,41 @@
 	    );
 	
 	-- Tabelle: player
-	    CREATE TABLE player (
-	        PlayerID INT AUTO_INCREMENT PRIMARY KEY,
-	        name VARCHAR(100) NOT NULL,
-			password VARCHAR(1000) NOT NULL,
-	        points Int (255) DEFAULT 0
-	    );
+    CREATE TABLE player (
+        PlayerID INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(100) NOT NULL UNIQUE,
+        password VARCHAR(1000) NOT NULL,
+        points INT DEFAULT 0
+    );
+
+
+
+    -- Neue Tabelle: Game (gespielte Spiele)
+    CREATE TABLE Game (
+        GameID INT AUTO_INCREMENT PRIMARY KEY,
+        PlayerID INT NOT NULL,
+        QuestionID INT NOT NULL,
+        SelectedAnswer INT NOT NULL,
+        CorrectAnswer INT NOT NULL,
+        IsCorrect BOOLEAN NOT NULL,
+        Score INT NULL,
+        Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (PlayerID) REFERENCES player(PlayerID),
+        FOREIGN KEY (QuestionID) REFERENCES Question(QuestionID)
+    );
 		
+
+    CREATE OR REPLACE VIEW TopHighscores AS
+    SELECT 
+        p.name AS username,
+        SUM(g.Score) AS totalScore
+    FROM Game g
+    JOIN player p ON g.PlayerID = p.PlayerID
+    WHERE g.Score IS NOT NULL
+    GROUP BY g.PlayerID
+    ORDER BY totalScore DESC;
+
+
 DELIMITER $$
 
 CREATE PROCEDURE InsertNewPlayer(

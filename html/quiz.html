@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Quiz</title>
+    <link rel="stylesheet" href="css/quiz.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <script defer src="js/quiz.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" aria-label="Hauptnavigation">
+        <ul>
+            <li><a href="index.html">Startseite</a></li>
+            <li><a href="quiz.html">Quiz starten</a></li>
+            <li><a href="admin.html">Admin-Panel</a></li>
+            <li><a href="highscore.html">Highscores</a></li>
+            <li><a href="login.html">Login</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hauptinhalt -->
+    <main class="quiz-container" id="mainContent">
+
+        <div id="Question" 
+            class="question-text" 
+            tabindex="-1" 
+            aria-live="polite">
+            Frage
+        </div>
+
+        <!-- Antwortmöglichkeiten mit Klick-Handler -->
+        <div class="answers">
+            <div class="answer"
+                 data-color="answer1"
+                 role="button"
+                 tabindex="0"
+                 onclick="handleAnswerClick('answer1')"
+                 onkeydown="if (event.key === 'Enter' || event.key === ' ') handleAnswerClick('answer1')">
+                <span id="answer1">Antwort 1</span>
+            </div>
+            <div class="answer"
+                 data-color="answer2"
+                 role="button"
+                 tabindex="0"
+                 onclick="handleAnswerClick('answer2')"
+                 onkeydown="if (event.key === 'Enter' || event.key === ' ') handleAnswerClick('answer2')">
+                <span id="answer2">Antwort 2</span>
+            </div>
+            <div class="answer"
+                 data-color="answer3"
+                 role="button"
+                 tabindex="0"
+                 onclick="handleAnswerClick('answer3')"
+                 onkeydown="if (event.key === 'Enter' || event.key === ' ') handleAnswerClick('answer3')">
+                <span id="answer3">Antwort 3</span>
+            </div>
+            <div class="answer"
+                 data-color="answer4"
+                 role="button"
+                 tabindex="0"
+                 onclick="handleAnswerClick('answer4')"
+                 onkeydown="if (event.key === 'Enter' || event.key === ' ') handleAnswerClick('answer4')">
+                <span id="answer4">Antwort 4</span>
+            </div>
+        </div>
+
+        <!-- Barrierefreie Rückmeldung -->
+        <div id="feedback" role="status" aria-live="polite"></div>
+
+        <!-- Button für neue Frage -->
+        <div id="newQuestionBtn"
+            class="button"
+            role="button"
+            style="display: none; margin-top: 20px;"
+            onclick="loadNewQuestion()"
+            onkeydown="if (event.key === 'Enter' || event.key === ' ') loadNewQuestion()">
+            Neue Frage
+        </div>
+
+   
+    </main>
+</body>
+</html>

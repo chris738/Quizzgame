@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login</title>
+  <link rel="stylesheet" href="css/login.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <script src="js/login.js"></script>
+</head>
+<body>
+
+    <nav class="navbar" aria-label="Hauptnavigation">
+        <ul>
+            <li><a href="index.html">Startseite</a></li>
+            <li><a href="quiz.html">Quiz starten</a></li>
+            <li><a href="admin.html">Admin-Panel</a></li>
+            <li><a href="highscore.html">Highscores</a></li>
+            <li><a href="login.html">Login</a></li>
+        </ul>
+    </nav>
+    
+        <div class="container">
+          <h1>Login</h1>
+          <form onsubmit="handleLogin(); return false;">
+            <input type="text" id="name" placeholder="Name" required />
+            <input type="password" id="password" placeholder="Passwort" required />
+            <button type="submit">Einloggen</button>
+          </form>
+        </div>
+      </body>
+      
+</html>
