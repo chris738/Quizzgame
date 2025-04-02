@@ -33,3 +33,10 @@
     text-decoration: underline;
     color: #ff6600;
   }
+
+  .navbar .nav-username {
+    color: white;
+    font-weight: bold;
+    margin-left: auto;
+    padding: 0 1rem;
+  }

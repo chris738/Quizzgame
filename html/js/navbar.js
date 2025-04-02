@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (data.success && data.username) {
           const userElement = document.getElementById('nav-username');
           if (userElement) {
-            userElement.textContent = '👤 ' + data.username;
+            userElement.textContent = '🧑 ' + data.username;
           }
         }
       })
