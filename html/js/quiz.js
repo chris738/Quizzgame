@@ -157,5 +157,5 @@ function resetUI() {
 
 // Beim Laden der Seite die erste Frage holen
 document.addEventListener('DOMContentLoaded', () => {
-    getQuestions();
+    getQuestions(selectedCategory);
 });
