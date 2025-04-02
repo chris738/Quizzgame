@@ -52,7 +52,7 @@ function handleGetUsername(): void {
         $user = $db->getUserById($playerId);
 
         if ($user) {
-            echo json_encode(['success' => true, 'username' => $user['username']]);
+            echo json_encode(['success' => true, 'username' => $user['name']]);
         } else {
             echo json_encode(['success' => false, 'message' => 'Benutzer nicht gefunden']);
         }
