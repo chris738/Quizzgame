@@ -1,19 +1,15 @@
-name: Deploy on Push (stanley)
+name: Deploy Stanley Branch
 
 on:
   push:
     branches:
-      - stanley  # Bei Pushes auf Branch "stanley" auslösen
+      - stanley
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
-    steps:
-      # (Optional) Checkout-Schritt – nur erforderlich, falls du Code in diesem Workflow selbst benötigst
-      - name: Check out code
-        uses: actions/checkout@v3
 
+<<<<<<< HEAD
       # SSH in den Server und führe dort die Deployment-Befehle aus
       - name: SSH Deploy
         uses: appleboy/ssh-action@v0.1.8
@@ -30,3 +26,16 @@ jobs:
               && sudo chmod -R 777 /var/dev/quizzgame \
               && sudo docker restart Quizzgame_Webserver_SQL_Dev
             )
+=======
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Execute Remote Deploy
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: tuxchen.de
+        username: deploy
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        script: /usr/local/bin/deploy-stanley.sh
+>>>>>>> 607100a8ba0fb1b3e57d405d67716a9548177ec5
