@@ -54,12 +54,13 @@ function loadNewQuestion() {
                 document.getElementById('answer3').textContent = data.info.antwort["3"];
                 document.getElementById('answer4').textContent = data.info.antwort["4"];
 
-                // UI zurücksetzen
-                resetUI();
                 questionStartTime = Date.now();
 
                 // Frageanzahl hochzählen
                 questionCount++;
+
+                // UI zurücksetzen
+                resetUI();
             } else {
                 console.error('Fehler:', data.info ? data.info.error : data);
             }
@@ -210,7 +211,11 @@ function resetUI() {
 
     // Fokus auf Frage setzen
     const questionHeading = document.getElementById('Question');
-    questionHeading.focus();
+
+
+    setTimeout(() => {
+        questionHeading.focus();
+    }, 300);
 }
 
 // --------------------
