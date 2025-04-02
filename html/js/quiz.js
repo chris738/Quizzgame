@@ -112,14 +112,12 @@ function nextQuestion() {
 
 function showHighscoreSection() {
     loadHighscore();
-    
+
     const section = document.getElementById('highscoreSection');
     section.style.display = 'block';
 
     // Optional: Scroll zum Highscore-Bereich
     section.scrollIntoView({ behavior: 'smooth' });
-
-    document.getElementById('gameResult').focus();
 }
 
 function showFinalScore() {
@@ -133,6 +131,10 @@ function showFinalScore() {
         `Du hast ${maxQuestions} Fragen beantwortet und insgesamt ${totalScore} Punkte erreicht!`;
 
     showHighscoreSection();
+
+    setTimeout(() => {
+        document.getElementById('gameResult').focus();
+    }, 250);
 }
 
 function resetGame() {
