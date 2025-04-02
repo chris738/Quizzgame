@@ -118,7 +118,7 @@ class Database implements DatabaseInterface {
     }
 
     public function getUserById($id) {
-        $stmt = $this->conn->prepare("SELECT PlayerID, username FROM player WHERE PlayerID = ?");
+        $stmt = $this->conn->prepare("SELECT PlayerID, name FROM player WHERE PlayerID = ?");
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
