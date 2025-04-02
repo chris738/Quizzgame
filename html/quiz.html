@@ -9,7 +9,6 @@
     <script defer src="js/quiz.js"></script>
 </head>
 <body>
-
     <!-- Navigation -->
     <nav class="navbar" aria-label="Hauptnavigation">
         <ul>
@@ -21,59 +20,52 @@
         </ul>
     </nav>
 
-    <!-- Kategorieauswahl -->
-    <div class="category-select" style="margin-bottom: 20px;">
-        <label for="categorySelect">Kategorie:</label>
-        <select id="categorySelect" onchange="changeCategory()" aria-label="Kategorie auswählen">
-            <option value="">Alle</option>
-            <option value="Allgemein">Allgemein</option>
-            <option value="Musik">Musik</option>
-            <option value="Gaming">Gaming</option>
-            <option value="Europa">Europa</option>
-            <option value="Medien">Medien</option>
-            <option value="Technik">Technik</option>
-        </select>
+    <!-- 1) Kategorieauswahl -->
+    <div id="categorySelection">
+        <h2>Wähle eine Kategorie</h2>
+        <div class="category-grid">
+            <div class="category-card" onclick="selectCategory('Allgemein')">Allgemein</div>
+            <div class="category-card" onclick="selectCategory('Musik')">Musik</div>
+            <div class="category-card" onclick="selectCategory('Gaming')">Gaming</div>
+            <div class="category-card" onclick="selectCategory('Europa')">Europa</div>
+            <div class="category-card" onclick="selectCategory('Medien')">Medien</div>
+            <div class="category-card" onclick="selectCategory('Technik')">Technik</div>
+        </div>
     </div>
 
-
-    <!-- Hauptinhalt -->
-    <main class="quiz-container" id="mainContent">
-
+    <!-- 2) Quiz-Bereich (zunächst versteckt) -->
+    <main class="quiz-container" id="quizContainer" style="display:none;">
         <div id="Question" 
-            class="question-text" 
-            tabindex="-1" 
-            aria-live="polite">
+             class="question-text" 
+             tabindex="-1" 
+             aria-live="polite">
             Frage
         </div>
 
         <!-- Antwortmöglichkeiten mit Klick-Handler -->
         <div class="answers">
-            <div class="answer"
-                 data-color="answer1"
+            <div class="answer" data-color="answer1"
                  role="button"
                  tabindex="0"
                  onclick="handleAnswerClick('answer1')"
                  onkeydown="if (event.key === 'Enter' || event.key === ' ') handleAnswerClick('answer1')">
                 <span id="answer1">Antwort 1</span>
             </div>
-            <div class="answer"
-                 data-color="answer2"
+            <div class="answer" data-color="answer2"
                  role="button"
                  tabindex="0"
                  onclick="handleAnswerClick('answer2')"
                  onkeydown="if (event.key === 'Enter' || event.key === ' ') handleAnswerClick('answer2')">
                 <span id="answer2">Antwort 2</span>
             </div>
-            <div class="answer"
-                 data-color="answer3"
+            <div class="answer" data-color="answer3"
                  role="button"
                  tabindex="0"
                  onclick="handleAnswerClick('answer3')"
                  onkeydown="if (event.key === 'Enter' || event.key === ' ') handleAnswerClick('answer3')">
                 <span id="answer3">Antwort 3</span>
             </div>
-            <div class="answer"
-                 data-color="answer4"
+            <div class="answer" data-color="answer4"
                  role="button"
                  tabindex="0"
                  onclick="handleAnswerClick('answer4')"
@@ -85,17 +77,23 @@
         <!-- Barrierefreie Rückmeldung -->
         <div id="feedback" role="status" aria-live="polite"></div>
 
-        <!-- Button für neue Frage -->
+        <!-- Button für nächste Frage -->
         <div id="newQuestionBtn"
-            class="button"
-            role="button"
-            style="display: none; margin-top: 20px;"
-            onclick="loadNewQuestion()"
-            onkeydown="if (event.key === 'Enter' || event.key === ' ') loadNewQuestion()">
-            Neue Frage
+             class="button"
+             role="button"
+             style="display: none; margin-top: 20px;"
+             onclick="nextQuestion()"
+             onkeydown="if (event.key === 'Enter' || event.key === ' ') nextQuestion()">
+            Nächste Frage
         </div>
-
-   
     </main>
+
+    <!-- 3) Endergebnis (zunächst versteckt) -->
+    <div id="gameResult" style="display:none; text-align: center;">
+        <h2>Spiel beendet!</h2>
+        <p id="finalScore"></p>
+        <button onclick="resetGame()">Nochmal spielen</button>
+    </div>
+
 </body>
 </html>

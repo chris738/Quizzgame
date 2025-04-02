@@ -105,3 +105,29 @@ input {
 .answer.selected {
     border: 2px solid #4CAF50; /* oder was dir gefällt */
 }
+
+/* 3x2 Grid für Kategorien */
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 Spalten */
+    gap: 20px;
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+.category-card {
+    background: #ffffff;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.category-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+}

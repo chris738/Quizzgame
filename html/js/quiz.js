@@ -1,23 +1,49 @@
+// --------------------
 // Globale Variablen
+// --------------------
 let currentQuestionID = null;
 let correctAnswer = null;
-let hasAnswered = false; // Merker, ob schon geantwortet wurde
+let hasAnswered = false;
 let currentPlayerId = parseInt(localStorage.getItem('playerId')) || 0;
-let questionStartTime = null; // Startzeit merken
-let selectedCategory = null; //auswahl der Kategorie
+let questionStartTime = null;
 
-// Frage vom Server holen
-function getQuestions(category = null) {
+let selectedCategory = null;    // gewählte Kategorie
+let questionCount = 0;          // wie viele Fragen wurden schon gestellt?
+const maxQuestions = 4;         // wie viele Fragen pro Spiel?
+let totalScore = 0;             // gesamter Score über alle Fragen
+
+// --------------------
+// Kategorie auswählen
+// --------------------
+function selectCategory(categoryName) {
+    // Speichere die Auswahl
+    selectedCategory = categoryName;
+
+    // Kategorieauswahl ausblenden
+    document.getElementById('categorySelection').style.display = 'none';
+
+    // Quiz-Bereich einblenden
+    document.getElementById('quizContainer').style.display = 'block';
+
+    // Erste Frage laden
+    questionCount = 0;
+    totalScore = 0;      // Score zurücksetzen, falls noch was vom letzten Spiel war
+    loadNewQuestion();
+}
+
+// --------------------
+// Neue Frage laden
+// --------------------
+function loadNewQuestion() {
     let url = 'php/quiz.php';
-    if (category) {
-        url += '?category=' + encodeURIComponent(category);
+    if (selectedCategory) {
+        url += '?category=' + encodeURIComponent(selectedCategory);
     }
 
     fetch(url)
         .then(response => response.json())
         .then(data => {
             if (data.info && !data.info.error) {
-                // ID und richtige Antwort aus JSON merken
                 currentQuestionID = data.info.id;
                 correctAnswer = parseInt(data.info.richtig, 10);
 
@@ -31,6 +57,9 @@ function getQuestions(category = null) {
                 // UI zurücksetzen
                 resetUI();
                 questionStartTime = Date.now();
+
+                // Frageanzahl hochzählen
+                questionCount++;
             } else {
                 console.error('Fehler:', data.info ? data.info.error : data);
             }
@@ -38,25 +67,99 @@ function getQuestions(category = null) {
         .catch(error => console.error('Fehler beim Fetch:', error));
 }
 
-function changeCategory() {
-    // Neue Frage mit neuer Kategorie laden
-    loadNewQuestion();
+// --------------------
+// Antwortklick
+// --------------------
+function handleAnswerClick(spanID) {
+    if (hasAnswered) return;
 
-    // Button ausblenden und zurücksetzen
+    const selectedAnswer = parseInt(spanID.replace('answer',''), 10);
+    const feedbackDiv = document.getElementById('feedback');
+
+    const isCorrect = (selectedAnswer === correctAnswer);
+    const score = calculateScore(isCorrect);
+    if (isCorrect) {
+        document.querySelector(`[data-color="answer${selectedAnswer}"]`)
+                .classList.add('correct');
+        feedbackDiv.textContent = `Richtig! +${score} Punkte`;
+    } else {
+        document.querySelector(`[data-color="answer${selectedAnswer}"]`)
+                .classList.add('wrong');
+        document.querySelector(`[data-color="answer${correctAnswer}"]`)
+                .classList.add('correct');
+        const correctText = document.getElementById(`answer${correctAnswer}`).textContent;
+        feedbackDiv.textContent = "Falsch! Richtig wäre: " + correctText;
+    }
+
+    // Score zum Gesamtscore addieren
+    totalScore += score;
+
+    hasAnswered = true;
+
+    // "Nächste Frage"-Button einblenden
     const newQuestionBtn = document.getElementById('newQuestionBtn');
-    newQuestionBtn.style.display = 'none';
-    hasAnswered = false;
+    newQuestionBtn.style.display = 'inline-block';
+
+    // Barrierefreiheit
+    feedbackDiv.setAttribute('tabindex', '0');
+    newQuestionBtn.setAttribute('tabindex', '1');
+    feedbackDiv.focus();
+
+    // Spielstand speichern (Backend-Logik)
+    saveGameResult(currentPlayerId, currentQuestionID, selectedAnswer, correctAnswer, score);
 }
 
+// --------------------
+// Aufruf durch "Nächste Frage" Button
+// --------------------
+function nextQuestion() {
+    // Wenn wir unsere max. Anzahl an Fragen erreicht haben, dann Endergebnis anzeigen
+    if (questionCount >= maxQuestions) {
+        showFinalScore();
+    } else {
+        loadNewQuestion();
+    }
+}
+
+// --------------------
+// Endergebnis anzeigen
+// --------------------
+function showFinalScore() {
+    // Quiz-Bereich ausblenden
+    document.getElementById('quizContainer').style.display = 'none';
+
+    // Ergebnis-Bereich sichtbar machen
+    document.getElementById('gameResult').style.display = 'block';
+    document.getElementById('finalScore').textContent = 
+        `Du hast ${maxQuestions} Fragen beantwortet und insgesamt ${totalScore} Punkte erreicht!`;
+}
+
+// --------------------
+// Spiel neu starten
+// --------------------
+function resetGame() {
+    // Ergebnis-Bereich ausblenden
+    document.getElementById('gameResult').style.display = 'none';
+    // Kategorieauswahl wieder anzeigen
+    document.getElementById('categorySelection').style.display = 'block';
+}
+
+// --------------------
+// Punkte berechnen
+// --------------------
 function calculateScore(isCorrect) {
     if (!isCorrect) return 0;
-    const responseTime = Math.floor((Date.now() - questionStartTime) / 1000); // in Sekunden
+    const responseTime = Math.floor((Date.now() - questionStartTime) / 1000);
     const basePoints = 100;
+    // z.B. Bonus abhängig von der Schnelligkeit
     const bonusPoints = Math.max(0, 100 - responseTime * (100 / 60));
     return Math.round(basePoints + bonusPoints);
 }
 
-function saveGameResult(playerId, currentQuestionID, selectedAnswer, correctAnswer, score) {
+// --------------------
+// Spielstand speichern
+// --------------------
+function saveGameResult(playerId, questionID, selectedAnswer, correctAnswer, score) {
     fetch('php/quiz.php', {
         method: 'POST',
         headers: {
@@ -64,98 +167,49 @@ function saveGameResult(playerId, currentQuestionID, selectedAnswer, correctAnsw
         },
         body: JSON.stringify({
             playerId: playerId,
-            questionId: currentQuestionID,
+            questionId: questionID,
             selectedAnswer: selectedAnswer,
             correctAnswer: correctAnswer,
             score: score
         })
-    }).then(response => response.json())
-      .then(data => {
-          if (!data.success) {
-              console.error("Fehler beim Speichern des Spiels:", data.message);
-          }
-      })
-      .catch(error => {
-          console.error("Netzwerkfehler:", error);
-      });
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (!data.success) {
+            console.error("Fehler beim Speichern des Spiels:", data.message);
+        }
+    })
+    .catch(error => {
+        console.error("Netzwerkfehler:", error);
+    });
 }
 
-function handleAnswerClick(spanID) {
-    // Falls schon beantwortet, nichts tun
-    if (hasAnswered) return;
-
-    // "answer1" -> wir wollen die Zahl als Integer (1,2,3,4)
-    const selectedAnswer = parseInt(spanID.replace('answer',''), 10);
-
-    // Das Element für Feedback
-    const feedbackDiv = document.getElementById('feedback');
-
-    //berechnet den score
-    const isCorrect = selectedAnswer === correctAnswer;
-    const score = calculateScore(isCorrect);
-
-    // Prüfung, ob richtig
-    if (selectedAnswer === correctAnswer) {
-        document.querySelector(`[data-color="answer${selectedAnswer}"]`)
-                .classList.add('correct');
-                feedbackDiv.textContent = `Richtig beantwortet! Dein Score: ${score}`;
-    } else {
-        // Falsche Antwort rot markieren
-        document.querySelector(`[data-color="answer${selectedAnswer}"]`)
-                .classList.add('wrong');
-        // Richtige Antwort grün markieren
-        document.querySelector(`[data-color="answer${correctAnswer}"]`)
-                .classList.add('correct');
-
-        // Zusätzlich: Text zur richtigen Antwort aus dem DOM auslesen
-        const correctText = document.getElementById(`answer${correctAnswer}`).textContent;
-        feedbackDiv.textContent = "Leider falsch! Die richtige Antwort war: " + correctText;
-    }
-
-    // Merken, dass beantwortet wurde
-    hasAnswered = true;
-
-    // Button "Neue Frage" einblenden und fokussieren
-    const newQuestionBtn = document.getElementById('newQuestionBtn');
-    newQuestionBtn.style.display = 'inline-block';
-
-    // ändere Tabstop und focus für die Baarierfreiheit
-    feedbackDiv.setAttribute('tabindex', '0');
-    newQuestionBtn.setAttribute('tabindex', '1');
-    feedback.focus();
-
-    //speichere den spielstand auf den Server
-    saveGameResult(currentPlayerId, currentQuestionID, selectedAnswer, correctAnswer, score);
-}
-
-// Neue Frage laden
-function loadNewQuestion() {
-    const categorySelect = document.getElementById('categorySelect');
-    const selectedCategory = categorySelect ? categorySelect.value : null;
-    getQuestions(selectedCategory);
-}
-
-// Zurücksetzen, damit bei neuer Frage kein altes CSS hängenbleibt
+// --------------------
+// UI (Antwortfarben, Feedback) zurücksetzen
+// --------------------
 function resetUI() {
     // CSS-Klassen entfernen
     document.querySelectorAll('.answer').forEach(answerDiv => {
         answerDiv.classList.remove('correct', 'wrong');
     });
-    // Feedback löschen
     document.getElementById('feedback').textContent = '';
-
-    // Merker zurücksetzen
     hasAnswered = false;
-    
-    // Button ausblenden
+
+    // "Nächste Frage" Button ausblenden
     document.getElementById('newQuestionBtn').style.display = 'none';
 
-    //focus auf das erste element setzen
+    // Fokus auf Frage setzen
     const questionHeading = document.getElementById('Question');
     questionHeading.focus();
 }
 
-// Beim Laden der Seite die erste Frage holen
+// --------------------
+// Seite fertig geladen
+// --------------------
 document.addEventListener('DOMContentLoaded', () => {
-    getQuestions(selectedCategory);
+    // Zu Beginn: erst mal nur Kategorie-Auswahl anzeigen.
+    // => categorySelection ist schon sichtbar (per CSS),
+    //    quizContainer & gameResult sind hidden.
+    // => Mach also hier nichts weiter, außer falls du
+    //    beim Laden direkt etwas debuggen willst.
 });
