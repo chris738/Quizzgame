@@ -4,6 +4,7 @@ let correctAnswer = null;
 let hasAnswered = false; // Merker, ob schon geantwortet wurde
 let currentPlayerId = parseInt(localStorage.getItem('playerId')) || 0;
 let questionStartTime = null; // Startzeit merken
+let selectedCategory = null; //auswahl der Kategorie
 
 // Frage vom Server holen
 function getQuestions(category = null) {
