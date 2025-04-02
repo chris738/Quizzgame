@@ -112,6 +112,9 @@ function nextQuestion() {
 }
 
 function showFinalScore() {
+    // Navigations bereich wieder einblenden
+    setNavVisibility(true);
+
     // Quiz-Bereich ausblenden
     document.getElementById('quizContainer').style.display = 'none';
 
@@ -137,7 +140,7 @@ function showFinalScore() {
 
 function resetGame() {
     // Navigations bereich wieder einblenden
-    setNavVisibility(true);
+    setNavVisibility(false);
     // Ergebnis-Bereich ausblenden
     document.getElementById('gameResult').style.display = 'none';
     // Kategorieauswahl wieder anzeigen
@@ -183,6 +186,8 @@ function saveGameResult(playerId, questionID, selectedAnswer, correctAnswer, sco
 }
 
 function resetUI() {
+    setNavVisibility(false);
+
     // CSS-Klassen entfernen
     document.querySelectorAll('.answer').forEach(answerDiv => {
         answerDiv.classList.remove('correct', 'wrong');
@@ -201,17 +206,6 @@ function resetUI() {
         questionHeading.focus();
     }, 250);
 }
-
-function setNavVisibility(visible) {
-    const hiddenLinks = document.querySelectorAll('nav[aria-label="Hauptnavigation"] a[aria-hidden="true"]');
-    hiddenLinks.forEach(link => {
-      if (visible) {
-        link.removeAttribute('aria-hidden');
-      } else {
-        link.setAttribute('aria-hidden', 'true');
-      }
-    });
-  }
 
 document.addEventListener('DOMContentLoaded', () => {
     setNavVisibility(false);
