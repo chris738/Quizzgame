@@ -29,8 +29,8 @@
         </div>
     </div>
 
-    <!-- 2) Quiz-Bereich (zunächst versteckt) aria-live="polite"-->
-    <main class="quiz-container" id="quizContainer" style="display:none;">
+    <!-- 2) Quiz-Bereich (zunächst versteckt) aria-live="polite" //war main statt div-->
+    <div class="quiz-container" id="quizContainer" style="display:none;">
         <div id="Question" 
              class="question-text" 
              tabindex="-1">
@@ -76,7 +76,7 @@
              onkeydown="if (event.key === 'Enter' || event.key === ' ') nextQuestion()">
             Nächste Frage
         </div>
-    </main>
+    </div>
 
     <!-- 3) Endergebnis (zunächst versteckt) -->
     <div id="gameResult" style="display:none; text-align: center;">
