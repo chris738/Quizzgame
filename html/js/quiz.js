@@ -37,6 +37,15 @@ function getQuestions(category = null) {
         .catch(error => console.error('Fehler beim Fetch:', error));
 }
 
+function changeCategory() {
+    // Neue Frage mit neuer Kategorie laden
+    loadNewQuestion();
+
+    // Button ausblenden und zurücksetzen
+    const newQuestionBtn = document.getElementById('newQuestionBtn');
+    newQuestionBtn.style.display = 'none';
+    hasAnswered = false;
+}
 
 function calculateScore(isCorrect) {
     if (!isCorrect) return 0;
