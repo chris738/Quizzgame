@@ -38,6 +38,7 @@ class Database implements DatabaseInterface {
                 RAND() 
             LIMIT 1";
             $stmt->bindParam(':category', $category);
+            $stmt = $this->conn->prepare($sql);
         } else {
             $sql = "
             SELECT 
@@ -47,8 +48,8 @@ class Database implements DatabaseInterface {
             ORDER BY 
                 RAND() 
             LIMIT 1";
+            $stmt = $this->conn->prepare($sql);
         }
-        $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
