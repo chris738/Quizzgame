@@ -9,36 +9,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-<<<<<<< HEAD
-      # SSH in den Server und führe dort die Deployment-Befehle aus
-      - name: SSH Deploy
-        uses: appleboy/ssh-action@v0.1.8
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          script: |
-            time (
-              sudo rm -rf /var/dev/quizzgame \
-              && sudo mkdir -p /var/dev/quizzgame \
-              && sudo chmod 777 /var/dev/quizzgame \
-              && git clone -b stanley --single-branch git@github.com:chris738/Quizzgame.git /var/dev/quizzgame \
-              && sudo chmod -R 777 /var/dev/quizzgame \
-              && sudo docker restart Quizzgame_Webserver_SQL
-            )
-name: Deploy Stanley Branch
-
-on:
-  push:
-    branches:
-      - stanley
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-=======
->>>>>>> main
     steps:
     - name: Checkout Code
       uses: actions/checkout@v3
