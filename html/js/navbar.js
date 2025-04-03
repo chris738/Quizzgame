@@ -46,3 +46,19 @@ document.addEventListener('DOMContentLoaded', () => {
       .catch(err => console.error('Fehler beim Laden des Benutzernamens:', err));
   }
   
+  window.setNavVisibility = function (visible) {
+    const toggleLinks = document.querySelectorAll(
+      'nav[aria-label="Hauptnavigation"] a[href="index.html"],' +
+      'nav[aria-label="Hauptnavigation"] a[href="quiz.html"],' +
+      'nav[aria-label="Hauptnavigation"] a[href="highscore.html"]'
+    );
+  
+    toggleLinks.forEach(link => {
+      if (visible) {
+        link.removeAttribute('aria-hidden');
+      } else {
+        link.setAttribute('aria-hidden', 'true');
+      }
+    });
+  };
+  
