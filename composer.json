@@ -3,7 +3,7 @@
       "phpunit/phpunit": "^10"
     },
     "autoload": {
-      "classmap": ["php/", "tests/"]
+      "classmap": ["html/php/", "tests/"]
     }
   }
   
