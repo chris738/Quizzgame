@@ -29,40 +29,35 @@
         </div>
     </div>
 
-    <!-- 2) Quiz-Bereich (zunächst versteckt) -->
-    <main class="quiz-container" id="quizContainer" style="display:none;">
+    <!-- 2) Quiz-Bereich (zunächst versteckt) aria-live="polite" //war main statt div-->
+    <div class="quiz-container" id="quizContainer" style="display:none;">
         <div id="Question" 
              class="question-text" 
-             tabindex="-1" 
-             aria-live="polite">
+             tabindex="-1">
             Frage
         </div>
 
         <!-- Antwortmöglichkeiten mit Klick-Handler -->
         <div class="answers">
             <div class="answer" data-color="answer1"
-                 role="button"
                  tabindex="0"
                  onclick="handleAnswerClick('answer1')"
                  onkeydown="if (event.key === 'Enter' || event.key === ' ') handleAnswerClick('answer1')">
                 <span id="answer1">Antwort 1</span>
             </div>
             <div class="answer" data-color="answer2"
-                 role="button"
                  tabindex="0"
                  onclick="handleAnswerClick('answer2')"
                  onkeydown="if (event.key === 'Enter' || event.key === ' ') handleAnswerClick('answer2')">
                 <span id="answer2">Antwort 2</span>
             </div>
             <div class="answer" data-color="answer3"
-                 role="button"
                  tabindex="0"
                  onclick="handleAnswerClick('answer3')"
                  onkeydown="if (event.key === 'Enter' || event.key === ' ') handleAnswerClick('answer3')">
                 <span id="answer3">Antwort 3</span>
             </div>
             <div class="answer" data-color="answer4"
-                 role="button"
                  tabindex="0"
                  onclick="handleAnswerClick('answer4')"
                  onkeydown="if (event.key === 'Enter' || event.key === ' ') handleAnswerClick('answer4')">
@@ -76,13 +71,12 @@
         <!-- Button für nächste Frage -->
         <div id="newQuestionBtn"
              class="button"
-             role="button"
              style="display: none; margin-top: 20px;"
              onclick="nextQuestion()"
              onkeydown="if (event.key === 'Enter' || event.key === ' ') nextQuestion()">
             Nächste Frage
         </div>
-    </main>
+    </div>
 
     <!-- 3) Endergebnis (zunächst versteckt) -->
     <div id="gameResult" style="display:none; text-align: center;">

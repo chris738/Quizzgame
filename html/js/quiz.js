@@ -26,6 +26,7 @@ function selectCategory(categoryName) {
     questionCount = 0;
     totalScore = 0;      // Score zurücksetzen, falls noch was vom letzten Spiel war
     loadNewQuestion();
+    setNavVisibility(false);
 }
 
 function loadNewQuestion() {
@@ -111,6 +112,9 @@ function nextQuestion() {
 }
 
 function showFinalScore() {
+    // Navigations bereich wieder einblenden
+    setNavVisibility(true);
+
     // Quiz-Bereich ausblenden
     document.getElementById('quizContainer').style.display = 'none';
 
@@ -130,11 +134,13 @@ function showFinalScore() {
     section.scrollIntoView({ behavior: 'smooth' });
 
     setTimeout(() => {
-        document.getElementById('gameResult').focus();
-    }, 250);
+        document.getElementById('finalScore').focus();
+    }, 400);
 }
 
 function resetGame() {
+    // Navigations bereich wieder einblenden
+    setNavVisibility(false);
     // Ergebnis-Bereich ausblenden
     document.getElementById('gameResult').style.display = 'none';
     // Kategorieauswahl wieder anzeigen
@@ -180,6 +186,8 @@ function saveGameResult(playerId, questionID, selectedAnswer, correctAnswer, sco
 }
 
 function resetUI() {
+    setNavVisibility(false);
+
     // CSS-Klassen entfernen
     document.querySelectorAll('.answer').forEach(answerDiv => {
         answerDiv.classList.remove('correct', 'wrong');
@@ -200,6 +208,7 @@ function resetUI() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    setNavVisibility(false);
     // Zu Beginn: erst mal nur Kategorie-Auswahl anzeigen.
     // => categorySelection ist schon sichtbar (per CSS),
     //    quizContainer & gameResult sind hidden.
