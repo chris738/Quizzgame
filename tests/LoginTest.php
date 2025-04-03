@@ -1,7 +1,7 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/../php/login.php';
+require_once __DIR__ . '/../html/php/login.php';
 
 class LoginTest extends TestCase
 {
