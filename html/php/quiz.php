@@ -83,7 +83,7 @@ class QuizHandler extends Database {
             $correctAnswer  = $data['correctAnswer'] ?? null;
     
             if ($gameId && $playerId && $questionId !== null && $selectedAnswer !== null && $correctAnswer !== null) {
-                $isCorrect = $this->saveMultiplayerAnswer(
+                $isCorrect = $this->handleMultiplayerAnswer(
                     (int)$gameId,
                     (int)$playerId,
                     (int)$questionId,
@@ -170,7 +170,7 @@ class QuizHandler extends Database {
         ];
     }
     
-    public function saveMultiplayerAnswer(array $data): array {
+    private function handleMultiplayerAnswer(array $data): array {
         $gameId         = $data['gameId'] ?? null;
         $playerId       = $data['playerId'] ?? null;
         $questionId     = $data['questionId'] ?? null;
@@ -191,7 +191,7 @@ class QuizHandler extends Database {
     
         return ['success' => false, 'message' => 'Ungültige oder fehlende Felder'];
     }
-}
+    
 
 // Hauptausführung
 $handler = new QuizHandler();
