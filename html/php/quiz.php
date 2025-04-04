@@ -183,37 +183,37 @@ class QuizHandler extends Database {
             return ['success' => false, 'message' => '[saveGameResultFromRequest] Ungültige Daten'];
         }
     }
-
+    
     private function loadMultiplayerQuestion(int $gameId, int $playerId): array {
         $frage = $this->getMultiplayerQuestion($gameId, $playerId);
     
-        if (is_array($frage)) {
-            $this->response = [
-                'info' => [
-                    'id'      => $frage['QuestionID'] ?? null,
-                    'frage'   => $frage['Question'] ?? null,
-                    'antwort' => [
-                        '1' => $frage['Answer1'] ?? null,
-                        '2' => $frage['Answer2'] ?? null,
-                        '3' => $frage['Answer3'] ?? null,
-                        '4' => $frage['Answer4'] ?? null
-                    ],
-                    'richtig' => $frage['correctAnswer'] ?? null,
-                    'nr'      => $frage['QuestionNumber'] ?? null
-                ]
-            ];
-        } else {
-            $this->response = [
-                'message' => '[handleGet] Keine neue Frage mehr verfügbar',
+        if (!$frage || !is_array($frage)) {
+            return [
+                'message' => '[loadMultiplayerQuestion] Keine neue Frage mehr verfügbar',
                 'debug' => [
-                    'gameId'   => $gameId,
+                    'gameId' => $gameId,
                     'playerId' => $playerId,
-                    'frage'    => $frage
+                    'frage' => $frage
                 ]
             ];
         }
-        
+    
+        return [
+            'info' => [
+                'id'      => $frage['QuestionID'] ?? null,
+                'frage'   => $frage['Question'] ?? null,
+                'antwort' => [
+                    '1' => $frage['Answer1'] ?? null,
+                    '2' => $frage['Answer2'] ?? null,
+                    '3' => $frage['Answer3'] ?? null,
+                    '4' => $frage['Answer4'] ?? null
+                ],
+                'richtig' => $frage['correctAnswer'] ?? null,
+                'nr'      => $frage['QuestionNumber'] ?? null
+            ]
+        ];
     }
+    
 }
 
 // Hauptausführung
