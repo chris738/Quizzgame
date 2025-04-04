@@ -9,7 +9,7 @@ interface DatabaseInterface {
     public function getTopHighscores($limit);
     public function getUserById($id);
     public function assignQuestions($gameId, $player1Id, $player2Id);
-    public function joinOrCreateGame($playerId);
+    public function joinOrCreateMultiplayerGame($playerId);
     public function getMultiplayerQuestion($gameId, $playerId);
     public function saveMultiplayerAnswer($gameId, $playerId, $questionId, $selectedAnswer, $correctAnswer);
 }
@@ -126,7 +126,7 @@ class Database implements DatabaseInterface {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function joinOrCreateGame($playerId) {
+    public function joinOrCreateMultiplayerGame($playerId) {
         // Schritt 1: Nach offenem Raum suchen
         $stmt = $this->conn->prepare("
             SELECT * FROM MultiplayerGame 

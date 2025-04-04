@@ -100,7 +100,6 @@ class QuizHandler extends Database {
         }
     }
     
-
     private function loadRandomQuestion(string $category = null): array {
         try {
             $frage = $this->getRandomQuestion($category);
