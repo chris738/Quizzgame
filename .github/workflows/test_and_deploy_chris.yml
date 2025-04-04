@@ -79,13 +79,14 @@ jobs:
   phpLint:
     needs: deploy
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
-
-      - name: Run PHP Linter
-        uses: overtrue/phplint-action@main
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
         with:
-          path: html/php
+          php-version: '8.2'
+      - name: Run PHP Lint
+        run: |
+          find html/php -name "*.php" -print0 | xargs -0 -n1 php -l
 
