@@ -7,7 +7,15 @@ class QuizHandler extends Database {
 
     public function handleRequest(string $method): void {
         try {
-            $mode = $_REQUEST['mode'] ?? 'single';
+            $mode = 'single';
+    
+            if ($method === 'POST') {
+                $rawData = file_get_contents("php://input");
+                $data = json_decode($rawData, true);
+                $mode = $data['mode'] ?? 'single';
+            } elseif ($method === 'GET') {
+                $mode = $_GET['mode'] ?? 'single';
+            }
     
             if ($method === 'GET') {
                 $this->handleGet($mode);

@@ -87,6 +87,7 @@ async function submitAnswer(answerNumber) {
 // ✅ Automatisch starten beim Seitenladen
 document.addEventListener('DOMContentLoaded', () => {
     const storedId = parseInt(localStorage.getItem('playerId')) || 0;
+    console.log(`[Info] SotedID ist: ${storedId}`);
     if (storedId > 0) {
         initMultiplayer(storedId);
     } else {
