@@ -60,6 +60,13 @@ class QuizHandler extends Database {
     private function handlePost(string $mode): void {
         $data = json_decode(file_get_contents("php://input"), true);
     
+        $playerId = $data['playerId'] ?? null;
+        if ($playerId) {
+            ...
+        } else {
+            $this->response = ['success' => false, 'message' => 'Spieler-ID fehlt'];
+        }
+
         if ($mode === 'multiplayer') {
             $action = $data['action'] ?? null;
     
