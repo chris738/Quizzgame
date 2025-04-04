@@ -83,3 +83,6 @@ class QuizHandler extends Database {
 // Hauptausführung
 $handler = new QuizHandler();
 $handler->handleRequest($_SERVER['REQUEST_METHOD']);
+
+
+?>
