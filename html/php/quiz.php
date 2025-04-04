@@ -87,11 +87,11 @@ class QuizHandler extends Database {
 
     private function handleJoinOrCreateGame(array $data): array {
         $playerId = $data['playerId'] ?? null;
-    
+
         if (!is_numeric($playerId)) {
             return ['success' => false, 'message' => 'Ungültige Spieler-ID'];
         }
-    
+
         $gameId = $this->joinOrCreateMultiplayerGame((int)$playerId);
         return ['success' => true, 'gameId' => $gameId];
     }
@@ -114,7 +114,11 @@ class QuizHandler extends Database {
             return ['success' => true, 'correct' => (bool)$isCorrect];
         }
     
-        return ['success' => false, 'message' => '[handleMultiplayerAnswer] Ungültige oder fehlende Felder'];
+        return ['success' => false, 'message' => 'Ungültige oder fehlende Felder'];
+    }
+
+    private function handleSingleplayerAnswer(array $data): array {
+        return $this->saveGameResultFromRequest($data);
     }
     
     private function loadRandomQuestion(string $category = null): array {
