@@ -35,7 +35,7 @@ class QuizHandler extends Database {
         if ($mode === 'multiplayer') {
             $gameId   = $_GET['gameId']   ?? null;
             $playerId = $_GET['playerId'] ?? null;
-    
+
             if ($gameId && $playerId) {
                 $frage = $this->getMultiplayerQuestion((int)$gameId, (int)$playerId);
                 if ($frage) {
@@ -54,7 +54,14 @@ class QuizHandler extends Database {
                         ]
                     ];
                 } else {
-                    $this->response = ['message' => 'Keine neue Frage mehr verfügbar'];
+                    $this->response = [
+                        'message' => '[handleGet] Keine neue Frage mehr verfügbar',
+                        'debug' => [
+                            'gameId'   => $gameId,
+                            'playerId' => $playerId,
+                            'frage'    => $frage
+                        ]
+                    ];
                 }
             } else {
                 $this->response = ['success' => false, 'message' => '[handleGet] Spiel-ID und Spieler-ID erforderlich.'];
@@ -93,7 +100,6 @@ class QuizHandler extends Database {
         // Standard: Antwort verarbeiten
         $this->response = $this->handleMultiplayerAnswer($data);
     }
-
 
     private function handleJoinOrCreateGame(array $data): array {
         $playerId = $data['playerId'] ?? null;
