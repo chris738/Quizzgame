@@ -60,6 +60,8 @@ class QuizHandler extends Database {
     private function handlePost(string $mode): void {
         $data = json_decode(file_get_contents("php://input"), true);
     
+        error_log("[quiz.php] POST-Daten: " . json_encode($data));
+    
         if (!isset($data['playerId']) || !is_numeric($data['playerId'])) {
             $this->response = ['success' => false, 'message' => '[handlePost] Spieler-ID fehlt oder ungültig'];
             return;
@@ -71,7 +73,7 @@ class QuizHandler extends Database {
             $this->response = $this->handleSingleplayerAnswer($data);
         }
     }
-    
+
     private function handleMultiplayerPost(array $data): void {
         $action = $data['action'] ?? null;
     

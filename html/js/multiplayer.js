@@ -31,6 +31,7 @@ async function initMultiplayer(currentPlayerId) {
         await startGame();
     } else {
         console.error(`[initMultiplayer] Fehler beim Beitreten: ${result.message || 'Unbekannter Fehler'}`);
+        console.error('[initMultiplayer] Fehler beim Beitreten:', result.message, result);
     }
 }
 
