@@ -178,14 +178,22 @@ class Database implements DatabaseInterface {
 
     public function getMultiplayerQuestion($gameId, $playerId) {
         $stmt = $this->conn->prepare("
-            SELECT q.QuestionID, q.Question, q.Answer1, q.Answer2, q.Answer3, q.Answer4, q.correctAnswer, mq.QuestionNumber
+            SELECT 
+            q.QuestionID AS QuestionID,
+            q.Question AS Question,
+            q.Answer1 AS Answer1,
+            q.Answer2 AS Answer2,
+            q.Answer3 AS Answer3,
+            q.Answer4 AS Answer4,
+            q.correctAnswer AS correctAnswer,
+            mq.QuestionNumber AS QuestionNumber
             FROM MultiplayerQuestion mq
             JOIN Question q ON mq.QuestionID = q.QuestionID
             WHERE mq.GameID = :gameId AND mq.AnsweredBy = :playerId
-              AND NOT EXISTS (
-                  SELECT 1 FROM MultiplayerAnswer a
-                  WHERE a.GameID = mq.GameID AND a.PlayerID = :playerId AND a.QuestionID = mq.QuestionID
-              )
+            AND NOT EXISTS (
+                SELECT 1 FROM MultiplayerAnswer a
+                WHERE a.GameID = mq.GameID AND a.PlayerID = :playerId AND a.QuestionID = mq.QuestionID
+            )
             ORDER BY mq.QuestionNumber ASC
             LIMIT 1
         ");
