@@ -187,24 +187,32 @@ class QuizHandler extends Database {
     private function loadMultiplayerQuestion(int $gameId, int $playerId): array {
         $frage = $this->getMultiplayerQuestion($gameId, $playerId);
     
-        if (!$frage) {
-            return ['message' => '[loadMultiplayerQuestion] Keine neue Frage mehr verfügbar'];
+        if (is_array($frage)) {
+            $this->response = [
+                'info' => [
+                    'id'      => $frage['QuestionID'] ?? null,
+                    'frage'   => $frage['Question'] ?? null,
+                    'antwort' => [
+                        '1' => $frage['Answer1'] ?? null,
+                        '2' => $frage['Answer2'] ?? null,
+                        '3' => $frage['Answer3'] ?? null,
+                        '4' => $frage['Answer4'] ?? null
+                    ],
+                    'richtig' => $frage['correctAnswer'] ?? null,
+                    'nr'      => $frage['QuestionNumber'] ?? null
+                ]
+            ];
+        } else {
+            $this->response = [
+                'message' => '[handleGet] Keine neue Frage mehr verfügbar',
+                'debug' => [
+                    'gameId'   => $gameId,
+                    'playerId' => $playerId,
+                    'frage'    => $frage
+                ]
+            ];
         }
-    
-        return [
-            'info' => [
-                'id'      => $frage['QuestionID'],
-                'frage'   => $frage['Question'],
-                'antwort' => [
-                    '1' => $frage['Answer1'],
-                    '2' => $frage['Answer2'],
-                    '3' => $frage['Answer3'],
-                    '4' => $frage['Answer4']
-                ],
-                'richtig' => $frage['correctAnswer'],
-                'nr'      => $frage['QuestionNumber']
-            ]
-        ];
+        
     }
 }
 
