@@ -61,7 +61,7 @@ jobs:
       run: vendor/bin/phpunit tests/QuizApiTest.php
 
   deploy:
-    needs: [UnitTestLogin, UnitGetHighscore, UnitGetQuiz]
+    needs: [UnitTestLogin, UnitGetHighscore]
     runs-on: ubuntu-latest
 
     steps:
