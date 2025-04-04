@@ -192,6 +192,7 @@ class QuizHandler extends Database {
         return ['success' => false, 'message' => 'Ungültige oder fehlende Felder'];
     }
     
+}
 
 // Hauptausführung
 $handler = new QuizHandler();
