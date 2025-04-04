@@ -51,6 +51,8 @@ class LoginTest extends TestCase
         $decoded = json_decode($result, true);
         $this->assertIsArray($decoded, 'Antwort ist kein gültiges JSON');
 
+        echo "\nAntwort:\n" . json_encode($decoded, JSON_PRETTY_PRINT) . "\n";
+
         return $decoded;
     }
 }

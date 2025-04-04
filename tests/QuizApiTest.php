@@ -17,6 +17,8 @@ class QuizApiTest extends TestCase
         $this->assertArrayHasKey('info', $data, 'Feld "info" fehlt');
         $info = $data['info'];
 
+        echo "\n✅ Parsed JSON (info):\n" . json_encode($info, JSON_PRETTY_PRINT) . "\n";
+
         $this->assertArrayHasKey('id', $info);
         $this->assertArrayHasKey('richtig', $info);
         $this->assertArrayHasKey('frage', $info);
