@@ -14,10 +14,10 @@ class QuizHandler extends Database {
             } elseif ($method === 'POST') {
                 $this->handlePost($mode);
             } else {
-                $this->response = ['success' => false, 'message' => 'Methode nicht unterstützt.'];
+                $this->response = ['success' => false, 'message' => '[handleRequest] Methode nicht unterstützt.'];
             }
         } catch (Exception $e) {
-            $this->response = ['error' => 'Interner Serverfehler: ' . $e->getMessage()];
+            $this->response = ['error' => '[handleRequest] Interner Serverfehler: ' . $e->getMessage()];
         }
     
         echo json_encode($this->response);
@@ -49,7 +49,7 @@ class QuizHandler extends Database {
                     $this->response = ['message' => 'Keine neue Frage mehr verfügbar'];
                 }
             } else {
-                $this->response = ['success' => false, 'message' => 'Spiel-ID und Spieler-ID erforderlich.'];
+                $this->response = ['success' => false, 'message' => '[handleGet] Spiel-ID und Spieler-ID erforderlich.'];
             }
         } else {
             $category = $_GET['category'] ?? null;
@@ -62,7 +62,7 @@ class QuizHandler extends Database {
         $playerId = $data['playerId'] ?? null;
     
         if (!$playerId) {
-            $this->response = ['success' => false, 'message' => 'Spieler-ID fehlt'];
+            $this->response = ['success' => false, 'message' => '[handlePost] Spieler-ID fehlt'];
             return;
         }
     
@@ -89,7 +89,7 @@ class QuizHandler extends Database {
         $playerId = $data['playerId'] ?? null;
 
         if (!is_numeric($playerId)) {
-            return ['success' => false, 'message' => 'Ungültige Spieler-ID'];
+            return ['success' => false, 'message' => '[handleJoinOrCreateGame] Ungültige Spieler-ID'];
         }
 
         $gameId = $this->joinOrCreateMultiplayerGame((int)$playerId);
@@ -114,7 +114,7 @@ class QuizHandler extends Database {
             return ['success' => true, 'correct' => (bool)$isCorrect];
         }
     
-        return ['success' => false, 'message' => 'Ungültige oder fehlende Felder'];
+        return ['success' => false, 'message' => '[handleMultiplayerAnswer] Ungültige oder fehlende Felder'];
     }
 
     private function handleSingleplayerAnswer(array $data): array {
@@ -126,7 +126,7 @@ class QuizHandler extends Database {
             $frage = $this->getRandomQuestion($category);
     
             if (!$frage || empty($frage['Question'])) {
-                return ['error' => 'Keine gültige Frage gefunden.'];
+                return ['error' => '[loadRandomQuestion] Keine gültige Frage gefunden.'];
             }
     
             return [
@@ -143,7 +143,7 @@ class QuizHandler extends Database {
                 ]
             ];
         } catch (PDOException $e) {
-            return ['error' => 'Datenbankfehler: ' . $e->getMessage()];
+            return ['error' => '[loadRandomQuestion] Datenbankfehler: ' . $e->getMessage()];
         }
     }
 
@@ -164,7 +164,7 @@ class QuizHandler extends Database {
             );
             return ['success' => true];
         } else {
-            return ['success' => false, 'message' => 'Ungültige Daten'];
+            return ['success' => false, 'message' => '[saveGameResultFromRequest] Ungültige Daten'];
         }
     }
 
@@ -172,7 +172,7 @@ class QuizHandler extends Database {
         $frage = $this->getMultiplayerQuestion($gameId, $playerId);
     
         if (!$frage) {
-            return ['message' => 'Keine neue Frage mehr verfügbar'];
+            return ['message' => '[loadMultiplayerQuestion] Keine neue Frage mehr verfügbar'];
         }
     
         return [
