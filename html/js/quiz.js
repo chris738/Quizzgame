@@ -207,11 +207,18 @@ function resetUI() {
     }, 250);
 }
 
+// Multiplayer-Check beim Start
 document.addEventListener('DOMContentLoaded', () => {
-    setNavVisibility(false);
-    // Zu Beginn: erst mal nur Kategorie-Auswahl anzeigen.
-    // => categorySelection ist schon sichtbar (per CSS),
-    //    quizContainer & gameResult sind hidden.
-    // => Mach also hier nichts weiter, außer falls du
-    //    beim Laden direkt etwas debuggen willst.
-});
+    const currentPlayerId = parseInt(localStorage.getItem('playerId')) || 0;
+  
+    // Wenn multiplayer.html geladen ist
+    if (window.location.pathname.includes('multiplayer.html')) {
+      if (currentPlayerId > 0) {
+        initMultiplayer(currentPlayerId);
+      } else {
+        alert('Fehler: Spieler-ID nicht gefunden. Bitte erneut einloggen.');
+        window.location.href = 'login.html'; // oder zur Startseite
+      }
+    }
+  });
+  
