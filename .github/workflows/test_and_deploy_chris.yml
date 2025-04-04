@@ -75,3 +75,17 @@ jobs:
         username: deploy
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: /usr/local/bin/deploy-chris.sh
+
+  phpLint:
+    needs: deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Run PHP Linter
+        uses: overtrue/phplint-action@main
+        with:
+          path: html/php
+
