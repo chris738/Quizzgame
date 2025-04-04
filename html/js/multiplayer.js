@@ -3,7 +3,8 @@ let playerId = null;
 let currentQuestionId = null;
 let correctAnswer = null;
 
-async function initMultiplayer(currentPlayerId) {
+// ✅ Funktion global verfügbar machen
+window.initMultiplayer = async function (currentPlayerId) {
     playerId = currentPlayerId;
 
     const response = await fetch('php/joinMultiplayer.php', {
@@ -16,6 +17,8 @@ async function initMultiplayer(currentPlayerId) {
     if (result.success) {
         gameId = result.gameId;
         console.log(`Multiplayer-Game beigetreten: ${gameId}`);
+        document.getElementById('waitingRoom')?.remove();
+        document.getElementById('quizContainer')?.style.setProperty('display', 'block');
         await startGame();
     } else {
         alert(result.message || 'Fehler beim Beitreten');
