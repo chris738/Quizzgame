@@ -186,29 +186,6 @@ class QuizHandler extends Database {
             ]
         ];
     }
-    
-    private function handleMultiplayerAnswer(array $data): array {
-        $gameId         = $data['gameId'] ?? null;
-        $playerId       = $data['playerId'] ?? null;
-        $questionId     = $data['questionId'] ?? null;
-        $selectedAnswer = $data['selectedAnswer'] ?? null;
-        $correctAnswer  = $data['correctAnswer'] ?? null;
-    
-        if ($gameId && $playerId && $questionId !== null && $selectedAnswer !== null && $correctAnswer !== null) {
-            $isCorrect = parent::saveMultiplayerAnswer(
-                (int)$gameId,
-                (int)$playerId,
-                (int)$questionId,
-                (int)$selectedAnswer,
-                (int)$correctAnswer
-            );
-    
-            return ['success' => true, 'correct' => (bool)$isCorrect];
-        }
-    
-        return ['success' => false, 'message' => 'Ungültige oder fehlende Felder'];
-    }
-    
 }
 
 // Hauptausführung
