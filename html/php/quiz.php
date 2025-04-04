@@ -170,7 +170,7 @@ class QuizHandler extends Database {
         ];
     }
     
-    private function saveMultiplayerAnswer(array $data): array {
+    public function saveMultiplayerAnswer(array $data): array {
         $gameId         = $data['gameId'] ?? null;
         $playerId       = $data['playerId'] ?? null;
         $questionId     = $data['questionId'] ?? null;
@@ -178,7 +178,7 @@ class QuizHandler extends Database {
         $correctAnswer  = $data['correctAnswer'] ?? null;
     
         if ($gameId && $playerId && $questionId !== null && $selectedAnswer !== null && $correctAnswer !== null) {
-            $isCorrect = $this->saveMultiplayerAnswer(
+            $isCorrect = parent::saveMultiplayerAnswer(
                 (int)$gameId,
                 (int)$playerId,
                 (int)$questionId,
