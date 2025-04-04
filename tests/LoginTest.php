@@ -2,7 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 
-class LoginApiTest extends TestCase
+class LoginTest extends TestCase
 {
     private string $url = 'https://chris.quizz.tuxchen.de/php/login.php';
 
