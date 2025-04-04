@@ -4,7 +4,7 @@ use PHPUnit\Framework\TestCase;
 
 class LoginTest extends TestCase
 {
-    private string $url = 'https://chris.quizz.tuxchen.de/php/login.php';
+    private string $url = 'https://quizz.tuxchen.de/php/login.php';
 
     public function testEmptyLoginData()
     {

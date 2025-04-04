@@ -6,7 +6,7 @@ class QuizApiTest extends TestCase
 {
     public function testQuizApiWithoutCategoryReturnsValidQuestion()
     {
-        $url = 'https://chris.quizz.tuxchen.de/php/quiz.php';
+        $url = 'https://quizz.tuxchen.de/php/quiz.php';
 
         $response = @file_get_contents($url);
         $this->assertNotFalse($response, "Fehler beim Abrufen von $url");

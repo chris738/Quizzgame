@@ -74,7 +74,7 @@ jobs:
         host: tuxchen.de
         username: deploy
         key: ${{ secrets.SERVER_SSH_KEY }}
-        script: /usr/local/bin/deploy-chris.sh
+        script: /usr/local/bin/deploy-main.sh
 
   phpLint:
     needs: deploy
