@@ -5,13 +5,11 @@ require_once __DIR__ . '/../html/php/login.php';
 
 class LoginTest extends TestCase
 {
-    protected function setUp(): void
-    {
+    protected function setUp(): void {
         $_SERVER['REQUEST_METHOD'] = 'POST';
     }
 
-    public function testEmptyLoginData()
-    {
+    public function testEmptyLoginData() {
         $this->mockInput(['name' => '', 'password' => '']);
 
         ob_start();
@@ -24,8 +22,7 @@ class LoginTest extends TestCase
         $this->assertEquals('Name und Passwort erforderlich', $json['message']);
     }
 
-    public function testInvalidCredentials()
-    {
+    public function testInvalidCredentials() {
         $this->mockInput(['name' => 'testuser', 'password' => 'wrongpass']);
 
         $dbMock = $this->createMock(Database::class);
@@ -46,8 +43,7 @@ class LoginTest extends TestCase
         $this->assertEquals('Falsche Zugangsdaten', $json['message']);
     }
 
-    public function testSuccessfulLogin()
-    {
+    public function testSuccessfulLogin() {
         $this->mockInput(['name' => 'testuser', 'password' => 'correctpass']);
 
         $dbMock = $this->createMock(Database::class);
@@ -68,8 +64,7 @@ class LoginTest extends TestCase
         $this->assertEquals(42, $json['playerId']);
     }
 
-    private function mockInput(array $data): void
-    {
+    private function mockInput(array $data): void {
         // php://input kann nicht direkt überschrieben werden, also tricksen wir:
         file_put_contents('php://temp', json_encode($data));
         stream_wrapper_unregister('php');
@@ -77,8 +72,7 @@ class LoginTest extends TestCase
         MockPhpStream::$content = json_encode($data);
     }
 
-    private function overrideDatabaseInstance($mock): void
-    {
+    private function overrideDatabaseInstance($mock): void {
         // Dazu musst du `new Database()` in handleLogin() z.B. durch `getDatabase()` ersetzen
         // und hier eine globale Hilfsfunktion mocken oder überschreiben
         // Beispiel siehe unten

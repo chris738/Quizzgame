@@ -1,0 +1,43 @@
+name: Test and Deploy Chris Branch
+
+on:
+  push:
+    branches:
+      - chris
+  pull_request:
+    branches:
+      - chris
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+
+    - name: Install dependencies
+      run: composer install
+
+    - name: Run PHPUnit Login Test
+      run: vendor/bin/phpunit tests/LoginTest.php
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Execute Remote Deploy
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: tuxchen.de
+        username: deploy
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        script: /usr/local/bin/deploy-chris.sh
