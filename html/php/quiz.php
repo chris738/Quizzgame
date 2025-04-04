@@ -7,28 +7,82 @@ class QuizHandler extends Database {
 
     public function handleRequest(string $method): void {
         try {
+            $mode = $_REQUEST['mode'] ?? 'single';
+    
             if ($method === 'GET') {
-                $this->handleGet();
+                $this->handleGet($mode);
             } elseif ($method === 'POST') {
-                $this->handlePost();
+                $this->handlePost($mode);
             } else {
                 $this->response = ['success' => false, 'message' => 'Methode nicht unterstützt.'];
             }
         } catch (Exception $e) {
             $this->response = ['error' => 'Interner Serverfehler: ' . $e->getMessage()];
         }
-
+    
         echo json_encode($this->response);
     }
-
-    private function handleGet(): void {
-        $category = $_GET['category'] ?? null;
-        $this->response = $this->loadRandomQuestion($category);
+    
+    private function handleGet(string $mode): void {
+        if ($mode === 'multiplayer') {
+            $gameId   = $_GET['gameId']   ?? null;
+            $playerId = $_GET['playerId'] ?? null;
+    
+            if ($gameId && $playerId) {
+                $frage = $this->getMultiplayerQuestion((int)$gameId, (int)$playerId);
+                if ($frage) {
+                    $this->response = [
+                        'info' => [
+                            'id'      => $frage['QuestionID'],
+                            'frage'   => $frage['Question'],
+                            'antwort' => [
+                                '1' => $frage['Answer1'],
+                                '2' => $frage['Answer2'],
+                                '3' => $frage['Answer3'],
+                                '4' => $frage['Answer4']
+                            ],
+                            'richtig' => $frage['correctAnswer'],
+                            'nr'      => $frage['QuestionNumber']
+                        ]
+                    ];
+                } else {
+                    $this->response = ['message' => 'Keine neue Frage mehr verfügbar'];
+                }
+            } else {
+                $this->response = ['success' => false, 'message' => 'Spiel-ID und Spieler-ID erforderlich.'];
+            }
+        } else {
+            $category = $_GET['category'] ?? null;
+            $this->response = $this->loadRandomQuestion($category);
+        }
     }
-
-    private function handlePost(): void {
+    
+    private function handlePost(string $mode): void {
         $data = json_decode(file_get_contents("php://input"), true);
-        $this->response = $this->saveGameResultFromRequest($data);
+    
+        if ($mode === 'multiplayer') {
+            $gameId         = $data['gameId'] ?? null;
+            $playerId       = $data['playerId'] ?? null;
+            $questionId     = $data['questionId'] ?? null;
+            $selectedAnswer = $data['selectedAnswer'] ?? null;
+            $correctAnswer  = $data['correctAnswer'] ?? null;
+    
+            if ($gameId && $playerId && $questionId !== null && $selectedAnswer !== null && $correctAnswer !== null) {
+                $isCorrect = $this->saveMultiplayerAnswer(
+                    (int)$gameId,
+                    (int)$playerId,
+                    (int)$questionId,
+                    (int)$selectedAnswer,
+                    (int)$correctAnswer
+                );
+    
+                $this->response = ['success' => true, 'correct' => (bool)$isCorrect];
+            } else {
+                $this->response = ['success' => false, 'message' => 'Ungültige oder fehlende Felder'];
+            }
+        } else {
+            $this->response = $this->saveGameResultFromRequest($data);
+        }
     }
 
     private function loadRandomQuestion(string $category = null): array {
@@ -56,7 +110,6 @@ class QuizHandler extends Database {
             return ['error' => 'Datenbankfehler: ' . $e->getMessage()];
         }
     }
-    
 
     private function saveGameResultFromRequest(array $data): array {
         $playerId       = $data['playerId'] ?? null;
@@ -77,6 +130,51 @@ class QuizHandler extends Database {
         } else {
             return ['success' => false, 'message' => 'Ungültige Daten'];
         }
+    }
+
+    private function loadMultiplayerQuestion(int $gameId, int $playerId): array {
+        $frage = $this->getMultiplayerQuestion($gameId, $playerId);
+    
+        if (!$frage) {
+            return ['message' => 'Keine neue Frage mehr verfügbar'];
+        }
+    
+        return [
+            'info' => [
+                'id'      => $frage['QuestionID'],
+                'frage'   => $frage['Question'],
+                'antwort' => [
+                    '1' => $frage['Answer1'],
+                    '2' => $frage['Answer2'],
+                    '3' => $frage['Answer3'],
+                    '4' => $frage['Answer4']
+                ],
+                'richtig' => $frage['correctAnswer'],
+                'nr'      => $frage['QuestionNumber']
+            ]
+        ];
+    }
+    
+    private function saveMultiplayerAnswer(array $data): array {
+        $gameId         = $data['gameId'] ?? null;
+        $playerId       = $data['playerId'] ?? null;
+        $questionId     = $data['questionId'] ?? null;
+        $selectedAnswer = $data['selectedAnswer'] ?? null;
+        $correctAnswer  = $data['correctAnswer'] ?? null;
+    
+        if ($gameId && $playerId && $questionId !== null && $selectedAnswer !== null && $correctAnswer !== null) {
+            $isCorrect = $this->saveMultiplayerAnswer(
+                (int)$gameId,
+                (int)$playerId,
+                (int)$questionId,
+                (int)$selectedAnswer,
+                (int)$correctAnswer
+            );
+    
+            return ['success' => true, 'correct' => (bool)$isCorrect];
+        }
+    
+        return ['success' => false, 'message' => 'Ungültige oder fehlende Felder'];
     }
 }
 

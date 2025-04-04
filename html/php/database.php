@@ -8,6 +8,10 @@ interface DatabaseInterface {
     public function getUserByName($name);
     public function getTopHighscores($limit);
     public function getUserById($id);
+    public function assignQuestions($gameId, $player1Id, $player2Id);
+    public function joinOrCreateGame($playerId);
+    public function getMultiplayerQuestion($gameId, $playerId);
+    public function saveMultiplayerAnswer($gameId, $playerId, $questionId, $selectedAnswer, $correctAnswer);
 }
 
 class Database implements DatabaseInterface {
@@ -120,6 +124,91 @@ class Database implements DatabaseInterface {
         $stmt = $this->conn->prepare("SELECT PlayerID, name FROM player WHERE PlayerID = ?");
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function joinOrCreateGame($playerId) {
+        // Schritt 1: Nach offenem Raum suchen
+        $stmt = $this->conn->prepare("
+            SELECT * FROM MultiplayerGame 
+            WHERE Player2ID IS NULL AND IsStarted = FALSE
+            LIMIT 1
+        ");
+        $stmt->execute();
+        $game = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+        if ($game) {
+            // Beitreten
+            $stmt = $this->conn->prepare("
+                UPDATE MultiplayerGame 
+                SET Player2ID = :pid 
+                WHERE GameID = :gid
+            ");
+            $stmt->execute([':pid' => $playerId, ':gid' => $game['GameID']]);
+            return $game['GameID'];
+        } else {
+            // Neuen Raum erstellen
+            $roomCode = substr(md5(uniqid()), 0, 6);
+            $stmt = $this->conn->prepare("
+                INSERT INTO MultiplayerGame (RoomCode, Player1ID) 
+                VALUES (:code, :pid)
+            ");
+            $stmt->execute([':code' => $roomCode, ':pid' => $playerId]);
+            return $this->conn->lastInsertId();
+        }
+    }
+
+    // 1–4 beantwortet von Player1, 5–8 von Player2
+    public function assignQuestions($gameId, $player1Id, $player2Id) {
+        $questions = $this->getRandomQuestions(8); // gib 8 zufällige Fragen
+
+        foreach ($questions as $index => $q) {
+            $answeredBy = ($index < 4) ? $player1Id : $player2Id;
+            $stmt = $this->conn->prepare("
+                INSERT INTO MultiplayerQuestion (GameID, QuestionNumber, QuestionID, AnsweredBy)
+                VALUES (:game, :num, :qid, :answeredBy)
+            ");
+            $stmt->execute([
+                ':game' => $gameId,
+                ':num' => $index + 1,
+                ':qid' => $q['QuestionID'],
+                ':answeredBy' => $answeredBy
+            ]);
+        }
+    }
+
+    public function getMultiplayerQuestion($gameId, $playerId) {
+        $stmt = $this->conn->prepare("
+            SELECT q.QuestionID, q.Question, q.Answer1, q.Answer2, q.Answer3, q.Answer4, q.correctAnswer, mq.QuestionNumber
+            FROM MultiplayerQuestion mq
+            JOIN Question q ON mq.QuestionID = q.QuestionID
+            WHERE mq.GameID = :gameId AND mq.AnsweredBy = :playerId
+              AND NOT EXISTS (
+                  SELECT 1 FROM MultiplayerAnswer a
+                  WHERE a.GameID = mq.GameID AND a.PlayerID = :playerId AND a.QuestionID = mq.QuestionID
+              )
+            ORDER BY mq.QuestionNumber ASC
+            LIMIT 1
+        ");
+        $stmt->execute([':gameId' => $gameId, ':playerId' => $playerId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function saveMultiplayerAnswer($gameId, $playerId, $questionId, $selectedAnswer, $correctAnswer) {
+        $isCorrect = ((int)$selectedAnswer === (int)$correctAnswer) ? 1 : 0;
+    
+        $stmt = $this->conn->prepare("
+            INSERT INTO MultiplayerAnswer (GameID, PlayerID, QuestionID, SelectedAnswer, IsCorrect)
+            VALUES (:game, :player, :question, :selected, :isCorrect)
+        ");
+        $stmt->execute([
+            ':game' => $gameId,
+            ':player' => $playerId,
+            ':question' => $questionId,
+            ':selected' => $selectedAnswer,
+            ':isCorrect' => $isCorrect
+        ]);
+    
+        return $isCorrect;
     }
     
 }

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Multiplayer-Quiz</title>
+
+  <!-- Preload & Styles -->
+  <link rel="preload" href="navbar.html" as="fetch" crossorigin="anonymous">
+  <link rel="preload" href="css/navbar.css" as="fetch" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/quiz.css">
+  <link rel="stylesheet" href="css/highscore.css">
+
+  <!-- Scripts -->
+  <script defer src="js/navbar.js"></script>
+  <script defer src="js/multiplayer.js"></script>
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <!-- Info: Wartet auf Gegner -->
+  <div id="waitingRoom" style="text-align: center; padding: 2rem;">
+    <h2>Mehrspieler-Modus</h2>
+    <p>Warte auf Mitspieler...</p>
+  </div>
+
+  <!-- Quiz-Bereich -->
+  <div class="quiz-container" id="quizContainer" style="display:none;">
+    <div id="Question" class="question-text" tabindex="-1">Frage</div>
+
+    <div class="answers">
+      <div class="answer" tabindex="0" onclick="submitAnswer(1)">
+        <span id="answer1">Antwort 1</span>
+      </div>
+      <div class="answer" tabindex="0" onclick="submitAnswer(2)">
+        <span id="answer2">Antwort 2</span>
+      </div>
+      <div class="answer" tabindex="0" onclick="submitAnswer(3)">
+        <span id="answer3">Antwort 3</span>
+      </div>
+      <div class="answer" tabindex="0" onclick="submitAnswer(4)">
+        <span id="answer4">Antwort 4</span>
+      </div>
+    </div>
+
+    <div id="feedback" role="status" aria-live="polite"></div>
+
+    <div id="newQuestionBtn" class="button" style="display: none; margin-top: 20px;"
+         onclick="loadNextQuestion()"
+         onkeydown="if (event.key === 'Enter' || event.key === ' ') loadNextQuestion()">
+      Nächste Frage
+    </div>
+  </div>
+
+  <!-- Endergebnis -->
+  <div id="gameResult" style="display:none; text-align: center;">
+    <h2>Spiel beendet!</h2>
+    <p id="finalScore"></p>
+    <div class="button" role="button" onclick="window.location.reload()">Nochmal spielen</div>
+  </div>
+
+  <script>
+    // Spieler-ID z. B. vom Login holen (z. B. aus Session oder globalem JS-Objekt)
+    const playerId = window.sessionPlayerId || 42; // ⬅️ ersetzen!
+    initMultiplayer(playerId);
+  </script>
+</body>
+</html>

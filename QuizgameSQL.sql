@@ -38,7 +38,41 @@
         points INT DEFAULT 0
     );
 
+    CREATE TABLE MultiplayerGame (
+        GameID INT AUTO_INCREMENT PRIMARY KEY,
+        RoomCode VARCHAR(10) NOT NULL UNIQUE,
+        Player1ID INT NOT NULL,
+        Player2ID INT DEFAULT NULL,
+        IsStarted BOOLEAN DEFAULT FALSE,
+        CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (Player1ID) REFERENCES player(PlayerID),
+        FOREIGN KEY (Player2ID) REFERENCES player(PlayerID)
+    );
 
+    CREATE TABLE MultiplayerQuestion (
+        ID INT AUTO_INCREMENT PRIMARY KEY,
+        GameID INT NOT NULL,
+        QuestionNumber INT NOT NULL,        -- 1 bis 8
+        QuestionID INT NOT NULL,
+        AnsweredBy INT,                     -- Player1ID oder Player2ID
+        ShownAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (GameID) REFERENCES MultiplayerGame(GameID),
+        FOREIGN KEY (QuestionID) REFERENCES Question(QuestionID),
+        FOREIGN KEY (AnsweredBy) REFERENCES player(PlayerID)
+    );
+
+    CREATE TABLE MultiplayerAnswer (
+        ID INT AUTO_INCREMENT PRIMARY KEY,
+        GameID INT NOT NULL,
+        PlayerID INT NOT NULL,
+        QuestionID INT NOT NULL,
+        SelectedAnswer INT,
+        IsCorrect BOOLEAN,
+        AnsweredAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (GameID) REFERENCES MultiplayerGame(GameID),
+        FOREIGN KEY (PlayerID) REFERENCES player(PlayerID),
+        FOREIGN KEY (QuestionID) REFERENCES Question(QuestionID)
+    );
 
     -- Neue Tabelle: Game (gespielte Spiele)
     CREATE TABLE Game (
