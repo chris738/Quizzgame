@@ -36,3 +36,6 @@ class MockPhpStream {
         return $this->index;
     }
 }
+
+
+?>
