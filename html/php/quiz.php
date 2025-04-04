@@ -62,48 +62,46 @@ class QuizHandler extends Database {
     
         $playerId = $data['playerId'] ?? null;
         if ($playerId) {
-            ...
+            if ($mode === 'multiplayer') {
+                $action = $data['action'] ?? null;
+        
+                if ($action === 'joinOrCreateGame') {
+                    $playerId = $data['playerId'] ?? null;
+        
+                    if ($playerId) {
+                        $gameId = $this->joinOrCreateMultiplayerGame((int)$playerId);
+                        $this->response = ['success' => true, 'gameId' => $gameId];
+                    } else {
+                        $this->response = ['success' => false, 'message' => 'Spieler-ID fehlt'];
+                    }
+                    return;
+                }
+        
+                // Antwort übermitteln (Standard)
+                $gameId         = $data['gameId'] ?? null;
+                $playerId       = $data['playerId'] ?? null;
+                $questionId     = $data['questionId'] ?? null;
+                $selectedAnswer = $data['selectedAnswer'] ?? null;
+                $correctAnswer  = $data['correctAnswer'] ?? null;
+        
+                if ($gameId && $playerId && $questionId !== null && $selectedAnswer !== null && $correctAnswer !== null) {
+                    $isCorrect = $this->handleMultiplayerAnswer(
+                        (int)$gameId,
+                        (int)$playerId,
+                        (int)$questionId,
+                        (int)$selectedAnswer,
+                        (int)$correctAnswer
+                    );
+        
+                    $this->response = ['success' => true, 'correct' => (bool)$isCorrect];
+                } else {
+                    $this->response = ['success' => false, 'message' => 'Ungültige oder fehlende Felder'];
+                }
+            } else {
+                $this->response = $this->saveGameResultFromRequest($data);
+            }
         } else {
             $this->response = ['success' => false, 'message' => 'Spieler-ID fehlt'];
-        }
-
-        if ($mode === 'multiplayer') {
-            $action = $data['action'] ?? null;
-    
-            if ($action === 'joinOrCreateGame') {
-                $playerId = $data['playerId'] ?? null;
-    
-                if ($playerId) {
-                    $gameId = $this->joinOrCreateMultiplayerGame((int)$playerId);
-                    $this->response = ['success' => true, 'gameId' => $gameId];
-                } else {
-                    $this->response = ['success' => false, 'message' => 'Spieler-ID fehlt'];
-                }
-                return;
-            }
-    
-            // Antwort übermitteln (Standard)
-            $gameId         = $data['gameId'] ?? null;
-            $playerId       = $data['playerId'] ?? null;
-            $questionId     = $data['questionId'] ?? null;
-            $selectedAnswer = $data['selectedAnswer'] ?? null;
-            $correctAnswer  = $data['correctAnswer'] ?? null;
-    
-            if ($gameId && $playerId && $questionId !== null && $selectedAnswer !== null && $correctAnswer !== null) {
-                $isCorrect = $this->handleMultiplayerAnswer(
-                    (int)$gameId,
-                    (int)$playerId,
-                    (int)$questionId,
-                    (int)$selectedAnswer,
-                    (int)$correctAnswer
-                );
-    
-                $this->response = ['success' => true, 'correct' => (bool)$isCorrect];
-            } else {
-                $this->response = ['success' => false, 'message' => 'Ungültige oder fehlende Felder'];
-            }
-        } else {
-            $this->response = $this->saveGameResultFromRequest($data);
         }
     }
     
