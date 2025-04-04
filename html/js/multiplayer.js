@@ -10,22 +10,21 @@ async function initMultiplayer(currentPlayerId) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          mode: 'multiplayer',
-          action: 'joinOrCreateGame', // 👈 wichtig
-          playerId: playerId
+            mode: 'multiplayer',
+            action: 'joinOrCreateGame',
+            playerId: playerId
         })
-      });
-      
+    });
 
     const result = await response.json();
     if (result.success) {
         gameId = result.gameId;
-        console.log(`Multiplayer-Game beigetreten: ${gameId}`);
+        console.log(`[initMultiplayer] Multiplayer-Game beigetreten: ${gameId}`);
         document.getElementById('waitingRoom')?.remove();
         document.getElementById('quizContainer')?.style.setProperty('display', 'block');
         await startGame();
     } else {
-        alert(result.message || 'Fehler beim Beitreten');
+        console.error(`[initMultiplayer] Fehler beim Beitreten: ${result.message || 'Unbekannter Fehler'}`);
     }
 }
 
@@ -38,6 +37,7 @@ async function loadNextQuestion() {
     const result = await response.json();
 
     if (!result.info) {
+        console.warn(`[loadNextQuestion] Keine neue Frage: ${result.message || 'Spiel beendet.'}`);
         document.getElementById('Question').textContent = result.message || 'Spiel beendet.';
         return;
     }
@@ -69,10 +69,10 @@ async function submitAnswer(answerNumber) {
 
     const result = await response.json();
     if (result.success) {
-        console.log(`Antwort war ${result.correct ? 'richtig' : 'falsch'}`);
+        console.log(`[submitAnswer] Antwort war ${result.correct ? 'richtig' : 'falsch'}`);
         await loadNextQuestion();
     } else {
-        alert(result.message || 'Antwort konnte nicht gespeichert werden');
+        console.error(`[submitAnswer] Fehler beim Speichern der Antwort: ${result.message || 'Unbekannter Fehler'}`);
     }
 }
 
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (storedId > 0) {
         initMultiplayer(storedId);
     } else {
-        alert('Keine gültige Spieler-ID gefunden. Bitte einloggen.');
+        console.error('[DOMContentLoaded] Keine gültige Spieler-ID gefunden. Abbruch.');
         window.location.href = 'login.html';
     }
 });
