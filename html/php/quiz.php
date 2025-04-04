@@ -59,50 +59,62 @@ class QuizHandler extends Database {
     
     private function handlePost(string $mode): void {
         $data = json_decode(file_get_contents("php://input"), true);
-    
         $playerId = $data['playerId'] ?? null;
-        if ($playerId) {
-            if ($mode === 'multiplayer') {
-                $action = $data['action'] ?? null;
-        
-                if ($action === 'joinOrCreateGame') {
-                    $playerId = $data['playerId'] ?? null;
-        
-                    if ($playerId) {
-                        $gameId = $this->joinOrCreateMultiplayerGame((int)$playerId);
-                        $this->response = ['success' => true, 'gameId' => $gameId];
-                    } else {
-                        $this->response = ['success' => false, 'message' => 'Spieler-ID fehlt'];
-                    }
-                    return;
-                }
-        
-                // Antwort übermitteln (Standard)
-                $gameId         = $data['gameId'] ?? null;
-                $playerId       = $data['playerId'] ?? null;
-                $questionId     = $data['questionId'] ?? null;
-                $selectedAnswer = $data['selectedAnswer'] ?? null;
-                $correctAnswer  = $data['correctAnswer'] ?? null;
-        
-                if ($gameId && $playerId && $questionId !== null && $selectedAnswer !== null && $correctAnswer !== null) {
-                    $isCorrect = $this->handleMultiplayerAnswer(
-                        (int)$gameId,
-                        (int)$playerId,
-                        (int)$questionId,
-                        (int)$selectedAnswer,
-                        (int)$correctAnswer
-                    );
-        
-                    $this->response = ['success' => true, 'correct' => (bool)$isCorrect];
-                } else {
-                    $this->response = ['success' => false, 'message' => 'Ungültige oder fehlende Felder'];
-                }
-            } else {
-                $this->response = $this->saveGameResultFromRequest($data);
-            }
-        } else {
+    
+        if (!$playerId) {
             $this->response = ['success' => false, 'message' => 'Spieler-ID fehlt'];
+            return;
         }
+    
+        if ($mode === 'multiplayer') {
+            $this->handleMultiplayerPost($data);
+        } else {
+            $this->response = $this->handleSingleplayerAnswer($data);
+        }
+    }
+
+    private function handleMultiplayerPost(array $data): void {
+        $action = $data['action'] ?? null;
+    
+        if ($action === 'joinOrCreateGame') {
+            $this->response = $this->handleJoinOrCreateGame($data);
+            return;
+        }
+    
+        $this->response = $this->handleMultiplayerAnswer($data);
+    }
+
+
+    private function handleJoinOrCreateGame(array $data): array {
+        $playerId = $data['playerId'] ?? null;
+    
+        if (!is_numeric($playerId)) {
+            return ['success' => false, 'message' => 'Ungültige Spieler-ID'];
+        }
+    
+        $gameId = $this->joinOrCreateMultiplayerGame((int)$playerId);
+        return ['success' => true, 'gameId' => $gameId];
+    }
+    
+    private function handleMultiplayerAnswer(array $data): array {
+        $gameId         = $data['gameId'] ?? null;
+        $playerId       = $data['playerId'] ?? null;
+        $questionId     = $data['questionId'] ?? null;
+        $selectedAnswer = $data['selectedAnswer'] ?? null;
+        $correctAnswer  = $data['correctAnswer'] ?? null;
+    
+        if ($gameId && $playerId && $questionId !== null && $selectedAnswer !== null && $correctAnswer !== null) {
+            $isCorrect = parent::saveMultiplayerAnswer(
+                (int)$gameId,
+                (int)$playerId,
+                (int)$questionId,
+                (int)$selectedAnswer,
+                (int)$correctAnswer
+            );
+            return ['success' => true, 'correct' => (bool)$isCorrect];
+        }
+    
+        return ['success' => false, 'message' => '[handleMultiplayerAnswer] Ungültige oder fehlende Felder'];
     }
     
     private function loadRandomQuestion(string $category = null): array {
