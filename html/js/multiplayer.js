@@ -3,8 +3,7 @@ let playerId = null;
 let currentQuestionId = null;
 let correctAnswer = null;
 
-// ✅ Funktion global verfügbar machen
-window.initMultiplayer = async function (currentPlayerId) {
+async function initMultiplayer(currentPlayerId) {
     playerId = currentPlayerId;
 
     const response = await fetch('php/joinMultiplayer.php', {
@@ -71,3 +70,14 @@ async function submitAnswer(answerNumber) {
         alert(result.message || 'Antwort konnte nicht gespeichert werden');
     }
 }
+
+// ✅ Automatisch starten beim Seitenladen
+document.addEventListener('DOMContentLoaded', () => {
+    const storedId = parseInt(localStorage.getItem('playerId')) || 0;
+    if (storedId > 0) {
+        initMultiplayer(storedId);
+    } else {
+        alert('Keine gültige Spieler-ID gefunden. Bitte einloggen.');
+        window.location.href = 'login.html';
+    }
+});
