@@ -6,6 +6,12 @@ let correctAnswer = null;
 async function initMultiplayer(currentPlayerId) {
     playerId = currentPlayerId;
 
+    console.log('[initMultiplayer] Sende:', {
+        mode: 'multiplayer',
+        action: 'joinOrCreateGame',
+        playerId
+    });
+
     const response = await fetch('php/quiz.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -27,6 +33,7 @@ async function initMultiplayer(currentPlayerId) {
         console.error(`[initMultiplayer] Fehler beim Beitreten: ${result.message || 'Unbekannter Fehler'}`);
     }
 }
+
 
 async function startGame() {
     await loadNextQuestion();
