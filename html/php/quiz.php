@@ -61,6 +61,21 @@ class QuizHandler extends Database {
         $data = json_decode(file_get_contents("php://input"), true);
     
         if ($mode === 'multiplayer') {
+            $action = $data['action'] ?? null;
+    
+            if ($action === 'joinOrCreateGame') {
+                $playerId = $data['playerId'] ?? null;
+    
+                if ($playerId) {
+                    $gameId = $this->joinOrCreateMultiplayerGame((int)$playerId);
+                    $this->response = ['success' => true, 'gameId' => $gameId];
+                } else {
+                    $this->response = ['success' => false, 'message' => 'Spieler-ID fehlt'];
+                }
+                return;
+            }
+    
+            // Antwort übermitteln (Standard)
             $gameId         = $data['gameId'] ?? null;
             $playerId       = $data['playerId'] ?? null;
             $questionId     = $data['questionId'] ?? null;
@@ -84,6 +99,7 @@ class QuizHandler extends Database {
             $this->response = $this->saveGameResultFromRequest($data);
         }
     }
+    
 
     private function loadRandomQuestion(string $category = null): array {
         try {

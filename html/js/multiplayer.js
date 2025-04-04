@@ -6,11 +6,16 @@ let correctAnswer = null;
 async function initMultiplayer(currentPlayerId) {
     playerId = currentPlayerId;
 
-    const response = await fetch('php/joinMultiplayer.php', {
+    const response = await fetch('php/quiz.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ playerId })
-    });
+        body: JSON.stringify({
+          mode: 'multiplayer',
+          action: 'joinOrCreateGame', // 👈 wichtig
+          playerId: playerId
+        })
+      });
+      
 
     const result = await response.json();
     if (result.success) {
