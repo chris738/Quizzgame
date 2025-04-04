@@ -37,7 +37,7 @@ class QuizHandler extends Database {
             $playerId = $_GET['playerId'] ?? null;
 
             if ($gameId && $playerId) {
-                $frage = $this->getMultiplayerQuestion((int)$gameId, (int)$playerId);
+                $frage = $this->loadMultiplayerQuestion((int)$gameId, (int)$playerId);
                 if ($frage) {
                     $this->response = [
                         'info' => [
