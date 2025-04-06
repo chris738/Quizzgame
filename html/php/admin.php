@@ -133,7 +133,12 @@ class UserManager extends Database {
 // Prüfe, ob eine POST-Anfrage gesendet wurde
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    if (isset($_POST['action']) && $_POST['action'] === 'updateQuestion') {
+    if (isset($_POST['action']) && $_POST['action'] === 'deleteQuestion') {
+        $questionManager = new QuestionManager();
+        $questionManager->deleteQuestion($_POST);
+        echo json_encode($questionManager->getResponse());
+
+    } elseif (isset($_POST['action']) && $_POST['action'] === 'updateQuestion') {
         $questionManager = new QuestionManager();
         $questionManager->updateQuestion($_POST);
         echo json_encode($questionManager->getResponse());
