@@ -84,6 +84,16 @@ function setAnswerButtonsEnabled(enabled) {
 }
 
 async function submitAnswer(answerNumber) {
+    if (hasAnswered) return;
+
+    const selectedAnswer = parseInt(answerNumber, 10);
+    const isCorrect = (selectedAnswer === correctAnswer);
+    const score = calculateScore(isCorrect);
+
+    // Anzeige aktualisieren
+    handleAnswerClick(selectedAnswer);
+
+    // An Server senden
     const response = await fetch('php/quiz.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -92,19 +102,20 @@ async function submitAnswer(answerNumber) {
             gameId: gameId,
             playerId: playerId,
             questionId: currentQuestionId,
-            selectedAnswer: answerNumber,
+            selectedAnswer: selectedAnswer,
             correctAnswer: correctAnswer
         })
     });
 
     const result = await response.json();
+
     if (result.success) {
         console.log(`[submitAnswer] Antwort war ${result.correct ? 'richtig' : 'falsch'}`);
-        await loadNextQuestion();
     } else {
         console.error(`[submitAnswer] Fehler beim Speichern der Antwort: ${result.message || 'Unbekannter Fehler'}`);
     }
 }
+
 
 // ✅ Automatisch starten beim Seitenladen
 document.addEventListener('DOMContentLoaded', () => {
