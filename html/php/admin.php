@@ -77,7 +77,7 @@ class QuestionManager extends Database {
         }
     
         try {
-            parent::deleteQuestion($questionID); // Aufruf der deleteQuestion-Methode aus der Database-Klasse
+            parent::dbdeleteQuestion($questionID); // Aufruf der deleteQuestion-Methode aus der Database-Klasse
             $this->response = ['success' => true, 'message' => 'Frage erfolgreich gelöscht'];
         } catch (Exception $e) {
             $this->response = ['success' => false, 'message' => 'Fehler: ' . $e->getMessage()];

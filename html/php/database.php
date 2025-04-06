@@ -9,6 +9,7 @@ interface DatabaseInterface {
     public function getTopHighscores($limit);
     public function getUserById($id);
     public function editQuestion($id, $question, $category, $a1, $a2, $a3, $a4, $correctAnswer);
+    public function deleteQuestion($id);
 }
 
 class Database implements DatabaseInterface {
@@ -114,6 +115,14 @@ class Database implements DatabaseInterface {
             ':correct' => $correctAnswer
         ]);
     }
+
+    public function dbdeleteQuestion($id) {
+        $stmt = $this->conn->prepare("
+        DELETE FROM Question WHERE QuestionID = :id"
+        );
+        $stmt->execute([':id' => $id]);
+    }
+
 
     public function insertUser($username, $hashedPassword) {
         $stmt = $this->conn->prepare("
