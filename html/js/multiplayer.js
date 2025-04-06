@@ -84,8 +84,6 @@ function setAnswerButtonsEnabled(enabled) {
 }
 
 async function submitAnswer(answerNumber) {
-    if (hasAnswered) return;
-
     const selectedAnswer = parseInt(answerNumber, 10);
     const isCorrect = (selectedAnswer === correctAnswer);
     const score = calculateScore(isCorrect);
@@ -119,6 +117,7 @@ async function submitAnswer(answerNumber) {
 
 // ✅ Automatisch starten beim Seitenladen
 document.addEventListener('DOMContentLoaded', () => {
+    /*
     const storedId = parseInt(localStorage.getItem('playerId')) || 0;
     console.log(`[Info] SotedID ist: ${storedId}`);
     if (storedId > 0) {
@@ -127,4 +126,5 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('[DOMContentLoaded] Keine gültige Spieler-ID gefunden. Abbruch.');
         window.location.href = 'login.html';
     }
+        */
 });
