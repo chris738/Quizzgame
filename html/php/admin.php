@@ -44,7 +44,7 @@ class QuestionManager extends Database {
             $this->response = ['success' => false, 'message' => 'Fehler: ' . $e->getMessage()];
         }
     }
-
+    //test
     public function updateQuestion($data) {
         $questionID    = $data['id'] ?? '';
         $question      = trim($data['question'] ?? '');
