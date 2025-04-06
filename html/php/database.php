@@ -8,7 +8,7 @@ interface DatabaseInterface {
     public function getUserByName($name);
     public function getTopHighscores($limit);
     public function getUserById($id);
-    public function assignQuestions($gameId, $player1Id, $player2Id);
+    public function assignQuestions($gameId, $player1Id);
     public function joinOrCreateMultiplayerGame($playerId);
     public function getMultiplayerQuestion($gameId, $playerId);
     public function saveMultiplayerAnswer($gameId, $playerId, $questionId, $selectedAnswer, $correctAnswer);
@@ -70,7 +70,6 @@ class Database implements DatabaseInterface {
             : $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
-
     public function saveGameResult($playerId, $questionId, $selectedAnswer, $correctAnswer, $score = null) {
         $isCorrect = ($selectedAnswer === $correctAnswer) ? 1 : 0;
     
@@ -138,8 +137,8 @@ class Database implements DatabaseInterface {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    // Mulitplayer Funktionen
     public function joinOrCreateMultiplayerGame($playerId) {
-        // Schritt 1: Nach offenem Raum suchen
         $stmt = $this->conn->prepare("
             SELECT * FROM MultiplayerGame 
             WHERE Player2ID IS NULL AND IsStarted = FALSE
@@ -149,7 +148,6 @@ class Database implements DatabaseInterface {
         $game = $stmt->fetch(PDO::FETCH_ASSOC);
     
         if ($game) {
-            // Beitreten
             $stmt = $this->conn->prepare("
                 UPDATE MultiplayerGame 
                 SET Player2ID = :pid 
@@ -158,35 +156,56 @@ class Database implements DatabaseInterface {
             $stmt->execute([':pid' => $playerId, ':gid' => $game['GameID']]);
             return $game['GameID'];
         } else {
-            // Neuen Raum erstellen
             $roomCode = substr(md5(uniqid()), 0, 6);
             $stmt = $this->conn->prepare("
                 INSERT INTO MultiplayerGame (RoomCode, Player1ID) 
                 VALUES (:code, :pid)
             ");
             $stmt->execute([':code' => $roomCode, ':pid' => $playerId]);
-            return $this->conn->lastInsertId();
+            $gameId = $this->conn->lastInsertId();
+    
+            // Fragen einfügen
+            $this->assignQuestions($gameId, $playerId);
+    
+            return $gameId;
         }
     }
+    
 
-    // 1–4 beantwortet von Player1, 5–8 von Player2
-    public function assignQuestions($gameId, $player1Id, $player2Id) {
-        $questions = $this->getRandomQuestions(8); // gib 8 zufällige Fragen
-
+    public function assignQuestions($gameId, $player1Id) {
+        $questions = $this->getRandomQuestions(16); // 4 Runden á 4 Fragen
+    
         foreach ($questions as $index => $q) {
-            $answeredBy = ($index < 4) ? $player1Id : $player2Id;
+            $questionNumber = $index + 1;
+    
+            if ($questionNumber <= 4) {
+                $round = 1;
+                $answeredBy = $player1Id;
+            } elseif ($questionNumber <= 8) {
+                $round = 2;
+                $answeredBy = null; // noch nicht bekannt
+            } elseif ($questionNumber <= 12) {
+                $round = 3;
+                $answeredBy = $player1Id;
+            } else {
+                $round = 4;
+                $answeredBy = null; // noch nicht bekannt
+            }
+    
             $stmt = $this->conn->prepare("
-                INSERT INTO MultiplayerQuestion (GameID, QuestionNumber, QuestionID, AnsweredBy)
-                VALUES (:game, :num, :qid, :answeredBy)
+                INSERT INTO MultiplayerQuestion (GameID, QuestionNumber, QuestionID, RoundNumber, AnsweredBy)
+                VALUES (:gameId, :questionNumber, :questionId, :round, :answeredBy)
             ");
             $stmt->execute([
-                ':game' => $gameId,
-                ':num' => $index + 1,
-                ':qid' => $q['QuestionID'],
+                ':gameId' => $gameId,
+                ':questionNumber' => $questionNumber,
+                ':questionId' => $q['QuestionID'],
+                ':round' => $round,
                 ':answeredBy' => $answeredBy
             ]);
         }
     }
+    
 
     public function getMultiplayerQuestion($gameId, $playerId) {
         $stmt = $this->conn->prepare("
