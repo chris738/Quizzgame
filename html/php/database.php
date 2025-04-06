@@ -30,34 +30,46 @@ class Database implements DatabaseInterface {
         }
     }
 
-    public function getRandomQuestion($category = null) {
+    public function getRandomQuestions(int $limit = 1, string $category = null): array {
+        // versehentliche Übergabe abfangen
+        if (is_string($limit) && $category === null) {
+            $category = $limit;
+            $limit = 1;
+        }
         if ($category) {
             $sql = "
-            SELECT 
-                QuestionID, Question, Answer1, Answer2, Answer3, Answer4, correctAnswer
-            FROM 
-                Question
-            WHERE 
-                Category = :category
-            ORDER BY 
-                RAND() 
-            LIMIT 1";
+                SELECT 
+                    QuestionID, Question, Answer1, Answer2, Answer3, Answer4, correctAnswer
+                FROM 
+                    Question
+                WHERE 
+                    Category = :category
+                ORDER BY 
+                    RAND()
+                LIMIT :limit";
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':category', $category);
+            $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
         } else {
             $sql = "
-            SELECT 
-                QuestionID, Question, Answer1, Answer2, Answer3, Answer4, correctAnswer
-            FROM 
-                Question
-            ORDER BY 
-                RAND() 
-            LIMIT 1";
+                SELECT 
+                    QuestionID, Question, Answer1, Answer2, Answer3, Answer4, correctAnswer
+                FROM 
+                    Question
+                ORDER BY 
+                    RAND()
+                LIMIT :limit";
             $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
         }
+    
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $limit === 1
+            ? $stmt->fetch(PDO::FETCH_ASSOC)
+            : $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
+    
 
     public function saveGameResult($playerId, $questionId, $selectedAnswer, $correctAnswer, $score = null) {
         $isCorrect = ($selectedAnswer === $correctAnswer) ? 1 : 0;
