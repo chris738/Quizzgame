@@ -3,7 +3,7 @@ require_once 'database.php';
 
 class SingleplayerHandler extends Database {
     public function getRandomQuestionResponse(?string $category): array {
-        $frage = $this->getRandomQuestion($category);
+        $frage = $this->getRandomQuestions($category);
         if (!$frage || empty($frage['Question'])) {
             return ['error' => '[Singleplayer] Keine gültige Frage gefunden.'];
         }

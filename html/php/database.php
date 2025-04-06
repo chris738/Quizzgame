@@ -1,7 +1,7 @@
 <?php
 
 interface DatabaseInterface {
-    public function getRandomQuestion($category);
+    public function getRandomQuestions($limit, $category);
     public function saveGameResult($playerId, $questionId, $selectedAnswer, $correctAnswer, $score);
     public function insertQuestion($question, $category, $a1, $a2, $a3, $a4, $correctAnswer);
     public function insertUser($username, $hashedPassword);
