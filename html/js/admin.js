@@ -62,7 +62,7 @@ function initDeleteQuestionForm() {
         e.preventDefault();
 
         const formData = new FormData(form);
-        formData.append('action', 'deleteQuestion'); // Action zum Löschen der Frage
+        formData.append('action', 'deleteQuestion'); 
 
         try {
             const response = await fetch("php/admin.php", {
