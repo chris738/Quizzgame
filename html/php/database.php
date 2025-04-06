@@ -8,6 +8,7 @@ interface DatabaseInterface {
     public function getUserByName($name);
     public function getTopHighscores($limit);
     public function getUserById($id);
+    public function updateQuestion($id, $question, $category, $a1, $a2, $a3, $a4, $correctAnswer);
 }
 
 class Database implements DatabaseInterface {
@@ -78,6 +79,32 @@ class Database implements DatabaseInterface {
             VALUES (:question, :category, :a1, :a2, :a3, :a4, :correct)
         ");
         $stmt->execute([
+            ':question' => $question,
+            ':category' => $category,
+            ':a1' => $a1,
+            ':a2' => $a2,
+            ':a3' => $a3,
+            ':a4' => $a4,
+            ':correct' => $correctAnswer
+        ]);
+    }
+
+    public function updateQuestion($id, $question, $category, $a1, $a2, $a3, $a4, $correctAnswer) {
+        $stmt = $this->conn->prepare("
+            UPDATE Question
+            SET 
+                Question = :question,
+                Category = :category,
+                Answer1 = :a1,
+                Answer2 = :a2,
+                Answer3 = :a3,
+                Answer4 = :a4,
+                correctAnswer = :correct
+            WHERE 
+                QuestionID = :id
+        ");
+        $stmt->execute([
+            ':id' => $id,
             ':question' => $question,
             ':category' => $category,
             ':a1' => $a1,
