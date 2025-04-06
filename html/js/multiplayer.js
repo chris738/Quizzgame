@@ -1,7 +1,7 @@
 let gameId = null;
 let playerId = null;
 let currentQuestionId = null;
-let correctAnswer = null;
+//let correctAnswer = null;
 
 async function initMultiplayer(currentPlayerId) {
     playerId = currentPlayerId;
