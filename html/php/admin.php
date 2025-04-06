@@ -44,29 +44,6 @@ class QuestionManager extends Database {
             $this->response = ['success' => false, 'message' => 'Fehler: ' . $e->getMessage()];
         }
     }
-    //test
-    public function updateQuestion($data) {
-        $questionID    = $data['id'] ?? '';
-        $question      = trim($data['question'] ?? '');
-        $category      = trim($data['category'] ?? '');
-        $answer1       = trim($data['answer1'] ?? '');
-        $answer2       = trim($data['answer2'] ?? '');
-        $answer3       = trim($data['answer3'] ?? '');
-        $answer4       = trim($data['answer4'] ?? '');
-        $correctAnswer = trim($data['correctAnswer'] ?? '');
-
-        if (!$this->isValidInput($question, $category, $answer1, $answer2, $answer3, $answer4, $correctAnswer)) {
-            $this->response = ['success' => false, 'message' => 'Ungültige Eingabedaten'];
-            return;
-        }
-
-        try {
-            parent::editQuestion($questionID, $question, $category, $answer1, $answer2, $answer3, $answer4, $correctAnswer);
-            $this->response = ['success' => true, 'message' => 'Frage erfolgreich aktualisiert'];
-        } catch (Exception $e) {
-            $this->response = ['success' => false, 'message' => 'Fehler: ' . $e->getMessage()];
-        }
-    }
 
     public function getResponse() {
         return $this->response;
@@ -116,12 +93,7 @@ class UserManager extends Database {
 // Prüfe, ob eine POST-Anfrage gesendet wurde
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    if (isset($_POST['action']) && $_POST['action'] === 'updateQuestion') {
-        $questionManager = new QuestionManager();
-        $questionManager->updateQuestion($_POST);
-        echo json_encode($questionManager->getResponse());
-
-    } elseif (isset($_POST['question'])) {
+    if (isset($_POST['question'])) {
         $questionManager = new QuestionManager();
         $questionManager->addQuestion($_POST);
         echo json_encode($questionManager->getResponse());
