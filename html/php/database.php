@@ -117,6 +117,10 @@ class Database implements DatabaseInterface {
     }
 
     public function dbdeleteQuestion($id) {
+        $stmt = $this->conn->prepare("UPDATE MultiplayerAnswer SET QuestionID = NULL WHERE QuestionID = :id");
+        $stmt->execute([':id' => $id]);
+
+
         $stmt = $this->conn->prepare("
         DELETE FROM Question WHERE QuestionID = :id"
         );
