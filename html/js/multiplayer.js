@@ -46,17 +46,23 @@ async function loadNextQuestion() {
 
     if (result.wait) {
         console.log('[loadNextQuestion] Warte auf anderen Spieler...');
-        document.getElementById('Question').textContent = result.message || 'Bitte warten...';
+
+        // Anzeigen: "Warte auf Mitspieler..."
+        document.getElementById('quizContainer').style.display = 'none';
+        document.getElementById('waitingRoom').style.display = 'block';
+        document.getElementById('waitingRoom').innerHTML = `
+          <h2>Mehrspieler-Modus</h2>
+          <p>${result.message || 'Warte auf Mitspieler...'}</p>
+        `;
+
         setAnswerButtonsEnabled(false);
         setTimeout(loadNextQuestion, 5000);
         return;
     }
 
-    if (!result.info || !result.info.id) {
-        document.getElementById('Question').textContent = result.message || 'Spiel beendet.';
-        setAnswerButtonsEnabled(false);
-        return;
-    }
+    // Wenn Frage kommt: Quiz anzeigen, Wartebereich ausblenden
+    document.getElementById('waitingRoom').style.display = 'none';
+    document.getElementById('quizContainer').style.display = 'block';
 
     const q = result.info;
     currentQuestionId = q.id;
@@ -72,7 +78,8 @@ async function loadNextQuestion() {
 
 function setAnswerButtonsEnabled(enabled) {
     for (let i = 1; i <= 4; i++) {
-        document.getElementById('answer' + i).disabled = !enabled;
+        document.getElementById('answer' + i).parentElement.style.pointerEvents = enabled ? 'auto' : 'none';
+        document.getElementById('answer' + i).parentElement.style.opacity = enabled ? '1' : '0.5';
     }
 }
 
