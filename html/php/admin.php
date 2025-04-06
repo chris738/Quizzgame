@@ -67,6 +67,22 @@ class QuestionManager extends Database {
             $this->response = ['success' => false, 'message' => 'Fehler: ' . $e->getMessage()];
         }
     }
+
+    public function deleteQuestion($data) {
+        $questionID = $data['deleteQuestionID'] ?? '';
+    
+        if (empty($questionID)) {
+            $this->response = ['success' => false, 'message' => 'Frage ID ist erforderlich'];
+            return;
+        }
+    
+        try {
+            parent::dbdeleteQuestion($questionID); 
+            $this->response = ['success' => true, 'message' => 'Frage erfolgreich gelöscht'];
+        } catch (Exception $e) {
+            $this->response = ['success' => false, 'message' => 'Fehler: ' . $e->getMessage()];
+        }
+    }
     
 
     public function getResponse() {
@@ -117,7 +133,12 @@ class UserManager extends Database {
 // Prüfe, ob eine POST-Anfrage gesendet wurde
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    if (isset($_POST['action']) && $_POST['action'] === 'updateQuestion') {
+    if (isset($_POST['action']) && $_POST['action'] === 'deleteQuestion') {
+        $questionManager = new QuestionManager();
+        $questionManager->deleteQuestion($_POST);
+        echo json_encode($questionManager->getResponse());
+
+    } elseif (isset($_POST['action']) && $_POST['action'] === 'updateQuestion') {
         $questionManager = new QuestionManager();
         $questionManager->updateQuestion($_POST);
         echo json_encode($questionManager->getResponse());
