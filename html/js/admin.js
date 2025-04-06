@@ -116,5 +116,6 @@ function initAddUserForm() {
 document.addEventListener("DOMContentLoaded", () => {
     initAddQuestionForm();
     initAddUserForm();
-    initEditQuestionForm(); 
+    initEditQuestionForm();
+    initDeleteQuestionForm(); 
 });
