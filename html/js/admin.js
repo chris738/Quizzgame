@@ -33,7 +33,7 @@ function initEditQuestionForm() {
         e.preventDefault();
 
         const formData = new FormData(form);
-        formData.append('updateQuestion', true); 
+        formData.append('action', 'updateQuestion'); 
 
         try {
             const response = await fetch("php/admin.php", {
