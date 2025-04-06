@@ -1,7 +1,7 @@
 <?php
 
 interface DatabaseInterface {
-    public function getRandomQuestions($limit, $category);
+    public function getRandomQuestions($limit = 1, $category = null);
     public function saveGameResult($playerId, $questionId, $selectedAnswer, $correctAnswer, $score);
     public function insertQuestion($question, $category, $a1, $a2, $a3, $a4, $correctAnswer);
     public function insertUser($username, $hashedPassword);
@@ -30,12 +30,13 @@ class Database implements DatabaseInterface {
         }
     }
 
-    public function getRandomQuestions(int $limit = 1, string $category = null): array {
-        // versehentliche Übergabe abfangen
+    public function getRandomQuestions($limit = 1, $category = null): array {
+        // flexible Übergabe: getRandomQuestions('Sport') → $category statt $limit
         if (is_string($limit) && $category === null) {
             $category = $limit;
             $limit = 1;
         }
+
         if ($category) {
             $sql = "
                 SELECT 
@@ -49,7 +50,7 @@ class Database implements DatabaseInterface {
                 LIMIT :limit";
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':category', $category);
-            $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+            $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
         } else {
             $sql = "
                 SELECT 
@@ -60,15 +61,14 @@ class Database implements DatabaseInterface {
                     RAND()
                 LIMIT :limit";
             $stmt = $this->conn->prepare($sql);
-            $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+            $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
         }
-    
+
         $stmt->execute();
-        return $limit === 1
+        return (int)$limit === 1
             ? $stmt->fetch(PDO::FETCH_ASSOC)
             : $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
     
 
     public function saveGameResult($playerId, $questionId, $selectedAnswer, $correctAnswer, $score = null) {
