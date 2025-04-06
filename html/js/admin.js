@@ -84,11 +84,6 @@ function initDeleteQuestionForm() {
     });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    initDeleteQuestionForm(); // Initialisiert das Löschen-Formular
-});
-
-
 function initAddUserForm() {
     const form = document.getElementById("addUserForm");
 
