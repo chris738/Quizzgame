@@ -44,13 +44,17 @@ async function loadNextQuestion() {
     const response = await fetch(`php/quiz.php?mode=multiplayer&gameId=${gameId}&playerId=${playerId}`);
     const result = await response.json();
 
-    if (!result.info || !result.info.id) {
-        console.log('[loadNextQuestion] Keine Frage gefunden. Warte auf Gegenspieler.');
-
-        document.getElementById('Question').textContent = 'Warte auf deinen Zug...';
-
-        // Wiederhole Abfrage alle 5 Sekunden
+    if (result.wait) {
+        console.log('[loadNextQuestion] Warte auf anderen Spieler...');
+        document.getElementById('Question').textContent = result.message || 'Bitte warten...';
+        setAnswerButtonsEnabled(false);
         setTimeout(loadNextQuestion, 5000);
+        return;
+    }
+
+    if (!result.info || !result.info.id) {
+        document.getElementById('Question').textContent = result.message || 'Spiel beendet.';
+        setAnswerButtonsEnabled(false);
         return;
     }
 
@@ -63,15 +67,7 @@ async function loadNextQuestion() {
     document.getElementById('answer2').textContent = q.antwort["2"];
     document.getElementById('answer3').textContent = q.antwort["3"];
     document.getElementById('answer4').textContent = q.antwort["4"];
-
-    if (!result.info || !result.info.id) {
-        document.getElementById('Question').textContent = 'Warte auf deinen Zug...';
-        setAnswerButtonsEnabled(false);
-        setTimeout(loadNextQuestion, 5000);
-        return;
-    } else {
-        setAnswerButtonsEnabled(true);
-    }
+    setAnswerButtonsEnabled(true);
 }
 
 function setAnswerButtonsEnabled(enabled) {

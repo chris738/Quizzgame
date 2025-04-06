@@ -13,6 +13,7 @@ interface DatabaseInterface {
     public function getMultiplayerQuestion($gameId, $playerId);
     public function saveMultiplayerAnswer($gameId, $playerId, $questionId, $selectedAnswer, $correctAnswer);
     public function assignPlayer2ToQuestions($gameId, $player2Id);
+    public function isPlayersTurn($gameId, $playerId);
 }
 
 class Database implements DatabaseInterface {
@@ -267,6 +268,29 @@ class Database implements DatabaseInterface {
             ':gameId' => $gameId
         ]);
     }
+
+    public function isPlayersTurn($gameId, $playerId): bool {
+        $stmt = $this->conn->prepare("
+            SELECT 1
+            FROM MultiplayerQuestion mq
+            WHERE mq.GameID = :gameId
+              AND mq.AnsweredBy = :playerId
+              AND NOT EXISTS (
+                  SELECT 1 FROM MultiplayerAnswer a
+                  WHERE a.GameID = mq.GameID
+                    AND a.PlayerID = mq.AnsweredBy
+                    AND a.QuestionID = mq.QuestionID
+              )
+            LIMIT 1
+        ");
+        $stmt->execute([
+            ':gameId' => $gameId,
+            ':playerId' => $playerId
+        ]);
+    
+        return (bool) $stmt->fetchColumn();
+    }
+    
 }
 
 ?>

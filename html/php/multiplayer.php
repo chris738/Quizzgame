@@ -23,12 +23,21 @@ class MultiplayerHandler extends Database {
     }
 
     public function getNextQuestion(int $gameId, int $playerId): array {
+        // Prüfen, ob dieser Spieler an der Reihe ist
+        if (!$this->isPlayersTurn($gameId, $playerId)) {
+            return [
+                'wait' => true,
+                'message' => 'Der andere Spieler ist an der Reihe.'
+            ];
+        }
+    
+        // Frage laden
         $frage = $this->getMultiplayerQuestion($gameId, $playerId);
-
+    
         if (!$frage || !is_array($frage)) {
             return ['message' => '[Multiplayer] Keine neue Frage mehr verfügbar'];
         }
-
+    
         return [
             'info' => [
                 'id'      => $frage['QuestionID'],
@@ -44,4 +53,5 @@ class MultiplayerHandler extends Database {
             ]
         ];
     }
+    
 }
