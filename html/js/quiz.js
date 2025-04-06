@@ -29,7 +29,7 @@ function selectCategory(categoryName) {
     setNavVisibility(false);
 }
 
-function loadNewQuestion() {loadNextQuestion
+function loadNewQuestion() {
     let url = 'php/quiz.php';
     if (selectedCategory) {
         url += '?category=' + encodeURIComponent(selectedCategory);
