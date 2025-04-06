@@ -89,7 +89,7 @@ class Database implements DatabaseInterface {
         ]);
     }
 
-    public function updateQuestion($id, $question, $category, $a1, $a2, $a3, $a4, $correctAnswer) {
+    public function editQuestion($id, $question, $category, $a1, $a2, $a3, $a4, $correctAnswer) {
         $stmt = $this->conn->prepare("
             UPDATE Question
             SET 
