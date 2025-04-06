@@ -55,6 +55,40 @@ function initEditQuestionForm() {
     });
 }
 
+function initDeleteQuestionForm() {
+    const form = document.getElementById("deleteQuestionForm");
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+        formData.append('action', 'deleteQuestion'); // Action zum Löschen der Frage
+
+        try {
+            const response = await fetch("php/admin.php", {
+                method: "POST",
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                alert("Frage erfolgreich gelöscht!");
+                form.reset();
+            } else {
+                alert("Fehler: " + result.message);
+            }
+        } catch (err) {
+            alert("Netzwerkfehler: " + err.message);
+        }
+    });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    initDeleteQuestionForm(); // Initialisiert das Löschen-Formular
+});
+
+
 function initAddUserForm() {
     const form = document.getElementById("addUserForm");
 
