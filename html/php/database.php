@@ -8,6 +8,8 @@ interface DatabaseInterface {
     public function getUserByName($name);
     public function getTopHighscores($limit);
     public function getUserById($id);
+    public function editQuestion($id, $question, $category, $a1, $a2, $a3, $a4, $correctAnswer);
+    public function dbdeleteQuestion($id);
 }
 
 class Database implements DatabaseInterface {
@@ -87,6 +89,46 @@ class Database implements DatabaseInterface {
             ':correct' => $correctAnswer
         ]);
     }
+
+    public function editQuestion($id, $question, $category, $a1, $a2, $a3, $a4, $correctAnswer) {
+        $stmt = $this->conn->prepare("
+            UPDATE Question
+            SET 
+                Question = :question,
+                Category = :category,
+                Answer1 = :a1,
+                Answer2 = :a2,
+                Answer3 = :a3,
+                Answer4 = :a4,
+                correctAnswer = :correct
+            WHERE 
+                QuestionID = :id
+        ");
+        $stmt->execute([
+            ':id' => $id,
+            ':question' => $question,
+            ':category' => $category,
+            ':a1' => $a1,
+            ':a2' => $a2,
+            ':a3' => $a3,
+            ':a4' => $a4,
+            ':correct' => $correctAnswer
+        ]);
+    }
+
+    public function dbdeleteQuestion($id) {
+        $stmt = $this->conn->prepare("UPDATE MultiplayerAnswer SET QuestionID = NULL WHERE QuestionID = :id");
+        $stmt->execute([':id' => $id]);
+        $stmt = $this->conn->prepare("UPDATE MultiplayerQuestion SET QuestionID = NULL WHERE QuestionID = :id");
+        $stmt->execute([':id' => $id]);
+
+
+        $stmt = $this->conn->prepare("
+        DELETE FROM Question WHERE QuestionID = :id"
+        );
+        $stmt->execute([':id' => $id]);
+    }
+
 
     public function insertUser($username, $hashedPassword) {
         $stmt = $this->conn->prepare("

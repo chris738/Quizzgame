@@ -60,6 +60,47 @@
         <button type="submit">Frage hinzufügen</button>
       </form>
     </div>
-  </div>
+
+    <div class="section">
+      <h2>Frage bearbeiten oder löschen</h2>
+      <form id="editQuestionForm">
+        <label for="id">Frage ID (zum Bearbeiten):</label>
+        <input type="number" id="id" name="id" required>
+
+        <label for="editquestion">Neue Frage:</label>
+        <input type="text" id="editquestion" name="question" required>
+
+        <label for="editcategory">Kategorie:</label>
+        <input type="text" id="editcategory" name="category" required>
+
+        <label for="editanswer1">Antwort 1:</label>
+        <input type="text" id="editanswer1" name="answer1" required>
+
+        <label for="editanswer2">Antwort 2:</label>
+        <input type="text" id="editanswer2" name="answer2" required>
+
+        <label for="editanswer3">Antwort 3:</label>
+        <input type="text" id="editanswer3" name="answer3" required>
+
+        <label for="editanswer4">Antwort 4:</label>
+        <input type="text" id="editanswer4" name="answer4" required>
+
+        <label for="editcorrectAnswer">Korrekte Antwort (1-4):</label>
+        <input type="number" id="editcorrectAnswer" name="correctAnswer" min="1" max="4" required>
+
+        <button type="submit">Frage bearbeiten</button>
+      </form>
+    </div>
+
+    <div class="section">
+      <form id="deleteQuestionForm">
+        <label for="deleteQuestionID">Frage ID zum Löschen:</label>
+        <input type="number" id="deleteQuestionID" name="deleteQuestionID" required>
+        <button type="submit">Frage löschen</button>
+      </form>
+    </div>
+
+
+</div>
 </body>
 </html>
