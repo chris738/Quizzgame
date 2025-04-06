@@ -68,6 +68,23 @@ class QuestionManager extends Database {
         }
     }
 
+    public function deleteQuestion($data) {
+        $questionID = $data['deleteQuestionID'] ?? '';
+    
+        if (empty($questionID)) {
+            $this->response = ['success' => false, 'message' => 'Frage ID ist erforderlich'];
+            return;
+        }
+    
+        try {
+            parent::deleteQuestion($questionID); // Aufruf der deleteQuestion-Methode aus der Database-Klasse
+            $this->response = ['success' => true, 'message' => 'Frage erfolgreich gelöscht'];
+        } catch (Exception $e) {
+            $this->response = ['success' => false, 'message' => 'Fehler: ' . $e->getMessage()];
+        }
+    }
+    
+
     public function getResponse() {
         return $this->response;
     }
