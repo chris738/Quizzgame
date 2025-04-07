@@ -66,8 +66,11 @@ class QuizHandler {
             } else {
                 $this->response = $handler->saveAnswer($data);
             }
+        } elseif ($mode === 'single') {
+            $handler = new SingleplayerHandler();
+            $this->response = $handler->saveAnswer($data);
         } else {
-            return ['success' => false, 'message' => '[saveGameResultFromRequest] Ungültige Daten'];
+            $this->response = ['success' => false, 'message' => '[saveGameResultFromRequest] Ungültige Daten'];
         }
     }
     
