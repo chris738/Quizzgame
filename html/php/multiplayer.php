@@ -7,6 +7,7 @@ class MultiplayerHandler extends Database {
         return ['success' => true, 'gameId' => $gameId];
     }
 
+    //todo question number implementiern
     public function saveAnswer(array $data): array {
         $gameId = $data['gameId'] ?? null;
         $playerId = $data['playerId'] ?? null;
@@ -22,7 +23,7 @@ class MultiplayerHandler extends Database {
         return ['success' => false, 'message' => '[Multiplayer] Ungültige oder fehlende Felder'];
     }
 
-    public function getNextQuestion(int $gameId, int $playerId): array {
+    public function getNextQuestion(int $gameId, int $playerId, int $questionNr): array {
         // Prüfen, ob dieser Spieler an der Reihe ist
         if (!$this->isPlayersTurn($gameId, $playerId)) {
             return [
@@ -32,7 +33,7 @@ class MultiplayerHandler extends Database {
         }
     
         // Frage laden
-        $frage = $this->getMultiplayerQuestion($gameId, $playerId);
+        $frage = $this->getMultiplayerQuestion($gameId, $playerId, $questionNr);
     
         if (!$frage || !is_array($frage)) {
             return ['message' => '[Multiplayer] Keine neue Frage mehr verfügbar'];

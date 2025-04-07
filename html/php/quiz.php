@@ -38,10 +38,11 @@ class QuizHandler {
         if ($mode === 'multiplayer') {
             $gameId = $data['gameId'] ?? null;
             $playerId = $data['playerId'] ?? null;
+            $questionNr = $data['questionNr'] ?? null;
 
             if ($gameId && $playerId) {
                 $handler = new MultiplayerHandler();
-                $this->response = $handler->getNextQuestion((int)$gameId, (int)$playerId);
+                $this->response = $handler->getNextQuestion((int)$gameId, (int)$playerId, (int)$questionNr);
             } else {
                 $this->response = ['success' => false, 'message' => '[GET] Spiel-ID und Spieler-ID erforderlich.'];
             }

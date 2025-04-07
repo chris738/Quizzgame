@@ -10,7 +10,7 @@ interface DatabaseInterface {
     public function getUserById($id);
     public function assignQuestions($gameId, $player1Id);
     public function joinOrCreateMultiplayerGame($playerId);
-    public function getMultiplayerQuestion($gameId, $playerId);
+    public function getMultiplayerQuestion($gameId, $playerId, $questionNr);
     public function saveMultiplayerAnswer($gameId, $playerId, $questionId, $selectedAnswer, $correctAnswer);
     public function assignPlayer2ToQuestions($gameId, $player2Id);
     public function isPlayersTurn($gameId, $playerId);
@@ -210,7 +210,7 @@ class Database implements DatabaseInterface {
     }
     
 
-    public function getMultiplayerQuestion($gameId, $playerId) {
+    public function getMultiplayerQuestion($gameId, $playerId, $questionNr) {
         $stmt = $this->conn->prepare("
             SELECT 
                 q.QuestionID AS QuestionID,
@@ -224,19 +224,17 @@ class Database implements DatabaseInterface {
             FROM MultiplayerQuestion mq
             JOIN Question q ON mq.QuestionID = q.QuestionID
             WHERE mq.GameID = :gameId 
+              AND mq.QuestionNumber = :questionNr
               AND mq.AnsweredBy = :playerId
-              AND NOT EXISTS (
-                SELECT 1 FROM MultiplayerAnswer a
-                WHERE a.GameID = mq.GameID 
-                  AND a.PlayerID = :playerId 
-                  AND a.QuestionID = mq.QuestionID
-            )
-            ORDER BY mq.QuestionNumber ASC
-            LIMIT 1
         ");
-        $stmt->execute([':gameId' => $gameId, ':playerId' => $playerId]);
+        $stmt->execute([
+            ':gameId' => $gameId,
+            ':playerId' => $playerId,
+            ':questionNr' => $questionNr
+        ]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+    
 
     public function saveMultiplayerAnswer($gameId, $playerId, $questionId, $selectedAnswer, $correctAnswer) {
         $isCorrect = ((int)$selectedAnswer === (int)$correctAnswer) ? 1 : 0;

@@ -1,6 +1,8 @@
 let gameId = null;
 let playerId = null;
 let currentQuestionId = null;
+let questionNumber = 1;
+
 //let correctAnswer = null;
 
 async function initMultiplayer(currentPlayerId) {
@@ -40,7 +42,8 @@ async function startGame() {
 }
 
 async function loadNextQuestion() {
-    const response = await fetch(`php/quiz.php?mode=multiplayer&gameId=${gameId}&playerId=${playerId}`);
+    const response = await fetch(`php/quiz.php?mode=multiplayer&gameId=${gameId}&playerId=${playerId}&questionNr=${questionNumber}`);
+
     const result = await response.json();
 
     if (result.wait) {
@@ -100,7 +103,8 @@ async function submitAnswer(answerNumber) {
             playerId: playerId,
             questionId: currentQuestionId,
             selectedAnswer: selectedAnswer,
-            correctAnswer: correctAnswer
+            correctAnswer: correctAnswer,
+            questionNumber: questionNumber
         })
     });
 
@@ -108,8 +112,14 @@ async function submitAnswer(answerNumber) {
 
     if (result.success) {
         console.log(`[submitAnswer] Antwort war ${result.correct ? 'richtig' : 'falsch'}`);
-    } else {
-        console.error(`[submitAnswer] Fehler beim Speichern der Antwort: ${result.message || 'Unbekannter Fehler'}`);
+        
+        if (questionNumber < 16) {
+            questionNumber++;
+            document.getElementById('newQuestionBtn').onclick = loadNextQuestion;
+        } else {
+            console.log('Spiel beendet. Alle 16 Fragen beantwortet.');
+            // Optional: Endbildschirm oder Highscore
+        }
     }
 
 
