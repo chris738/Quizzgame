@@ -65,12 +65,23 @@ function loadNewQuestion() {
 
 function handleAnswerClick(spanID) {
     if (hasAnswered) return;
-    
-    const selectedAnswer = parseInt(spanID.replace('answer',''), 10);
-    const feedbackDiv = document.getElementById('feedback');
 
+    const selectedAnswer = parseInt(spanID.replace('answer', ''), 10);
     const isCorrect = (selectedAnswer === correctAnswer);
     const score = calculateScore(isCorrect);
+
+    showAnswerFeedback(isCorrect, selectedAnswer, score);
+
+    totalScore += score;
+    hasAnswered = true;
+
+    saveGameResult(currentPlayerId, currentQuestionID, selectedAnswer, correctAnswer, score);
+}
+
+window.showAnswerFeedback = function(isCorrect, selectedAnswer, score) {
+    const feedbackDiv = document.getElementById('feedback');
+    const newQuestionBtn = document.getElementById('newQuestionBtn');
+
     if (isCorrect) {
         document.querySelector(`[data-color="answer${selectedAnswer}"]`)
                 .classList.add('correct');
@@ -84,23 +95,13 @@ function handleAnswerClick(spanID) {
         feedbackDiv.textContent = "Falsch! Richtig wäre: " + correctText;
     }
 
-    // Score zum Gesamtscore addieren
-    totalScore += score;
-
-    hasAnswered = true;
-
-    // "Nächste Frage"-Button einblenden
-    const newQuestionBtn = document.getElementById('newQuestionBtn');
     newQuestionBtn.style.display = 'inline-block';
 
-    // Barrierefreiheit
     feedbackDiv.setAttribute('tabindex', '0');
     newQuestionBtn.setAttribute('tabindex', '1');
     feedbackDiv.focus();
+};
 
-    // Spielstand speichern (Backend-Logik)
-    saveGameResult(currentPlayerId, currentQuestionID, selectedAnswer, correctAnswer, score);
-}
 
 function nextQuestion() {
     // Wenn wir unsere max. Anzahl an Fragen erreicht haben, dann Endergebnis anzeigen

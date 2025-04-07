@@ -88,7 +88,7 @@ async function submitAnswer(answerNumber) {
     const score = calculateScore(isCorrect);
 
     // Anzeige aktualisieren
-    handleAnswerClick(selectedAnswer);
+    showAnswerFeedback(isCorrect, selectedAnswer, score);
 
     // An Server senden
     const response = await fetch('php/quiz.php', {
