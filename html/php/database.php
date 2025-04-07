@@ -13,7 +13,7 @@ interface DatabaseInterface {
     public function getMultiplayerQuestion($gameId, $playerId, $questionNr);
     public function saveMultiplayerAnswer($gameId, $playerId, $questionId, $selectedAnswer, $correctAnswer, $questionNumber);
     public function assignPlayer2ToQuestions($gameId, $player2Id);
-    public function isPlayersTurn($gameId, $playerId);
+    public function isPlayersTurn($gameId, $playerId, $questionNr);
 }
 
 class Database implements DatabaseInterface {
@@ -283,9 +283,7 @@ class Database implements DatabaseInterface {
     
         return $isCorrect;
     }
-    
-    
-    
+       
     public function assignPlayer2ToQuestions($gameId, $player2Id) {
         $stmt = $this->conn->prepare("
             UPDATE MultiplayerQuestion 
@@ -299,7 +297,7 @@ class Database implements DatabaseInterface {
         ]);
     }
 
-    public function isPlayersTurn($gameId, $playerId, $questionNr): bool {
+    public function isPlayersTurn($gameId, $playerId, $questionNr) {
         $stmt = $this->conn->prepare("
             SELECT 1
             FROM MultiplayerQuestion
