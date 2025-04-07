@@ -76,6 +76,9 @@ async function loadNextQuestion() {
     document.getElementById('answer3').textContent = q.antwort["3"];
     document.getElementById('answer4').textContent = q.antwort["4"];
     setAnswerButtonsEnabled(true);
+
+    // UI zurücksetzen
+    resetUI();
 }
 
 function setAnswerButtonsEnabled(enabled) {
@@ -116,6 +119,7 @@ async function submitAnswer(answerNumber) {
         if (questionNumber < 16) {
             questionNumber++;
             document.getElementById('newQuestionBtn').onclick = loadNextQuestion;
+
         } else {
             console.log('Spiel beendet. Alle 16 Fragen beantwortet.');
             // Optional: Endbildschirm oder Highscore

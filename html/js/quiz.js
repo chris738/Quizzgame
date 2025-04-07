@@ -186,7 +186,7 @@ function saveGameResult(playerId, questionID, selectedAnswer, correctAnswer, sco
     });
 }
 
-function resetUI() {
+window.resetUI = function resetUI() {
     setNavVisibility(false);
 
     // CSS-Klassen entfernen
@@ -202,11 +202,11 @@ function resetUI() {
     // Fokus auf Frage setzen
     const questionHeading = document.getElementById('Question');
 
-
     setTimeout(() => {
         questionHeading.focus();
     }, 250);
-}
+};
+
 
 // Multiplayer-Check beim Start
 document.addEventListener('DOMContentLoaded', () => {
