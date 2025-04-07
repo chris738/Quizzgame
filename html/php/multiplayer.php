@@ -31,7 +31,7 @@ class MultiplayerHandler extends Database {
                 (int)$correctAnswer,
                 (int)$questionNumber
             );
-            return ['success' => true, 'correct' => (bool)$isCorrect];
+            return ['success' => true, 'correct' => (bool)$isCorrect, 'nr' => (int)$questionNumber];
         }
     
         return ['success' => false, 'message' => '[Multiplayer] Ungültige oder fehlende Felder'];
