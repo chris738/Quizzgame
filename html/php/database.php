@@ -168,6 +168,7 @@ class Database implements DatabaseInterface {
     
             // Rückgabe mit Spiel-ID, Status und ID des anderen Spielers (Player 1)
             return [
+                'success' => true,
                 'gameId' => $game['GameID'],
                 'status' => 'joined',
                 'otherPlayerId' => (int)$game['Player1ID']
@@ -193,6 +194,7 @@ class Database implements DatabaseInterface {
     
             // Rückgabe mit Spiel-ID und Status
             return [
+                'success' => true,
                 'gameId' => $gameId,
                 'status' => 'created'
             ];
