@@ -141,6 +141,7 @@ class Database implements DatabaseInterface {
 
     // Mulitplayer Funktionen
     public function joinOrCreateMultiplayerGame($playerId) {
+        // Versuche ein offenes Spiel zu finden, das noch nicht gestartet ist und auf einen zweiten Spieler wartet
         $stmt = $this->conn->prepare("
             SELECT * FROM MultiplayerGame 
             WHERE Player2ID IS NULL AND IsStarted = FALSE
@@ -150,29 +151,47 @@ class Database implements DatabaseInterface {
         $game = $stmt->fetch(PDO::FETCH_ASSOC);
     
         if ($game) {
+            // Spiel gefunden – Spieler 2 tritt bei
+    
+            // Spieler 2 wird im Spiel eingetragen
             $stmt = $this->conn->prepare("
                 UPDATE MultiplayerGame 
                 SET Player2ID = :pid 
                 WHERE GameID = :gid
             ");
+    
+            // Fragen für Spieler 2 zuweisen
             $this->assignPlayer2ToQuestions($game['GameID'], $playerId);
+    
+            // Spieler-ID und Spiel-ID an Query binden und ausführen
             $stmt->execute([':pid' => $playerId, ':gid' => $game['GameID']]);
+    
+            // Rückgabe mit Spiel-ID, Status und ID des anderen Spielers (Player 1)
             return [
                 'gameId' => $game['GameID'],
-                'status' => 'joined'
+                'status' => 'joined',
+                'otherPlayerId' => (int)$game['Player1ID']
             ];
         } else {
+            // Kein offenes Spiel vorhanden – neues Spiel erstellen
+    
+            // Raumcode generieren
             $roomCode = substr(md5(uniqid()), 0, 6);
+    
+            // Spiel mit Player 1 in Datenbank einfügen
             $stmt = $this->conn->prepare("
                 INSERT INTO MultiplayerGame (RoomCode, Player1ID) 
                 VALUES (:code, :pid)
             ");
             $stmt->execute([':code' => $roomCode, ':pid' => $playerId]);
+    
+            // Neue Spiel-ID holen
             $gameId = $this->conn->lastInsertId();
     
-            // Fragen einfügen
+            // Fragen für Spieler 1 zuweisen
             $this->assignQuestions($gameId, $playerId);
     
+            // Rückgabe mit Spiel-ID und Status
             return [
                 'gameId' => $gameId,
                 'status' => 'created'
@@ -180,8 +199,6 @@ class Database implements DatabaseInterface {
         }
     }
     
-    
-
     public function assignQuestions($gameId, $player1Id) {
         $questions = $this->getRandomQuestions(16); // 4 Runden á 4 Fragen
     
