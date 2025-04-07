@@ -104,6 +104,8 @@ async function loadNextQuestion() {
             } else {
                 console.log('[loadNextQuestion] Alle 16 Fragen beantwortet.');
                 // Hier z. B. Endbildschirm anzeigen
+
+                return;
             }
             loadNextQuestion(); // direkt erneut laden
             return;
