@@ -299,27 +299,24 @@ class Database implements DatabaseInterface {
         ]);
     }
 
-    public function isPlayersTurn($gameId, $playerId): bool {
+    public function isPlayersTurn($gameId, $playerId, $questionNr): bool {
         $stmt = $this->conn->prepare("
             SELECT 1
-            FROM MultiplayerQuestion mq
-            WHERE mq.GameID = :gameId
-              AND mq.AnsweredBy = :playerId
-              AND NOT EXISTS (
-                  SELECT 1 FROM MultiplayerAnswer a
-                  WHERE a.GameID = mq.GameID
-                    AND a.PlayerID = mq.AnsweredBy
-                    AND a.QuestionID = mq.QuestionID
-              )
+            FROM MultiplayerQuestion
+            WHERE GameID = :gameId
+              AND QuestionNumber = :qNr
+              AND AnsweredBy = :playerId
             LIMIT 1
         ");
         $stmt->execute([
             ':gameId' => $gameId,
-            ':playerId' => $playerId
+            ':playerId' => $playerId,
+            ':qNr' => $questionNr
         ]);
     
         return (bool) $stmt->fetchColumn();
     }
+    
     
 }
 
