@@ -113,31 +113,28 @@ function nextQuestion() {
 }
 
 function showFinalScore() {
-    // Navigations bereich wieder einblenden
     setNavVisibility(true);
-
-    // Quiz-Bereich ausblenden
     document.getElementById('quizContainer').style.display = 'none';
-
-    // Ergebnis-Bereich sichtbar machen
     document.getElementById('gameResult').style.display = 'block';
     document.getElementById('restartBtn').style.display = 'block';
-    document.getElementById('finalScore').textContent = 
+
+    document.getElementById('finalScore').textContent =
         `Du hast ${maxQuestions} Fragen beantwortet und insgesamt ${totalScore} Punkte erreicht!`;
 
-    //lade den hightscore aus der js/hightscore.js
     loadHighscore();
 
     const section = document.getElementById('highscoreSection');
     section.style.display = 'block';
-    
-    // Optional: Scroll zum Highscore-Bereich
     section.scrollIntoView({ behavior: 'smooth' });
 
     setTimeout(() => {
         document.getElementById('finalScore').focus();
     }, 400);
 }
+
+// Funktion global machen
+window.showFinalScore = showFinalScore;
+
 
 function resetGame() {
     // Navigations bereich wieder einblenden

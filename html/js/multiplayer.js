@@ -100,6 +100,7 @@ async function loadNextQuestion() {
             } else {
                 console.log('[loadNextQuestion] Alle 16 Fragen beantwortet.');
                 // Hier z. B. Endbildschirm anzeigen
+                showFinalScore();
                 return;
             }
             loadNextQuestion(); // direkt erneut laden
