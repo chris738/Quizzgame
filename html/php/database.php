@@ -157,7 +157,10 @@ class Database implements DatabaseInterface {
             ");
             $this->assignPlayer2ToQuestions($game['GameID'], $playerId);
             $stmt->execute([':pid' => $playerId, ':gid' => $game['GameID']]);
-            return $game['GameID'];
+            return [
+                'gameId' => $game['GameID'],
+                'status' => 'joined'
+            ];
         } else {
             $roomCode = substr(md5(uniqid()), 0, 6);
             $stmt = $this->conn->prepare("
@@ -170,9 +173,13 @@ class Database implements DatabaseInterface {
             // Fragen einfügen
             $this->assignQuestions($gameId, $playerId);
     
-            return $gameId;
+            return [
+                'gameId' => $gameId,
+                'status' => 'created'
+            ];
         }
     }
+    
     
 
     public function assignQuestions($gameId, $player1Id) {

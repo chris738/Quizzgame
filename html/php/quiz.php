@@ -55,15 +55,23 @@ class QuizHandler {
 
     private function handlePost(string $mode, array $data) {
         if (!isset($data['playerId']) || !is_numeric($data['playerId'])) {
-            $this->response = ['success' => false, 'message' => '[POST] Spieler-ID fehlt oder ungültig'];
+            $this->response = [
+                'success' => false, 
+                'message' => '[POST] Spieler-ID fehlt oder ungültig'
+            ];
             return;
         }
-
+    
         if ($mode === 'multiplayer') {
             $handler = new MultiplayerHandler();
-
+    
             if (($data['action'] ?? null) === 'joinOrCreateGame') {
-                $this->response = $handler->joinOrCreateGame((int)$data['playerId']);
+                $result = $handler->joinOrCreateGame((int)$data['playerId']);
+                $this->response = [
+                    'success' => true,
+                    'gameId' => $result['gameId'],
+                    'status' => $result['status']
+                ];
             } else {
                 $this->response = $handler->saveAnswer($data);
             }
@@ -74,6 +82,7 @@ class QuizHandler {
             $this->response = ['success' => false, 'message' => '[saveGameResultFromRequest] Ungültige Daten'];
         }
     }
+    
     
     private function loadMultiplayerQuestion(int $gameId, int $playerId): array {
         $frage = $this->getMultiplayerQuestion($gameId, $playerId);
