@@ -57,7 +57,6 @@ async function initMultiplayer(currentPlayerId) {
     }
 }
 
-
 async function startGame() {
     await loadNextQuestion();
 }
@@ -81,7 +80,18 @@ function waitForOtherPlayers(message = 'Warte auf Mitspieler...') {
 }
 
 async function loadNextQuestion() {
-    const response = await fetch(`php/quiz.php?mode=multiplayer&gameId=${gameId}&playerId=${playerId}&questionNr=${questionNumber}`);
+    const response = await fetch('php/quiz.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            mode: 'multiplayer',
+            action: 'getNextQuestion',
+            gameId: gameId,
+            playerId: playerId,
+            questionNr: questionNumber
+        })
+    });
+
     const result = await response.json();
 
     if (result.wait) {

@@ -35,24 +35,15 @@ class QuizHandler {
     }
 
     private function handleGet(string $mode, array $data): void {
-        if ($mode === 'multiplayer') {
-            $gameId = $data['gameId'] ?? null;
-            $playerId = $data['playerId'] ?? null;
-            $questionNr = $data['questionNr'] ?? null;
-
-            if ($gameId && $playerId) {
-                $handler = new MultiplayerHandler();
-                $this->response = $handler->getNextQuestion((int)$gameId, (int)$playerId, (int)$questionNr);
-            } else {
-                $this->response = ['success' => false, 'message' => '[GET] Spiel-ID und Spieler-ID erforderlich.'];
-            }
-        } else {
+        if ($mode === 'single') {
             $handler = new SingleplayerHandler();
             $category = $data['category'] ?? null;
             $this->response = $handler->getRandomQuestionResponse($category);
+        } else {
+            $this->response = ['success' => false, 'message' => '[GET] Ungültiger Modus oder veraltet'];
         }
     }
-
+    
     private function handlePost(string $mode, array $data) {
         if (!isset($data['playerId']) || !is_numeric($data['playerId'])) {
             $this->response = [
@@ -65,15 +56,30 @@ class QuizHandler {
         if ($mode === 'multiplayer') {
             $handler = new MultiplayerHandler();
     
-            if (($data['action'] ?? null) === 'joinOrCreateGame') {
-                $result = $handler->joinOrCreateMultiplayerGame((int)$data['playerId']);
-                $this->response = [
-                    'success' => true,
-                    'gameId' => $result['gameId'],
-                    'status' => $result['status']
-                ];
-            } else {
-                $this->response = $handler->saveAnswer($data);
+            switch ($data['action'] ?? null) {
+                case 'joinOrCreateGame':
+                    $result = $handler->joinOrCreateMultiplayerGame((int)$data['playerId']);
+                    $this->response = [
+                        'success' => true,
+                        'gameId' => $result['gameId'],
+                        'status' => $result['status']
+                    ];
+                    break;
+    
+                case 'getNextQuestion':
+                    if (!isset($data['gameId'], $data['questionNr'])) {
+                        $this->response = ['success' => false, 'message' => 'Spiel-ID oder Frage-Nr fehlt'];
+                        return;
+                    }
+                    $this->response = $handler->getNextQuestion(
+                        (int)$data['gameId'], 
+                        (int)$data['playerId'], 
+                        (int)$data['questionNr']
+                    );
+                    break;
+    
+                default:
+                    $this->response = $handler->saveAnswer($data);
             }
         } elseif ($mode === 'single') {
             $handler = new SingleplayerHandler();
@@ -82,38 +88,6 @@ class QuizHandler {
             $this->response = ['success' => false, 'message' => '[saveGameResultFromRequest] Ungültige Daten'];
         }
     }
-    
-    
-    private function loadMultiplayerQuestion(int $gameId, int $playerId): array {
-        $frage = $this->getMultiplayerQuestion($gameId, $playerId);
-    
-        if (!$frage || !is_array($frage)) {
-            return [
-                'message' => '[loadMultiplayerQuestion] Keine neue Frage mehr verfügbar',
-                'debug' => [
-                    'gameId' => $gameId,
-                    'playerId' => $playerId,
-                    'frage' => $frage
-                ]
-            ];
-        }
-    
-        return [
-            'info' => [
-                'id'      => $frage['QuestionID'] ?? null,
-                'frage'   => $frage['Question'] ?? null,
-                'antwort' => [
-                    '1' => $frage['Answer1'] ?? null,
-                    '2' => $frage['Answer2'] ?? null,
-                    '3' => $frage['Answer3'] ?? null,
-                    '4' => $frage['Answer4'] ?? null
-                ],
-                'richtig' => $frage['correctAnswer'] ?? null,
-                'nr'      => $frage['QuestionNumber'] ?? null
-            ]
-        ];
-    }
-    
 }
 
 // Hauptausführung
