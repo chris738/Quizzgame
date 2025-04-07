@@ -297,24 +297,47 @@ class Database implements DatabaseInterface {
         ]);
     }
 
-    public function isPlayersTurn($gameId, $playerId, $questionNr) {
+    public function isPlayersTurn(int $gameId, int $playerId, int $questionNr) {
         $stmt = $this->conn->prepare("
-            SELECT 1
-            FROM MultiplayerQuestion
-            WHERE GameID = :gameId
-              AND QuestionNumber = :qNr
-              AND AnsweredBy = :playerId
+            SELECT mq.QuestionID, mq.AnsweredBy
+            FROM MultiplayerQuestion mq
+            WHERE mq.GameID = :gameId
+              AND mq.QuestionNumber = :qNr
             LIMIT 1
         ");
         $stmt->execute([
             ':gameId' => $gameId,
-            ':playerId' => $playerId,
             ':qNr' => $questionNr
         ]);
     
-        return (bool) $stmt->fetchColumn();
-    }
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
     
+        if (!$row) {
+            return false; // Frage existiert nicht
+        }
+    
+        // Wenn der Spieler nicht für diese Frage zuständig ist → nicht dran
+        if ((int)$row['AnsweredBy'] !== $playerId) {
+            return false;
+        }
+    
+        // Prüfen, ob bereits eine Antwort zu dieser Frage existiert
+        $stmt = $this->conn->prepare("
+            SELECT 1
+            FROM MultiplayerAnswer
+            WHERE GameID = :gameId
+              AND QuestionID = :questionId
+              AND PlayerID = :playerId
+            LIMIT 1
+        ");
+        $stmt->execute([
+            ':gameId' => $gameId,
+            ':questionId' => $row['QuestionID'],
+            ':playerId' => $playerId
+        ]);
+    
+        return !$stmt->fetch(); // Nur dran, wenn noch keine Antwort existiert
+    }
     
 }
 

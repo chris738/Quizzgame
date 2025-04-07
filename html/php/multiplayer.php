@@ -43,9 +43,11 @@ class MultiplayerHandler extends Database {
         if (!$this->isPlayersTurn($gameId, $playerId, $questionNr)) {
             return [
                 'wait' => true,
-                'message' => 'Der andere Spieler ist an der Reihe.'
+                'skipped' => true,
+                'message' => "Frage $questionNr wurde bereits beantwortet oder ist nicht deine Runde."
             ];
         }
+        
         
         // Frage laden
         $frage = $this->getMultiplayerQuestion($gameId, $playerId, $questionNr);

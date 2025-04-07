@@ -95,6 +95,15 @@ async function loadNextQuestion() {
     const result = await response.json();
 
     if (result.wait) {
+        // Spezielle Info: Der andere Spieler hat bereits gespielt → Frage überspringen
+        if (result.skipped) {
+            console.log(`[loadNextQuestion] Frage ${questionNumber} wurde vom Gegner gespielt. Überspringe.`);
+            questionNumber++; // nächste Frage vorbereiten
+            loadNextQuestion(); // direkt erneut laden
+            return;
+        }
+
+        // Normaler Fall: Spieler muss noch warten
         waitForOtherPlayers(result.message);
         return;
     }
