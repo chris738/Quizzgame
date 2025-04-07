@@ -151,7 +151,7 @@ async function submitAnswer(answerNumber) {
     const result = await response.json();
 
     if (result.success) {
-        console.log(`[submitAnswer] Antwort war ${result.correct ? 'richtig' : 'falsch'}`);
+        console.log(`[submitAnswer] Antwort war ${result.correct ? 'richtig' : 'falsch'} - Frage Nr: ${result.nr}`);
         
         if (questionNumber < 16) {
             questionNumber++;
