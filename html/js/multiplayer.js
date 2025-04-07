@@ -2,7 +2,6 @@ let gameId = null;
 let playerId = null;
 let currentQuestionId = null;
 let questionNumber = 1;
-
 //let correctAnswer = null;
 
 // Initialisiert den Multiplayer-Modus für den aktuellen Spieler
@@ -72,42 +71,9 @@ function waitForOtherPlayers(message = 'Warte auf Mitspieler...') {
       <p>${message}</p>
     `;
 
-    // Antwortbuttons deaktivieren
-    setAnswerButtonsEnabled(false);
-
     // Nach 5 Sekunden erneut versuchen
     setTimeout(loadNextQuestion, 5000);
 }
-
-async function checkWhosTurn() {
-    const response = await fetch('php/quiz.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            mode: 'multiplayer',
-            action: 'getNextQuestion',
-            gameId: gameId,
-            playerId: playerId,
-            questionNr: questionNumber
-        })
-    });
-
-    const result = await response.json();
-
-    if (result.wait) {
-        if (result.skipped) {
-            console.log(`[checkWhosTurn] Opponent has already answered question ${questionNumber}.`);
-            return 'opponent';
-        } else {
-            console.log('[checkWhosTurn] It is not my turn.');
-            return 'opponent';
-        }
-    }
-
-    console.log('[checkWhosTurn] It is my turn.');
-    return 'me';
-}
-
 
 async function loadNextQuestion() {
     const response = await fetch('php/quiz.php', {
@@ -134,7 +100,6 @@ async function loadNextQuestion() {
             } else {
                 console.log('[loadNextQuestion] Alle 16 Fragen beantwortet.');
                 // Hier z. B. Endbildschirm anzeigen
-
                 return;
             }
             loadNextQuestion(); // direkt erneut laden
@@ -159,17 +124,9 @@ async function loadNextQuestion() {
     document.getElementById('answer2').textContent = q.antwort["2"];
     document.getElementById('answer3').textContent = q.antwort["3"];
     document.getElementById('answer4').textContent = q.antwort["4"];
-    setAnswerButtonsEnabled(true);
 
     // UI zurücksetzen
     resetUI();
-}
-
-function setAnswerButtonsEnabled(enabled) {
-    for (let i = 1; i <= 4; i++) {
-        document.getElementById('answer' + i).parentElement.style.pointerEvents = enabled ? 'auto' : 'none';
-        document.getElementById('answer' + i).parentElement.style.opacity = enabled ? '1' : '0.5';
-    }
 }
 
 async function submitAnswer(answerNumber) {
