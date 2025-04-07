@@ -297,7 +297,7 @@ class Database implements DatabaseInterface {
         ]);
     }
 
-    public function isPlayersTurn(int $gameId, int $playerId, int $questionNr) {
+    public function isPlayersTurn($gameId, $playerId, $questionNr) {
         $stmt = $this->conn->prepare("
             SELECT mq.QuestionID, mq.AnsweredBy
             FROM MultiplayerQuestion mq
