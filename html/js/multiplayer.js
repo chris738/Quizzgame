@@ -27,7 +27,15 @@ async function initMultiplayer(currentPlayerId) {
     const result = await response.json();
     if (result.success) {
         gameId = result.gameId;
-        console.log(`[initMultiplayer] Multiplayer-Game beigetreten: ${gameId}`);
+    
+        if (result.status === 'joined') {
+            console.log(`[initMultiplayer] Multiplayer-Game beigetreten: ${gameId}`);
+        } else if (result.status === 'created') {
+            console.log(`[initMultiplayer] Multiplayer-Game erstellt: ${gameId}`);
+        } else {
+            console.log(`[initMultiplayer] Multiplayer-Game gestartet: ${gameId}`);
+        }
+    
         document.getElementById('waitingRoom')?.style?.setProperty('display', 'none'); 
         document.getElementById('quizContainer')?.style.setProperty('display', 'block');
         await startGame();
@@ -35,6 +43,7 @@ async function initMultiplayer(currentPlayerId) {
         console.error(`[initMultiplayer] Fehler beim Beitreten: ${result.message || 'Unbekannter Fehler'}`);
         console.error('[initMultiplayer] Fehler beim Beitreten:', result.message, result);
     }
+    
 }
 
 async function startGame() {
