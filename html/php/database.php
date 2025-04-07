@@ -1,17 +1,19 @@
 <?php
 
 interface DatabaseInterface {
-    public function getRandomQuestion($category);
+    public function getRandomQuestions($limit = 1, $category = null);
     public function saveGameResult($playerId, $questionId, $selectedAnswer, $correctAnswer, $score);
     public function insertQuestion($question, $category, $a1, $a2, $a3, $a4, $correctAnswer);
     public function insertUser($username, $hashedPassword);
     public function getUserByName($name);
     public function getTopHighscores($limit);
     public function getUserById($id);
-    public function assignQuestions($gameId, $player1Id, $player2Id);
+    public function assignQuestions($gameId, $player1Id);
     public function joinOrCreateMultiplayerGame($playerId);
     public function getMultiplayerQuestion($gameId, $playerId);
     public function saveMultiplayerAnswer($gameId, $playerId, $questionId, $selectedAnswer, $correctAnswer);
+    public function assignPlayer2ToQuestions($gameId, $player2Id);
+    public function isPlayersTurn($gameId, $playerId);
 }
 
 class Database implements DatabaseInterface {
@@ -30,35 +32,46 @@ class Database implements DatabaseInterface {
         }
     }
 
-    public function getRandomQuestion($category = null) {
+    public function getRandomQuestions($limit = 1, $category = null): array {
+        // flexible Übergabe: getRandomQuestions('Sport') → $category statt $limit
+        if (is_string($limit) && $category === null) {
+            $category = $limit;
+            $limit = 1;
+        }
+
         if ($category) {
             $sql = "
-            SELECT 
-                QuestionID, Question, Answer1, Answer2, Answer3, Answer4, correctAnswer
-            FROM 
-                Question
-            WHERE 
-                Category = :category
-            ORDER BY 
-                RAND() 
-            LIMIT 1";
+                SELECT 
+                    QuestionID, Question, Answer1, Answer2, Answer3, Answer4, correctAnswer
+                FROM 
+                    Question
+                WHERE 
+                    Category = :category
+                ORDER BY 
+                    RAND()
+                LIMIT :limit";
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':category', $category);
+            $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
         } else {
             $sql = "
-            SELECT 
-                QuestionID, Question, Answer1, Answer2, Answer3, Answer4, correctAnswer
-            FROM 
-                Question
-            ORDER BY 
-                RAND() 
-            LIMIT 1";
+                SELECT 
+                    QuestionID, Question, Answer1, Answer2, Answer3, Answer4, correctAnswer
+                FROM 
+                    Question
+                ORDER BY 
+                    RAND()
+                LIMIT :limit";
             $stmt = $this->conn->prepare($sql);
+            $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
         }
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
 
+        $stmt->execute();
+        return (int)$limit === 1
+            ? $stmt->fetch(PDO::FETCH_ASSOC)
+            : $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
     public function saveGameResult($playerId, $questionId, $selectedAnswer, $correctAnswer, $score = null) {
         $isCorrect = ($selectedAnswer === $correctAnswer) ? 1 : 0;
     
@@ -126,8 +139,8 @@ class Database implements DatabaseInterface {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    // Mulitplayer Funktionen
     public function joinOrCreateMultiplayerGame($playerId) {
-        // Schritt 1: Nach offenem Raum suchen
         $stmt = $this->conn->prepare("
             SELECT * FROM MultiplayerGame 
             WHERE Player2ID IS NULL AND IsStarted = FALSE
@@ -137,62 +150,86 @@ class Database implements DatabaseInterface {
         $game = $stmt->fetch(PDO::FETCH_ASSOC);
     
         if ($game) {
-            // Beitreten
             $stmt = $this->conn->prepare("
                 UPDATE MultiplayerGame 
                 SET Player2ID = :pid 
                 WHERE GameID = :gid
             ");
+            $this->assignPlayer2ToQuestions($game['GameID'], $playerId);
             $stmt->execute([':pid' => $playerId, ':gid' => $game['GameID']]);
             return $game['GameID'];
         } else {
-            // Neuen Raum erstellen
             $roomCode = substr(md5(uniqid()), 0, 6);
             $stmt = $this->conn->prepare("
                 INSERT INTO MultiplayerGame (RoomCode, Player1ID) 
                 VALUES (:code, :pid)
             ");
             $stmt->execute([':code' => $roomCode, ':pid' => $playerId]);
-            return $this->conn->lastInsertId();
+            $gameId = $this->conn->lastInsertId();
+    
+            // Fragen einfügen
+            $this->assignQuestions($gameId, $playerId);
+    
+            return $gameId;
         }
     }
+    
 
-    // 1–4 beantwortet von Player1, 5–8 von Player2
-    public function assignQuestions($gameId, $player1Id, $player2Id) {
-        $questions = $this->getRandomQuestions(8); // gib 8 zufällige Fragen
-
+    public function assignQuestions($gameId, $player1Id) {
+        $questions = $this->getRandomQuestions(16); // 4 Runden á 4 Fragen
+    
         foreach ($questions as $index => $q) {
-            $answeredBy = ($index < 4) ? $player1Id : $player2Id;
+            $questionNumber = $index + 1;
+    
+            if ($questionNumber <= 4) {
+                $round = 1;
+                $answeredBy = $player1Id;
+            } elseif ($questionNumber <= 8) {
+                $round = 2;
+                $answeredBy = null; // noch nicht bekannt
+            } elseif ($questionNumber <= 12) {
+                $round = 3;
+                $answeredBy = $player1Id;
+            } else {
+                $round = 4;
+                $answeredBy = null; // noch nicht bekannt
+            }
+    
             $stmt = $this->conn->prepare("
-                INSERT INTO MultiplayerQuestion (GameID, QuestionNumber, QuestionID, AnsweredBy)
-                VALUES (:game, :num, :qid, :answeredBy)
+                INSERT INTO MultiplayerQuestion (GameID, QuestionNumber, QuestionID, RoundNumber, AnsweredBy)
+                VALUES (:gameId, :questionNumber, :questionId, :round, :answeredBy)
             ");
             $stmt->execute([
-                ':game' => $gameId,
-                ':num' => $index + 1,
-                ':qid' => $q['QuestionID'],
+                ':gameId' => $gameId,
+                ':questionNumber' => $questionNumber,
+                ':questionId' => $q['QuestionID'],
+                ':round' => $round,
                 ':answeredBy' => $answeredBy
             ]);
         }
     }
+    
 
     public function getMultiplayerQuestion($gameId, $playerId) {
         $stmt = $this->conn->prepare("
             SELECT 
-            q.QuestionID AS QuestionID,
-            q.Question AS Question,
-            q.Answer1 AS Answer1,
-            q.Answer2 AS Answer2,
-            q.Answer3 AS Answer3,
-            q.Answer4 AS Answer4,
-            q.correctAnswer AS correctAnswer,
-            mq.QuestionNumber AS QuestionNumber
+                q.QuestionID AS QuestionID,
+                q.Question AS Question,
+                q.Answer1 AS Answer1,
+                q.Answer2 AS Answer2,
+                q.Answer3 AS Answer3,
+                q.Answer4 AS Answer4,
+                q.correctAnswer AS correctAnswer,
+                mq.QuestionNumber AS QuestionNumber
             FROM MultiplayerQuestion mq
             JOIN Question q ON mq.QuestionID = q.QuestionID
-            WHERE mq.GameID = :gameId AND mq.AnsweredBy = :playerId
-            AND NOT EXISTS (
+            WHERE mq.GameID = :gameId 
+              AND mq.AnsweredBy = :playerId
+              AND NOT EXISTS (
                 SELECT 1 FROM MultiplayerAnswer a
-                WHERE a.GameID = mq.GameID AND a.PlayerID = :playerId AND a.QuestionID = mq.QuestionID
+                WHERE a.GameID = mq.GameID 
+                  AND a.PlayerID = :playerId 
+                  AND a.QuestionID = mq.QuestionID
             )
             ORDER BY mq.QuestionNumber ASC
             LIMIT 1
@@ -217,6 +254,41 @@ class Database implements DatabaseInterface {
         ]);
     
         return $isCorrect;
+    }
+    
+    public function assignPlayer2ToQuestions($gameId, $player2Id) {
+        $stmt = $this->conn->prepare("
+            UPDATE MultiplayerQuestion 
+            SET AnsweredBy = :player2 
+            WHERE GameID = :gameId 
+            AND AnsweredBy IS NULL
+        ");
+        $stmt->execute([
+            ':player2' => $player2Id,
+            ':gameId' => $gameId
+        ]);
+    }
+
+    public function isPlayersTurn($gameId, $playerId): bool {
+        $stmt = $this->conn->prepare("
+            SELECT 1
+            FROM MultiplayerQuestion mq
+            WHERE mq.GameID = :gameId
+              AND mq.AnsweredBy = :playerId
+              AND NOT EXISTS (
+                  SELECT 1 FROM MultiplayerAnswer a
+                  WHERE a.GameID = mq.GameID
+                    AND a.PlayerID = mq.AnsweredBy
+                    AND a.QuestionID = mq.QuestionID
+              )
+            LIMIT 1
+        ");
+        $stmt->execute([
+            ':gameId' => $gameId,
+            ':playerId' => $playerId
+        ]);
+    
+        return (bool) $stmt->fetchColumn();
     }
     
 }

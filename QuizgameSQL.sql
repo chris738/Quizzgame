@@ -52,9 +52,10 @@
     CREATE TABLE MultiplayerQuestion (
         ID INT AUTO_INCREMENT PRIMARY KEY,
         GameID INT NOT NULL,
-        QuestionNumber INT NOT NULL,        -- 1 bis 8
+        QuestionNumber INT NOT NULL,     -- 1 bis 16
         QuestionID INT NOT NULL,
-        AnsweredBy INT,                     -- Player1ID oder Player2ID
+        RoundNumber INT NOT NULL,        -- 1 bis 4
+        AnsweredBy INT,                  -- Player1ID oder Player2ID
         ShownAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (GameID) REFERENCES MultiplayerGame(GameID),
         FOREIGN KEY (QuestionID) REFERENCES Question(QuestionID),

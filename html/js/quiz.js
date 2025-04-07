@@ -65,7 +65,7 @@ function loadNewQuestion() {
 
 function handleAnswerClick(spanID) {
     if (hasAnswered) return;
-
+    
     const selectedAnswer = parseInt(spanID.replace('answer',''), 10);
     const feedbackDiv = document.getElementById('feedback');
 

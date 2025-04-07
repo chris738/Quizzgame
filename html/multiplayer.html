@@ -7,12 +7,12 @@
 
   <!-- Preload & Styles -->
   <link rel="preload" href="navbar.html" as="fetch" crossorigin="anonymous">
-  <link rel="preload" href="css/navbar.css" as="fetch" crossorigin="anonymous">
-  <link rel="stylesheet" href="css/quiz.css">
   <link rel="stylesheet" href="css/highscore.css">
+  <link rel="stylesheet" href="css/quiz.css">
 
   <!-- Scripts -->
   <script defer src="js/navbar.js"></script>
+  <script defer src="js/quiz.js"></script>
 </head>
 <body>
   <script defer src="js/multiplayer.js"></script>
@@ -28,29 +28,46 @@
   <div class="quiz-container" id="quizContainer" style="display:none;">
     <div id="Question" class="question-text" tabindex="-1">Frage</div>
 
-    <div class="answers">
-      <div class="answer" tabindex="0" onclick="submitAnswer(1)">
-        <span id="answer1">Antwort 1</span>
+        <!-- Antwortmöglichkeiten mit Klick-Handler -->
+        <div class="answers">
+          <div class="answer" data-color="answer1"
+               tabindex="0"
+               onclick="submitAnswer(1)"
+               onkeydown="if (event.key === 'Enter' || event.key === ' ') submitAnswer(1)">
+              <span id="answer1">Antwort 1</span>
+          </div>
+          <div class="answer" data-color="answer2"
+               tabindex="0"
+               onclick="submitAnswer(2)"
+               onkeydown="if (event.key === 'Enter' || event.key === ' ') submitAnswer(2)">
+              <span id="answer2">Antwort 2</span>
+          </div>
+          <div class="answer" data-color="answer3"
+               tabindex="0"
+               onclick="submitAnswer(3)"
+               onkeydown="if (event.key === 'Enter' || event.key === ' ') submitAnswer(3)">
+              <span id="answer3">Antwort 3</span>
+          </div>
+          <div class="answer" data-color="answer4"
+               tabindex="0"
+               onclick="submitAnswer(4)"
+               onkeydown="if (event.key === 'Enter' || event.key === ' ') submitAnswer(4)">
+              <span id="answer4">Antwort 4</span>
+          </div>
       </div>
-      <div class="answer" tabindex="0" onclick="submitAnswer(2)">
-        <span id="answer2">Antwort 2</span>
-      </div>
-      <div class="answer" tabindex="0" onclick="submitAnswer(3)">
-        <span id="answer3">Antwort 3</span>
-      </div>
-      <div class="answer" tabindex="0" onclick="submitAnswer(4)">
-        <span id="answer4">Antwort 4</span>
-      </div>
-    </div>
 
-    <div id="feedback" role="status" aria-live="polite"></div>
+        <!-- Barrierefreie Rückmeldung -->
+        <div id="feedback" role="status" aria-live="polite"></div>
 
-    <div id="newQuestionBtn" class="button" style="display: none; margin-top: 20px;"
-         onclick="loadNextQuestion()"
-         onkeydown="if (event.key === 'Enter' || event.key === ' ') loadNextQuestion()">
-      Nächste Frage
+        <!-- Button für nächste Frage -->
+        <div id="newQuestionBtn"
+             class="button"
+             style="display: none; margin-top: 20px;"
+             onclick="nextQuestion()"
+             onkeydown="if (event.key === 'Enter' || event.key === ' ') nextQuestion()">
+            Nächste Frage
+        </div>
     </div>
-  </div>
 
   <!-- Endergebnis -->
   <div id="gameResult" style="display:none; text-align: center;">
