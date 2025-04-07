@@ -98,7 +98,13 @@ async function loadNextQuestion() {
         // Spezielle Info: Der andere Spieler hat bereits gespielt → Frage überspringen
         if (result.skipped) {
             console.log(`[loadNextQuestion] Frage ${questionNumber} wurde vom Gegner gespielt. Überspringe.`);
-            questionNumber++; // nächste Frage vorbereiten
+            if (questionNumber < 16) {
+                questionNumber++;
+                loadNextQuestion();
+            } else {
+                console.log('[loadNextQuestion] Alle 16 Fragen beantwortet.');
+                // Hier z. B. Endbildschirm anzeigen
+            }
             loadNextQuestion(); // direkt erneut laden
             return;
         }
