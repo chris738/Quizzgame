@@ -52,7 +52,7 @@ class QuizHandler {
         }
     }
 
-    private function handlePost(string $mode, array $data): void {
+    private function handlePost(string $mode, array $data) {
         if (!isset($data['playerId']) || !is_numeric($data['playerId'])) {
             $this->response = ['success' => false, 'message' => '[POST] Spieler-ID fehlt oder ungültig'];
             return;
