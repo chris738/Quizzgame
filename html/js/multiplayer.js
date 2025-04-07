@@ -5,15 +5,18 @@ let questionNumber = 1;
 
 //let correctAnswer = null;
 
+// Initialisiert den Multiplayer-Modus für den aktuellen Spieler
 async function initMultiplayer(currentPlayerId) {
-    playerId = currentPlayerId;
+    playerId = currentPlayerId; // Setze die globale playerId
 
+    // Debug-Ausgabe der gesendeten Daten
     console.log('[initMultiplayer] Sende:', {
         mode: 'multiplayer',
         action: 'joinOrCreateGame',
         playerId
     });
 
+    // Anfrage an den Server senden, um Spiel beizutreten oder zu erstellen
     const response = await fetch('php/quiz.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -24,10 +27,14 @@ async function initMultiplayer(currentPlayerId) {
         })
     });
 
+    // Antwort parsen
     const result = await response.json();
+
+    // Erfolgreiche Antwort vom Server
     if (result.success) {
-        gameId = result.gameId;
-    
+        gameId = result.gameId; // Globale gameId setzen
+
+        // Status des Spiels auswerten und entsprechende Nachricht ausgeben
         if (result.status === 'joined') {
             console.log(`[initMultiplayer] Multiplayer-Game beigetreten: ${gameId}`);
         } else if (result.status === 'created') {
@@ -35,39 +42,50 @@ async function initMultiplayer(currentPlayerId) {
         } else {
             console.log(`[initMultiplayer] Multiplayer-Game gestartet: ${gameId}`);
         }
-    
+
+        // Warteraum ausblenden und Quiz anzeigen
         document.getElementById('waitingRoom')?.style?.setProperty('display', 'none'); 
         document.getElementById('quizContainer')?.style.setProperty('display', 'block');
+
+        // Spiel starten
         await startGame();
+
     } else {
+        // Fehlerfall: Ausgabe der Fehlermeldung
         console.error(`[initMultiplayer] Fehler beim Beitreten: ${result.message || 'Unbekannter Fehler'}`);
         console.error('[initMultiplayer] Fehler beim Beitreten:', result.message, result);
     }
-    
 }
+
 
 async function startGame() {
     await loadNextQuestion();
 }
 
+function waitForOtherPlayers(message = 'Warte auf Mitspieler...') {
+    console.log('[waitForOtherPlayers]', message);
+
+    // Warteanzeige im UI
+    document.getElementById('quizContainer').style.display = 'none';
+    document.getElementById('waitingRoom').style.display = 'block';
+    document.getElementById('waitingRoom').innerHTML = `
+      <h2>Mehrspieler-Modus</h2>
+      <p>${message}</p>
+    `;
+
+    // Antwortbuttons deaktivieren
+    setAnswerButtonsEnabled(false);
+
+    // Nach 5 Sekunden erneut versuchen
+    setTimeout(loadNextQuestion, 5000);
+}
+
 async function loadNextQuestion() {
     const response = await fetch(`php/quiz.php?mode=multiplayer&gameId=${gameId}&playerId=${playerId}&questionNr=${questionNumber}`);
-
     const result = await response.json();
 
     if (result.wait) {
-        console.log('[loadNextQuestion] Warte auf anderen Spieler...');
-
-        // Anzeigen: "Warte auf Mitspieler..."
-        document.getElementById('quizContainer').style.display = 'none';
-        document.getElementById('waitingRoom').style.display = 'block';
-        document.getElementById('waitingRoom').innerHTML = `
-          <h2>Mehrspieler-Modus</h2>
-          <p>${result.message || 'Warte auf Mitspieler...'}</p>
-        `;
-
-        setAnswerButtonsEnabled(false);
-        setTimeout(loadNextQuestion, 5000);
+        waitForOtherPlayers(result.message);
         return;
     }
 
