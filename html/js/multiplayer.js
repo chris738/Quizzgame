@@ -111,6 +111,8 @@ async function submitAnswer(answerNumber) {
     } else {
         console.error(`[submitAnswer] Fehler beim Speichern der Antwort: ${result.message || 'Unbekannter Fehler'}`);
     }
+
+
 }
 
 
