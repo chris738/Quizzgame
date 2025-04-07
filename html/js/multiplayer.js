@@ -26,7 +26,7 @@ async function initMultiplayer(currentPlayerId) {
     if (result.success) {
         gameId = result.gameId;
         console.log(`[initMultiplayer] Multiplayer-Game beigetreten: ${gameId}`);
-        document.getElementById('waitingRoom')?.remove();
+        document.getElementById('waitingRoom')?.style?.setProperty('display', 'none'); 
         document.getElementById('quizContainer')?.style.setProperty('display', 'block');
         await startGame();
     } else {
