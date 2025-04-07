@@ -69,11 +69,13 @@
         QuestionID INT NOT NULL,
         SelectedAnswer INT,
         IsCorrect BOOLEAN,
+        QuestionNumber INT,  -- NULL erlaubt
         AnsweredAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (GameID) REFERENCES MultiplayerGame(GameID),
         FOREIGN KEY (PlayerID) REFERENCES player(PlayerID),
         FOREIGN KEY (QuestionID) REFERENCES Question(QuestionID)
     );
+
 
     -- Neue Tabelle: Game (gespielte Spiele)
     CREATE TABLE Game (

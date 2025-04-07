@@ -3,25 +3,40 @@ require_once 'database.php';
 
 class MultiplayerHandler extends Database {
     public function joinOrCreateGame(int $playerId): array {
-        $gameId = $this->joinOrCreateMultiplayerGame($playerId);
-        return ['success' => true, 'gameId' => $gameId];
+        // Aufruf der vererbten Funktion aus Database
+        return $this->joinOrCreateMultiplayerGame($playerId);
     }
-
-    //todo question number implementiern
+    
     public function saveAnswer(array $data): array {
         $gameId = $data['gameId'] ?? null;
         $playerId = $data['playerId'] ?? null;
         $questionId = $data['questionId'] ?? null;
         $selectedAnswer = $data['selectedAnswer'] ?? null;
         $correctAnswer = $data['correctAnswer'] ?? null;
-
-        if ($gameId && $playerId && $questionId !== null && $selectedAnswer !== null && $correctAnswer !== null) {
-            $isCorrect = $this->saveMultiplayerAnswer((int)$gameId, (int)$playerId, (int)$questionId, (int)$selectedAnswer, (int)$correctAnswer);
+        $questionNumber = $data['questionNumber'] ?? null;
+    
+        if (
+            $gameId !== null &&
+            $playerId !== null &&
+            $questionId !== null &&
+            $selectedAnswer !== null &&
+            $correctAnswer !== null &&
+            $questionNumber !== null
+        ) {
+            $isCorrect = $this->saveMultiplayerAnswer(
+                (int)$gameId,
+                (int)$playerId,
+                (int)$questionId,
+                (int)$selectedAnswer,
+                (int)$correctAnswer,
+                (int)$questionNumber
+            );
             return ['success' => true, 'correct' => (bool)$isCorrect];
         }
-
+    
         return ['success' => false, 'message' => '[Multiplayer] Ungültige oder fehlende Felder'];
     }
+    
 
     public function getNextQuestion(int $gameId, int $playerId, int $questionNr): array {
         // Prüfen, ob dieser Spieler an der Reihe ist

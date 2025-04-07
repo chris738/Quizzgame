@@ -58,14 +58,10 @@ class QuizHandler {
     
             switch ($data['action'] ?? null) {
                 case 'joinOrCreateGame':
-                    $result = $handler->joinOrCreateMultiplayerGame((int)$data['playerId']);
-                    $this->response = [
-                        'success' => true,
-                        'gameId' => $result['gameId'],
-                        'status' => $result['status']
-                    ];
+                    $result = $handler->joinOrCreateGame((int)$data['playerId']);
+                    $this->response = $result;
                     break;
-    
+                
                 case 'getNextQuestion':
                     if (!isset($data['gameId'], $data['questionNr'])) {
                         $this->response = ['success' => false, 'message' => 'Spiel-ID oder Frage-Nr fehlt'];

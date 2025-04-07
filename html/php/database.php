@@ -11,7 +11,7 @@ interface DatabaseInterface {
     public function assignQuestions($gameId, $player1Id);
     public function joinOrCreateMultiplayerGame($playerId);
     public function getMultiplayerQuestion($gameId, $playerId, $questionNr);
-    public function saveMultiplayerAnswer($gameId, $playerId, $questionId, $selectedAnswer, $correctAnswer);
+    public function saveMultiplayerAnswer($gameId, $playerId, $questionId, $selectedAnswer, $correctAnswer, $questionNumber);
     public function assignPlayer2ToQuestions($gameId, $player2Id);
     public function isPlayersTurn($gameId, $playerId);
 }
@@ -260,23 +260,29 @@ class Database implements DatabaseInterface {
     }
     
 
-    public function saveMultiplayerAnswer($gameId, $playerId, $questionId, $selectedAnswer, $correctAnswer) {
+    public function saveMultiplayerAnswer($gameId, $playerId, $questionId, $selectedAnswer, $correctAnswer, $questionNumber) {
         $isCorrect = ((int)$selectedAnswer === (int)$correctAnswer) ? 1 : 0;
     
         $stmt = $this->conn->prepare("
-            INSERT INTO MultiplayerAnswer (GameID, PlayerID, QuestionID, SelectedAnswer, IsCorrect)
-            VALUES (:game, :player, :question, :selected, :isCorrect)
+            INSERT INTO MultiplayerAnswer (
+                GameID, PlayerID, QuestionID, SelectedAnswer, IsCorrect, QuestionNumber
+            ) VALUES (
+                :game, :player, :question, :selected, :isCorrect, :qNum
+            )
         ");
         $stmt->execute([
             ':game' => $gameId,
             ':player' => $playerId,
             ':question' => $questionId,
             ':selected' => $selectedAnswer,
-            ':isCorrect' => $isCorrect
+            ':isCorrect' => $isCorrect,
+            ':qNum' => $questionNumber
         ]);
     
         return $isCorrect;
     }
+    
+    
     
     public function assignPlayer2ToQuestions($gameId, $player2Id) {
         $stmt = $this->conn->prepare("
