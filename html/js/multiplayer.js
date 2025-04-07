@@ -35,7 +35,6 @@ async function initMultiplayer(currentPlayerId) {
     }
 }
 
-
 async function startGame() {
     await loadNextQuestion();
 }
