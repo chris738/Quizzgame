@@ -118,7 +118,7 @@ async function submitAnswer(answerNumber) {
 document.addEventListener('DOMContentLoaded', () => {
     /*
     const storedId = parseInt(localStorage.getItem('playerId')) || 0;
-    console.log(`[Info] SotedID ist: ${storedId}`);
+    console.log(`[Info] Stored Player ID ist: ${storedId}`);
     if (storedId > 0) {
         initMultiplayer(storedId);
     } else {
