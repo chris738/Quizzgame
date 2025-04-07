@@ -66,7 +66,7 @@ class QuizHandler {
             $handler = new MultiplayerHandler();
     
             if (($data['action'] ?? null) === 'joinOrCreateGame') {
-                $result = $handler->joinOrCreateGame((int)$data['playerId']);
+                $result = $handler->joinOrCreateMultiplayerGame((int)$data['playerId']);
                 $this->response = [
                     'success' => true,
                     'gameId' => $result['gameId'],
