@@ -30,20 +30,43 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   
   function loadUsername() {
-    const playerId = parseInt(localStorage.getItem('playerId')) || 0;
-    if (playerId <= 0) return;
+    const player1Id = parseInt(localStorage.getItem('playerId')) || 0;
+    const player2Id = parseInt(localStorage.getItem('player2Id')) || 0;
   
-    fetch(`php/login.php?playerId=${playerId}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.success && data.username) {
-          const userElement = document.getElementById('nav-username');
-          if (userElement) {
-            userElement.textContent = '🧑 ' + data.username;
-          }
-        }
-      })
-      .catch(err => console.error('Fehler beim Laden des Benutzernamens:', err));
+    const userElement = document.getElementById('nav-username');
+    if (!userElement) return;
+  
+    const promises = [];
+  
+    if (player1Id > 0) {
+      promises.push(fetch(`php/login.php?playerId=${player1Id}`).then(res => res.json()));
+    } else {
+      promises.push(Promise.resolve(null));
+    }
+  
+    if (player2Id > 0) {
+      promises.push(fetch(`php/login.php?playerId=${player2Id}`).then(res => res.json()));
+    } else {
+      promises.push(Promise.resolve(null));
+    }
+  
+    Promise.all(promises).then(([p1, p2]) => {
+      const lines = [];
+  
+      if (p1 && p1.success && p1.username) {
+        lines.push(`🧑 Spieler 1: ${p1.username}`);
+      }
+  
+      if (p2 && p2.success && p2.username) {
+        lines.push(`🧑 Spieler 2: ${p2.username}`);
+      }
+  
+      if (lines.length > 0) {
+        userElement.innerHTML = lines.join('<br>');
+      }
+    }).catch(err => {
+      console.error('Fehler beim Laden der Spielernamen:', err);
+    });
   }
   
   window.setNavVisibility = function (visible) {
