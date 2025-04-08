@@ -84,6 +84,30 @@ function initDeleteQuestionForm() {
     });
 }
 
+function loadQuestionData(questionId) {
+    if (!questionId) {
+        alert("Bitte gib eine Frage-ID ein.");
+        return;
+    }
+
+    
+    fetch(`php/admin.php?action=loadQuestion&id=${questionId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert(data.error);
+            } else {
+                
+                fillFormWithQuestionData(data.info);
+            }
+        })
+        .catch(error => {
+            console.error("Fehler beim Laden der Frage:", error);
+            alert("Es gab ein Problem beim Laden der Frage.");
+        });
+}
+
+
 function initAddUserForm() {
     const form = document.getElementById("addUserForm");
 
