@@ -107,9 +107,10 @@ window.displayQuestion = function displayQuestion(q) {
     correctAnswer = parseInt(q.richtig);
 
     document.getElementById('Question').textContent = q.frage;
-    for (let i = 1; i <= 4; i++) {
-        document.getElementById(`answer${i}`).textContent = q.antwort[i.toString()];
-    }
+    document.getElementById('answer1').textContent = q.antwort["1"];
+    document.getElementById('answer2').textContent = q.antwort["2"];
+    document.getElementById('answer3').textContent = q.antwort["3"];
+    document.getElementById('answer4').textContent = q.antwort["4"];
 
     resetUI();
 }
