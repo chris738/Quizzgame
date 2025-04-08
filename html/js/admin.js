@@ -90,6 +90,7 @@ function loadQuestionData(questionId) {
         return;
     }
 
+    console.log("Lade Frage mit ID: ", questionId); 
 
     fetch(`php/admin.php?action=loadQuestion&id=${questionId}`)
         .then(response => response.json())
