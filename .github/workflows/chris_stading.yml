@@ -1,4 +1,4 @@
-name: Test and Deploy Chris Branch
+name: Test and Deploy in CI
 
 on:
   push:
