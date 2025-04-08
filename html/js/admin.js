@@ -155,7 +155,14 @@ document.addEventListener("DOMContentLoaded", () => {
     initDeleteQuestionForm(); 
 });
 
-document.getElementById("loadQuestionBtn").addEventListener("click", function () {
-    const questionId = document.getElementById("id").value;
-    loadQuestionData(questionId);  
+document.addEventListener('DOMContentLoaded', function() {
+    const loadButton = document.getElementById("loadQuestionBtn");
+    if (loadButton) {
+        loadButton.addEventListener('click', function() {
+            const questionId = document.getElementById("id").value;
+            loadQuestionData(questionId);
+        });
+    } else {
+        console.log('Button nicht gefunden!');
+    }
 });
