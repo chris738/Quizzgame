@@ -1,18 +1,86 @@
-<!-- navbar.html -->
+<!DOCTYPE html>
+<html lang="de">
+
+<!-- Style Inline zum schnelleren laden -->
 <style>
-    @import url('css/navbar.css');
-  </style>
+  .navbar {
+    background-color: #333;
+    overflow: hidden;
+  }
+
+  .navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .navbar li {
+    padding: 14px 20px;
+  }
+
+  .navbar a {
+    color: white;
+    text-decoration: none;
+    font-size: 17px;
+    display: block;
+    text-align: center;
+  }
+
+  .navbar a:hover {
+    background-color: #ddd;
+    color: black;
+  }
+
+  .navbar a.active {
+    font-weight: bold;
+    text-decoration: underline;
+    color: #ff6600;
+  }
+
+  .navbar .nav-username {
+    color: white;
+    font-weight: bold;
+    margin-left: auto;
+    padding: 0 1rem;
+  }
+</style>
   
   <nav class="navbar">
-    <ul role="presentation">
-      <li><a href="index.html">Startseite</a></li>
-      <li><a href="quiz.html">Quiz starten</a></li>
-      <li><a href="admin.html" aria-hidden="true">Admin-Panel</a></li>
-      <li><a href="highscore.html">Highscores</a></li>
-      <li><a href="help.html" aria-hidden="true">Hilfe</a></li>
-      <li><a href="login.html" aria-hidden="true">Login</a></li>
-      <li id="nav-username" class="nav-username" style="margin-left:auto;"></li>
-    </ul>
+    <ul role="navigation">
+      <li><a href="index.html"
+             role="link">
+             Startseite
+      </a></li>
+      <li><a href="quiz.html"
+             role="link">
+             Quiz starten
+      </a></li>
+      <li><a href="multiplayer.html" 
+             aria-hidden="true">
+             Multiplayer
+      </a></li>
+      <li><a href="admin.html" 
+             aria-hidden="true">
+             Admin-Panel
+      </a></li>
+      <li><a href="highscore.html"
+             role="link">
+             Highscores
+      </a></li>
+      <li><a href="help.html" 
+             aria-hidden="true">
+             Hilfe
+      </a></li>
+      <li><a href="login.html" 
+             aria-hidden="true">
+             Login
+      </a></li>
+      <li id="nav-username" 
+          class="nav-username" 
+          style="margin-left:auto;">
+        </li></ul>
   </nav>
   
   <script>
@@ -27,3 +95,4 @@
     });
   </script>
   
+</html>

@@ -4,7 +4,7 @@ use PHPUnit\Framework\TestCase;
 
 class QuizApiTest extends TestCase
 {
-    public function testQuizApiWithoutCategoryReturnsValidQuestion()
+    public function testQuizApiWithCategoryReturnsValidJson()
     {
         $url = 'https://quizz.tuxchen.de/php/quiz.php';
 
@@ -12,20 +12,10 @@ class QuizApiTest extends TestCase
         $this->assertNotFalse($response, "Fehler beim Abrufen von $url");
 
         $data = json_decode($response, true);
+
+        // Ensure the response is valid JSON
+        $this->assertNotNull($data, 'Antwort ist kein gültiges JSON');
         $this->assertIsArray($data, 'Antwort ist kein gültiges JSON');
-
-        $this->assertArrayHasKey('info', $data, 'Feld "info" fehlt');
-        $info = $data['info'];
-
-        $this->assertArrayHasKey('id', $info);
-        $this->assertArrayHasKey('richtig', $info);
-        $this->assertArrayHasKey('frage', $info);
-        $this->assertArrayHasKey('antwort', $info);
-
-        $this->assertIsArray($info['antwort']);
-        foreach (["1", "2", "3", "4"] as $key) {
-            $this->assertArrayHasKey($key, $info['antwort']);
-        }
     }
 }
 

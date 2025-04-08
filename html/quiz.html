@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Quiz</title>
     <link rel="preload" href="navbar.html" as="fetch" crossorigin="anonymous">
-    <link rel="preload" href="css/navbar.css" as="fetch" crossorigin="anonymous">
     <script defer src="js/navbar.js"></script>
     <link rel="stylesheet" href="css/quiz.css">
     <link rel="stylesheet" href="css/highscore.css">
@@ -20,12 +19,48 @@
     <div id="categorySelection">
         <h1>Wähle eine Kategorie</h1>
         <div class="category-grid">
-            <div class="category-card" onclick="selectCategory('Allgemein')">Allgemein</div>
-            <div class="category-card" onclick="selectCategory('Musik')">Musik</div>
-            <div class="category-card" onclick="selectCategory('Gaming')">Gaming</div>
-            <div class="category-card" onclick="selectCategory('Europa')">Europa</div>
-            <div class="category-card" onclick="selectCategory('Medien')">Medien</div>
-            <div class="category-card" onclick="selectCategory('Technik')">Technik</div>
+            <div class="category-card" 
+                 role="button" 
+                 tabindex="0"
+                 onclick="selectCategory('Allgemein')"
+                 onkeydown="if (event.key === 'Enter' || event.key === ' ') selectCategory('Allgemein')">
+                 Allgemein
+            </div>
+            <div class="category-card" 
+                 role="button" 
+                 tabindex="0"
+                 onclick="selectCategory('Musik')"
+                 onkeydown="if (event.key === 'Enter' || event.key === ' ') selectCategory('Musik')">
+                 Musik
+            </div>
+            <div class="category-card" 
+                 role="button" 
+                 tabindex="0"
+                 onclick="selectCategory('Gaming')"
+                 onkeydown="if (event.key === 'Enter' || event.key === ' ') selectCategory('Gaming')">
+                 Gaming
+            </div>
+            <div class="category-card" 
+                 role="button" 
+                 tabindex="0"
+                 onclick="selectCategory('Europa')"
+                 onkeydown="if (event.key === 'Enter' || event.key === ' ') selectCategory('Europa')">
+                 Europa
+            </div>
+            <div class="category-card" 
+                 role="button" 
+                 tabindex="0"
+                 onclick="selectCategory('Medien')"
+                 onkeydown="if (event.key === 'Enter' || event.key === ' ') selectCategory('Medien')">
+                 Medien
+            </div>
+            <div class="category-card" 
+                 role="button" 
+                 tabindex="0"
+                 onclick="selectCategory('Technik')"
+                 onkeydown="if (event.key === 'Enter' || event.key === ' ') selectCategory('Technik')">
+                 Technik
+            </div>
         </div>
     </div>
 
@@ -72,6 +107,7 @@
         <div id="newQuestionBtn"
              class="button"
              style="display: none; margin-top: 20px;"
+             tabindex="0"
              onclick="nextQuestion()"
              onkeydown="if (event.key === 'Enter' || event.key === ' ') nextQuestion()">
             Nächste Frage
@@ -85,6 +121,7 @@
         <div id="restartBtn"
              class="button"
              role="button"
+             tabindex="0"
              style="display: none; margin-top: 20px;"
              onclick="resetGame()"
              onkeydown="if (event.key === 'Enter' || event.key === ' ') resetGame()">
@@ -111,6 +148,8 @@
         </div>
     </section>
 
+    <!-- 5) waitingRoom wird nur für den Multiplayer benötigt -->
+    <div id="waitingRoom"></div>
   
 
 </body>

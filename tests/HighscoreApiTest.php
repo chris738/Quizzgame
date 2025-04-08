@@ -13,6 +13,8 @@ class HighscoreApiTest extends TestCase
         $data = json_decode($response, true);
         $this->assertIsArray($data, 'Antwort ist kein gültiges JSON');
 
+        echo "\n✅ Parsed JSON (erste 3 Einträge):\n" . json_encode(array_slice($data, 0, 3), JSON_PRETTY_PRINT) . "\n";
+        
         foreach ($data as $entry) {
             $this->assertArrayHasKey('username', $entry);
             $this->assertArrayHasKey('totalScore', $entry);
