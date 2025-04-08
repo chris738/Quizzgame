@@ -10,6 +10,7 @@
 </head>
 <body>
   <div id="navbar-container"></div>
+
   <div class="container">
     <h1>Login</h1>
     <form onsubmit="handleLogin(); return false;">
@@ -19,12 +20,12 @@
         <input type="checkbox" id="isPlayer2" />
         Login für Spieler 2
       </label>
-      <button type="submit">Einloggen</button>
+
+      <div class="button-group">
+        <button type="submit">Einloggen</button>
+        <button type="button" class="logout" onclick="logout()">Logout</button>
+      </div>
     </form>
-
-    <hr>
-
-    <button onclick="logout()">Logout</button>
   </div>
 </body>
 </html>
