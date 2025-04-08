@@ -61,6 +61,8 @@ function showLocalFinalScore() {
     document.getElementById('quizContainer').style.display = 'none';
     document.getElementById('gameResult').style.display = 'block';
     document.getElementById('restartBtn').style.display = 'block';
+    document.getElementById('activePlayer').style.display = 'none';
+
   
     // Sortiere Spieler nach Score
     const players = [
