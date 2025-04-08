@@ -24,8 +24,24 @@ jobs:
         run: |
           find html/php -name "*.php" -print0 | xargs -0 -n1 php -l
 
-  UnitTestLogin:
+  deployChris:
     needs: phpLint
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Execute Remote Deploy to Chris
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: tuxchen.de
+        username: deploy
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        script: /usr/local/bin/deploy-chris.sh
+
+  UnitTestLogin:
+    needs: deployChris
     runs-on: ubuntu-latest
 
     steps:
@@ -43,7 +59,7 @@ jobs:
       run: vendor/bin/phpunit tests/LoginTest.php
 
   UnitGetHighscore:
-    needs: phpLint
+    needs: deployChris
     runs-on: ubuntu-latest
 
     steps:
@@ -61,7 +77,7 @@ jobs:
       run: vendor/bin/phpunit tests/HighscoreApiTest.php
 
   UnitGetQuiz:
-    needs: phpLint
+    needs: deployChris
     runs-on: ubuntu-latest
 
     steps:
@@ -78,7 +94,7 @@ jobs:
     - name: Run PHPUnit Get Quiz Test
       run: vendor/bin/phpunit tests/QuizApiTest.php
 
-  deploy:
+  deployCI:
     needs: [UnitTestLogin, UnitGetHighscore, UnitGetQuiz]
     runs-on: ubuntu-latest
 
@@ -86,10 +102,10 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v3
 
-    - name: Execute Remote Deploy
+    - name: Execute Remote Deploy to CI
       uses: appleboy/ssh-action@v1.0.0
       with:
         host: tuxchen.de
         username: deploy
         key: ${{ secrets.SERVER_SSH_KEY }}
-        script: /usr/local/bin/deploy-chris.sh
+        script: /usr/local/bin/deploy-ci.sh
