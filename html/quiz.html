@@ -19,12 +19,42 @@
     <div id="categorySelection">
         <h1>Wähle eine Kategorie</h1>
         <div class="category-grid">
-            <div class="category-card" onclick="selectCategory('Allgemein')">Allgemein</div>
-            <div class="category-card" onclick="selectCategory('Musik')">Musik</div>
-            <div class="category-card" onclick="selectCategory('Gaming')">Gaming</div>
-            <div class="category-card" onclick="selectCategory('Europa')">Europa</div>
-            <div class="category-card" onclick="selectCategory('Medien')">Medien</div>
-            <div class="category-card" onclick="selectCategory('Technik')">Technik</div>
+            <div class="category-card" 
+                 role="button" 
+                 onclick="selectCategory('Allgemein')"
+                 onkeydown="if (event.key === 'Enter' || event.key === ' ') selectCategory('Allgemein')">
+                 Allgemein
+            </div>
+            <div class="category-card" 
+                 role="button" 
+                 onclick="selectCategory('Musik')"
+                 onkeydown="if (event.key === 'Enter' || event.key === ' ') selectCategory('Musik')">
+                 Musik
+            </div>
+            <div class="category-card" 
+                 role="button" 
+                 onclick="selectCategory('Gaming')"
+                 onkeydown="if (event.key === 'Enter' || event.key === ' ') selectCategory('Gaming')">
+                 Gaming
+            </div>
+            <div class="category-card" 
+                 role="button" 
+                 onclick="selectCategory('Europa')"
+                 onkeydown="if (event.key === 'Enter' || event.key === ' ') selectCategory('Europa')">
+                 Europa
+            </div>
+            <div class="category-card" 
+                 role="button" 
+                 onclick="selectCategory('Medien')"
+                 onkeydown="if (event.key === 'Enter' || event.key === ' ') selectCategory('Medien')">
+                 Medien
+            </div>
+            <div class="category-card" 
+                 role="button" 
+                 onclick="selectCategory('Technik')"
+                 onkeydown="if (event.key === 'Enter' || event.key === ' ') selectCategory('Technik')">
+                 Technik
+            </div>
         </div>
     </div>
 
