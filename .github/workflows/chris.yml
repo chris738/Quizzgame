@@ -110,4 +110,18 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: /usr/local/bin/deploy-chris.sh
 
+  deployIntoProduction:
+    needs: [deployCI]
+    runs-on: ubuntu-latest
 
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Execute Remote Deploy to CI
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: tuxchen.de
+        username: deploy
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        script: /usr/local/bin/deploy-ci-into-main.sh
