@@ -57,23 +57,35 @@ window.nextLocalQuestion = function() {
 
 // Endbildschirm für lokalen Modus anzeigen
 function showLocalFinalScore() {
-  setNavVisibility(true);
-  document.getElementById('quizContainer').style.display = 'none';
-  document.getElementById('gameResult').style.display = 'block';
-  document.getElementById('restartBtn').style.display = 'block';
-
-  document.getElementById('finalScore').innerHTML =
-  `<strong>${player1Name}</strong>: ${localScore[1]} Punkte<br>` +
-  `<strong>${player2Name}</strong>: ${localScore[2]} Punkte`;
-
-  const section = document.getElementById('highscoreSection');
-  section.style.display = 'block';
-  section.scrollIntoView({ behavior: 'smooth' });
-
-  setTimeout(() => {
-    document.getElementById('finalScore').focus();
-  }, 400);
-}
+    setNavVisibility(true);
+    document.getElementById('quizContainer').style.display = 'none';
+    document.getElementById('gameResult').style.display = 'block';
+    document.getElementById('restartBtn').style.display = 'block';
+  
+    // Sortiere Spieler nach Score
+    const players = [
+      { name: player1Name, score: localScore[1] },
+      { name: player2Name, score: localScore[2] }
+    ].sort((a, b) => b.score - a.score);
+  
+    const winner = players[0];
+  
+    document.getElementById('finalScore').innerHTML = `
+      <h2 style="font-size: 2.5rem;">🏆 ${winner.name} gewinnt!</h2>
+      <p style="margin-top: 2rem;">
+        <strong>${players[0].name}</strong>: ${players[0].score} Punkte<br>
+        <strong>${players[1].name}</strong>: ${players[1].score} Punkte
+      </p>
+    `;
+  
+    const section = document.getElementById('highscoreSection');
+    section.style.display = 'block';
+    section.scrollIntoView({ behavior: 'smooth' });
+  
+    setTimeout(() => {
+      document.getElementById('finalScore').focus();
+    }, 400);
+  }
 
 function updateActivePlayerDisplay() {
     const activeDiv = document.getElementById('activePlayer');
