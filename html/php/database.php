@@ -10,6 +10,7 @@ interface DatabaseInterface {
     public function getUserById($id);
     public function editQuestion($id, $question, $category, $a1, $a2, $a3, $a4, $correctAnswer);
     public function dbdeleteQuestion($id);
+    public function getQuestionById($id);
 }
 
 class Database implements DatabaseInterface {
