@@ -16,6 +16,8 @@ async function login(name, password) {
       localStorage.setItem('playerId', result.playerId);
       alert("Spieler 1 eingeloggt!");
     }
+
+    window.location.href = 'quiz.html';
   } else {
     alert(result.message || "Login fehlgeschlagen");
   }
@@ -24,9 +26,16 @@ async function login(name, password) {
 function handleLogin() {
   const name = document.getElementById('name').value;
   const password = document.getElementById('password').value;
-  login(name, password).then(() => {
-    if (localStorage.getItem('playerId') || localStorage.getItem('player2Id')) {
-      window.location.href = 'quiz.html';
-    }
-  });
+  login(name, password);
+}
+
+function logout() {
+  const isPlayer2 = document.getElementById('isPlayer2').checked;
+  if (isPlayer2) {
+    localStorage.removeItem('player2Id');
+    alert("Spieler 2 ausgeloggt!");
+  } else {
+    localStorage.removeItem('playerId');
+    alert("Spieler 1 ausgeloggt!");
+  }
 }
