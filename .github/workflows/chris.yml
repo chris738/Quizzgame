@@ -1,0 +1,127 @@
+name: Test and Deploy in CI
+
+on:
+  push:
+    branches:
+      - chris
+  pull_request:
+    branches:
+      - chris
+
+jobs:
+  phpLint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Run PHP Lint
+        run: |
+          find html/php -name "*.php" -print0 | xargs -0 -n1 php -l
+
+  deployChris:
+    needs: phpLint
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Execute Remote Deploy to Chris
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: tuxchen.de
+        username: deploy
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        script: /usr/local/bin/deploy-chris.sh
+
+  UnitTestLogin:
+    needs: deployChris
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+
+    - name: Install dependencies
+      run: composer install
+
+    - name: Run PHPUnit Login Test
+      run: vendor/bin/phpunit tests/LoginTest.php
+
+  UnitGetHighscore:
+    needs: deployChris
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+
+    - name: Install dependencies
+      run: composer install
+
+    - name: Run PHPUnit Get Highscore Test
+      run: vendor/bin/phpunit tests/HighscoreApiTest.php
+
+  UnitGetQuiz:
+    needs: deployChris
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+
+    - name: Install dependencies
+      run: composer install
+
+    - name: Run PHPUnit Get Quiz Test
+      run: vendor/bin/phpunit tests/QuizApiTest.php
+
+  deployCI:
+    needs: [UnitTestLogin, UnitGetHighscore, UnitGetQuiz]
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Execute Remote Deploy to CI
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: tuxchen.de
+        username: deploy
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        script: /usr/local/bin/deploy-chris.sh
+
+  #deployIntoProduction:
+  #  needs: [deployCI]
+  #  runs-on: ubuntu-latest
+
+#    steps:
+#    - name: Checkout Code
+#      uses: actions/checkout@v3
+
+#    - name: Execute Remote Deploy to CI
+#      uses: appleboy/ssh-action@v1.0.0
+#      with:
+#        host: tuxchen.de
+#        username: deploy
+#        key: ${{ secrets.SERVER_SSH_KEY }}
+#        script: /usr/local/bin/deploy-ci-into-main.sh

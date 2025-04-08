@@ -43,11 +43,7 @@ function loadNewQuestion() {
                 correctAnswer = parseInt(data.info.richtig, 10);
 
                 // Frage-Text und Antworten befüllen
-                document.getElementById('Question').textContent = data.info.frage;
-                document.getElementById('answer1').textContent = data.info.antwort["1"];
-                document.getElementById('answer2').textContent = data.info.antwort["2"];
-                document.getElementById('answer3').textContent = data.info.antwort["3"];
-                document.getElementById('answer4').textContent = data.info.antwort["4"];
+                displayQuestion(data.info);
 
                 questionStartTime = Date.now();
 
@@ -66,11 +62,22 @@ function loadNewQuestion() {
 function handleAnswerClick(spanID) {
     if (hasAnswered) return;
 
-    const selectedAnswer = parseInt(spanID.replace('answer',''), 10);
-    const feedbackDiv = document.getElementById('feedback');
-
+    const selectedAnswer = parseInt(spanID.replace('answer', ''), 10);
     const isCorrect = (selectedAnswer === correctAnswer);
     const score = calculateScore(isCorrect);
+
+    showAnswerFeedback(isCorrect, selectedAnswer, score);
+
+    totalScore += score;
+    hasAnswered = true;
+
+    saveGameResult(currentPlayerId, currentQuestionID, selectedAnswer, correctAnswer, score);
+}
+
+window.showAnswerFeedback = function(isCorrect, selectedAnswer, score) {
+    const feedbackDiv = document.getElementById('feedback');
+    const newQuestionBtn = document.getElementById('newQuestionBtn');
+
     if (isCorrect) {
         document.querySelector(`[data-color="answer${selectedAnswer}"]`)
                 .classList.add('correct');
@@ -84,23 +91,30 @@ function handleAnswerClick(spanID) {
         feedbackDiv.textContent = "Falsch! Richtig wäre: " + correctText;
     }
 
-    // Score zum Gesamtscore addieren
-    totalScore += score;
-
-    hasAnswered = true;
-
-    // "Nächste Frage"-Button einblenden
-    const newQuestionBtn = document.getElementById('newQuestionBtn');
     newQuestionBtn.style.display = 'inline-block';
 
-    // Barrierefreiheit
     feedbackDiv.setAttribute('tabindex', '0');
     newQuestionBtn.setAttribute('tabindex', '1');
     feedbackDiv.focus();
+};
 
-    // Spielstand speichern (Backend-Logik)
-    saveGameResult(currentPlayerId, currentQuestionID, selectedAnswer, correctAnswer, score);
+//Anzeigen der Frage und der Antworten
+window.displayQuestion = function displayQuestion(q) {
+    document.getElementById('waitingRoom').style.display = 'none';
+    document.getElementById('quizContainer').style.display = 'block';
+
+    currentQuestionId = q.id;
+    correctAnswer = parseInt(q.richtig);
+
+    document.getElementById('Question').textContent = q.frage;
+    document.getElementById('answer1').textContent = q.antwort["1"];
+    document.getElementById('answer2').textContent = q.antwort["2"];
+    document.getElementById('answer3').textContent = q.antwort["3"];
+    document.getElementById('answer4').textContent = q.antwort["4"];
+
+    resetUI();
 }
+
 
 function nextQuestion() {
     // Wenn wir unsere max. Anzahl an Fragen erreicht haben, dann Endergebnis anzeigen
@@ -111,26 +125,19 @@ function nextQuestion() {
     }
 }
 
-function showFinalScore() {
-    // Navigations bereich wieder einblenden
+window.showFinalScore = function showFinalScore() {
     setNavVisibility(true);
-
-    // Quiz-Bereich ausblenden
     document.getElementById('quizContainer').style.display = 'none';
-
-    // Ergebnis-Bereich sichtbar machen
     document.getElementById('gameResult').style.display = 'block';
     document.getElementById('restartBtn').style.display = 'block';
-    document.getElementById('finalScore').textContent = 
+
+    document.getElementById('finalScore').textContent =
         `Du hast ${maxQuestions} Fragen beantwortet und insgesamt ${totalScore} Punkte erreicht!`;
 
-    //lade den hightscore aus der js/hightscore.js
     loadHighscore();
 
     const section = document.getElementById('highscoreSection');
     section.style.display = 'block';
-    
-    // Optional: Scroll zum Highscore-Bereich
     section.scrollIntoView({ behavior: 'smooth' });
 
     setTimeout(() => {
@@ -185,7 +192,7 @@ function saveGameResult(playerId, questionID, selectedAnswer, correctAnswer, sco
     });
 }
 
-function resetUI() {
+window.resetUI = function resetUI() {
     setNavVisibility(false);
 
     // CSS-Klassen entfernen
@@ -201,17 +208,24 @@ function resetUI() {
     // Fokus auf Frage setzen
     const questionHeading = document.getElementById('Question');
 
-
     setTimeout(() => {
         questionHeading.focus();
     }, 250);
-}
+};
 
+
+// Multiplayer-Check beim Start
 document.addEventListener('DOMContentLoaded', () => {
-    setNavVisibility(false);
-    // Zu Beginn: erst mal nur Kategorie-Auswahl anzeigen.
-    // => categorySelection ist schon sichtbar (per CSS),
-    //    quizContainer & gameResult sind hidden.
-    // => Mach also hier nichts weiter, außer falls du
-    //    beim Laden direkt etwas debuggen willst.
-});
+    const currentPlayerId = parseInt(localStorage.getItem('playerId')) || 0;
+  
+    // Wenn multiplayer.html geladen ist
+    if (window.location.pathname.includes('multiplayer.html')) {
+      if (currentPlayerId > 0) {
+        initMultiplayer(currentPlayerId);
+      } else {
+        alert('Fehler: Spieler-ID nicht gefunden. Bitte erneut einloggen.');
+        window.location.href = 'login.html'; // oder zur Startseite
+      }
+    }
+  });
+  
