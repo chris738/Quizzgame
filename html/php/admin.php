@@ -194,10 +194,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['action'] === 'loadQuestion') {
     $questionId = $_GET['id'] ?? null;
-    $response = loadQuestionById($questionId);
+    $manager = new QuestionManager();
+    $response = $manager->loadQuestionById($questionId);
     echo json_encode($response);
     exit;
 }
+
 
 
 ?>
