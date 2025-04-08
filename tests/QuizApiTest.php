@@ -4,11 +4,25 @@ use PHPUnit\Framework\TestCase;
 
 class QuizApiTest extends TestCase
 {
-    public function testQuizApiWithoutCategoryReturnsValidQuestion()
+    public function testQuizApiWithCategoryReturnsValidQuestion()
     {
+        // Die URL der neuen API
         $url = 'https://chris.quizz.tuxchen.de/php/quiz.php';
 
-        $response = @file_get_contents($url);
+        // Daten, die als POST gesendet werden
+        $postData = ['category' => 'Musik'];
+
+        // Initialisierung des cURL-Requests für die POST-Anfrage
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        // Senden der Anfrage
+        $response = curl_exec($ch);
+        curl_close($ch);
+
         $this->assertNotFalse($response, "Fehler beim Abrufen von $url");
 
         $data = json_decode($response, true);
