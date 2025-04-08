@@ -90,7 +90,7 @@ function loadQuestionData(questionId) {
         return;
     }
 
-    
+
     fetch(`php/admin.php?action=loadQuestion&id=${questionId}`)
         .then(response => response.json())
         .then(data => {
@@ -105,6 +105,16 @@ function loadQuestionData(questionId) {
             console.error("Fehler beim Laden der Frage:", error);
             alert("Es gab ein Problem beim Laden der Frage.");
         });
+}
+
+function fillFormWithQuestionData(questionData) {
+    document.getElementById("editquestion").value = questionData.frage;
+    document.getElementById("editcategory").value = questionData.category;
+    document.getElementById("editanswer1").value = questionData.antwort['1'];
+    document.getElementById("editanswer2").value = questionData.antwort['2'];
+    document.getElementById("editanswer3").value = questionData.antwort['3'];
+    document.getElementById("editanswer4").value = questionData.antwort['4'];
+    document.getElementById("editcorrectAnswer").value = questionData.richtig;
 }
 
 
