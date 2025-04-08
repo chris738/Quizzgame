@@ -147,14 +147,6 @@ function initAddUserForm() {
     });
 }
 
-
-document.addEventListener("DOMContentLoaded", () => {
-    initAddQuestionForm();
-    initAddUserForm();
-    initEditQuestionForm();
-    initDeleteQuestionForm(); 
-});
-
 document.addEventListener('DOMContentLoaded', function() {
     const loadButton = document.getElementById("loadQuestionBtn");
     if (loadButton) {
@@ -166,3 +158,12 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Button nicht gefunden!');
     }
 });
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    initAddQuestionForm();
+    initAddUserForm();
+    initEditQuestionForm();
+    initDeleteQuestionForm(); 
+});
+
