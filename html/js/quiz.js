@@ -29,7 +29,7 @@ function selectCategory(categoryName) {
     setNavVisibility(false);
 }
 
-function loadNewQuestion() {
+window.loadNewQuestion = function loadNewQuestion() {
     let url = 'php/quiz.php';
     if (selectedCategory) {
         url += '?category=' + encodeURIComponent(selectedCategory);
@@ -116,7 +116,7 @@ window.displayQuestion = function displayQuestion(q) {
 }
 
 
-function nextQuestion() {
+window.nextQuestion = function nextQuestion() {
     // Wenn wir unsere max. Anzahl an Fragen erreicht haben, dann Endergebnis anzeigen
     if (questionCount >= maxQuestions) {
         showFinalScore();
@@ -145,7 +145,7 @@ window.showFinalScore = function showFinalScore() {
     }, 400);
 }
 
-function resetGame() {
+window.resetGame = function resetGame() {
     // Navigations bereich wieder einblenden
     setNavVisibility(false);
     // Ergebnis-Bereich ausblenden
@@ -158,7 +158,7 @@ function resetGame() {
     document.getElementById('categorySelection').focus();
 }
 
-function calculateScore(isCorrect) {
+window.calculateScore = function calculateScore(isCorrect) {
     if (!isCorrect) return 0;
     const responseTime = Math.floor((Date.now() - questionStartTime) / 1000);
     const basePoints = 100;

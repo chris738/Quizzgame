@@ -1,6 +1,8 @@
 // Spieler-IDs aus localStorage laden
 let player1Id = localStorage.getItem('playerId');
 let player2Id = localStorage.getItem('player2Id');
+let player1Name = localStorage.getItem('playerName') || 'Spieler 1';
+let player2Name = localStorage.getItem('player2Name') || 'Spieler 2';
 
 // Aktueller Spieler (1 oder 2)
 let currentPlayer = 1;
@@ -60,8 +62,8 @@ function showLocalFinalScore() {
   document.getElementById('restartBtn').style.display = 'block';
 
   document.getElementById('finalScore').innerHTML =
-    `<strong>${player1Id}</strong>: ${localScore[1]} Punkte<br>` +
-    `<strong>${player2Id}</strong>: ${localScore[2]} Punkte`;
+  `<strong>${player1Name}</strong>: ${localScore[1]} Punkte<br>` +
+  `<strong>${player2Name}</strong>: ${localScore[2]} Punkte`;
 
   const section = document.getElementById('highscoreSection');
   section.style.display = 'block';

@@ -11,9 +11,11 @@ async function login(name, password) {
     const isPlayer2 = document.getElementById('isPlayer2').checked;
     if (isPlayer2) {
       localStorage.setItem('player2Id', result.playerId);
+      localStorage.setItem('player2Name', result.username);
       alert("Spieler 2 eingeloggt!");
     } else {
       localStorage.setItem('playerId', result.playerId);
+      localStorage.setItem('playerName', result.username);
       alert("Spieler 1 eingeloggt!");
     }
 
