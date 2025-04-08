@@ -143,3 +143,8 @@ document.addEventListener("DOMContentLoaded", () => {
     initEditQuestionForm();
     initDeleteQuestionForm(); 
 });
+
+document.getElementById("loadQuestionBtn").addEventListener("click", function () {
+    const questionId = document.getElementById("id").value;
+    loadQuestionData(questionId);  
+});
