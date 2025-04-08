@@ -4,21 +4,23 @@
   <meta charset="UTF-8" />
   <title>Login</title>
   <link rel="stylesheet" href="css/login.css">
-  <script src="js/login.js"></script>
+  <script src="js/login.js" defer></script>
   <link rel="preload" href="navbar.html" as="fetch" crossorigin="anonymous">
   <script defer src="js/navbar.js"></script>
-
 </head>
 <body>
   <div id="navbar-container"></div>
-        <div class="container">
-          <h1>Login</h1>
-          <form onsubmit="handleLogin(); return false;">
-            <input type="text" id="name" placeholder="Name" required />
-            <input type="password" id="password" placeholder="Passwort" required />
-            <button type="submit">Einloggen</button>
-          </form>
-        </div>
-      </body>
-      
+  <div class="container">
+    <h1>Login</h1>
+    <form onsubmit="handleLogin(); return false;">
+      <input type="text" id="name" placeholder="Name" required />
+      <input type="password" id="password" placeholder="Passwort" required />
+      <label>
+        <input type="checkbox" id="isPlayer2" />
+        Login für Spieler 2
+      </label>
+      <button type="submit">Einloggen</button>
+    </form>
+  </div>
+</body>
 </html>
