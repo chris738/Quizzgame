@@ -23,7 +23,7 @@
 </div>
 
   <!-- Kategorieauswahl -->
-  <div id="categorySelection">
+<div id="categorySelection">
     <h1>Wähle eine Kategorie</h1>
     <div class="category-grid">
         <div class="category-card" 
@@ -71,6 +71,9 @@
     </div>
 </div>
 
+<!-- Aktueller Spieler -->
+<div id="activePlayer" class="active-player" style="display:none; text-align: center; font-size: 1.4rem; font-weight: bold; margin-top: 2rem;"></div>
+
   <!-- Quiz-Bereich -->
   <div class="quiz-container" id="quizContainer" style="display:none;">
     <div id="Question" class="question-text" tabindex="-1">Frage</div>
@@ -109,7 +112,7 @@
     <h2>Spiel beendet!</h2>
     <p id="finalScore"></p>
     <div id="restartBtn" class="button" style="display: none;" tabindex="0"
-         onclick="resetGame()" onkeydown="if (event.key === 'Enter' || event.key === ' ') resetGame()">
+         onclick="resetGameMultiplayer()" onkeydown="if (event.key === 'Enter' || event.key === ' ') resetGameMultiplayer()">
       Nochmal spielen
     </div>
   </div>

@@ -51,6 +51,7 @@ window.nextLocalQuestion = function() {
   } else {
     currentPlayer = currentPlayer === 1 ? 2 : 1;
     loadNewQuestion(); // kommt aus quiz.js
+    updateActivePlayerDisplay();
   }
 };
 
@@ -74,6 +75,21 @@ function showLocalFinalScore() {
   }, 400);
 }
 
+function updateActivePlayerDisplay() {
+    const activeDiv = document.getElementById('activePlayer');
+    const name = currentPlayer === 1 ? player1Name : player2Name;
+    activeDiv.textContent = `🔹 ${name} ist dran!`;
+    activeDiv.style.display = 'block';
+  }
+
+window.resetGameMultiplayer = function resetGameMultiplayer() {
+    // Navigations bereich wieder einblenden
+    setNavVisibility(false);
+
+    //Seite neu Laden
+    location.reload();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const name1 = localStorage.getItem('playerName');
     const name2 = localStorage.getItem('player2Name');
@@ -91,6 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
       startBtn.addEventListener('click', () => {
         document.getElementById('vsScreen').style.display = 'none';
         document.getElementById('categorySelection').style.display = 'block';
+        updateActivePlayerDisplay();
       });
     }
   
