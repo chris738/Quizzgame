@@ -116,6 +116,15 @@ class Database implements DatabaseInterface {
         ]);
     }
 
+    public function getQuestionById($id) {
+    $stmt = $this->conn->prepare("
+    SELECT * FROM Question WHERE QuestionID = :id"
+    );
+    $stmt->execute([':id' => $id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+
     public function dbdeleteQuestion($id) {
         $stmt = $this->conn->prepare("UPDATE MultiplayerAnswer SET QuestionID = NULL WHERE QuestionID = :id");
         $stmt->execute([':id' => $id]);
