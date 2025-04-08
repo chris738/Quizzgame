@@ -19,13 +19,50 @@
   <div id="categorySelection">
     <h1>Wähle eine Kategorie</h1>
     <div class="category-grid">
-      <div class="category-card" role="button" tabindex="0" onclick="selectCategory('Allgemein')"
-           onkeydown="if (event.key === 'Enter' || event.key === ' ') selectCategory('Allgemein')">
-        Allgemein
-      </div>
-      <!-- Weitere Kategorien wie in quiz.html -->
+        <div class="category-card" 
+             role="button" 
+             tabindex="0"
+             onclick="selectCategory('Allgemein')"
+             onkeydown="if (event.key === 'Enter' || event.key === ' ') selectCategory('Allgemein')">
+             Allgemein
+        </div>
+        <div class="category-card" 
+             role="button" 
+             tabindex="0"
+             onclick="selectCategory('Musik')"
+             onkeydown="if (event.key === 'Enter' || event.key === ' ') selectCategory('Musik')">
+             Musik
+        </div>
+        <div class="category-card" 
+             role="button" 
+             tabindex="0"
+             onclick="selectCategory('Gaming')"
+             onkeydown="if (event.key === 'Enter' || event.key === ' ') selectCategory('Gaming')">
+             Gaming
+        </div>
+        <div class="category-card" 
+             role="button" 
+             tabindex="0"
+             onclick="selectCategory('Europa')"
+             onkeydown="if (event.key === 'Enter' || event.key === ' ') selectCategory('Europa')">
+             Europa
+        </div>
+        <div class="category-card" 
+             role="button" 
+             tabindex="0"
+             onclick="selectCategory('Medien')"
+             onkeydown="if (event.key === 'Enter' || event.key === ' ') selectCategory('Medien')">
+             Medien
+        </div>
+        <div class="category-card" 
+             role="button" 
+             tabindex="0"
+             onclick="selectCategory('Technik')"
+             onkeydown="if (event.key === 'Enter' || event.key === ' ') selectCategory('Technik')">
+             Technik
+        </div>
     </div>
-  </div>
+</div>
 
   <!-- Quiz-Bereich -->
   <div class="quiz-container" id="quizContainer" style="display:none;">
