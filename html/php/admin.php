@@ -83,6 +83,37 @@ class QuestionManager extends Database {
             $this->response = ['success' => false, 'message' => 'Fehler: ' . $e->getMessage()];
         }
     }
+
+    function loadQuestionById($questionId) {
+        if (!$questionId) {
+            return ['error' => 'Keine Frage-ID angegeben.'];
+        }
+    
+        try {
+            $db = new Database();
+            $question = $db->getQuestionById($questionId); 
+            
+            if ($question) {
+                return [
+                    'info' => [
+                        'frage' => $question['Question'],
+                        'category' => $question['Category'],
+                        'antwort' => [
+                            '1' => $question['Answer1'],
+                            '2' => $question['Answer2'],
+                            '3' => $question['Answer3'],
+                            '4' => $question['Answer4']
+                        ],
+                        'richtig' => $question['correctAnswer']
+                    ]
+                ];
+            } else {
+                return ['error' => 'Frage nicht gefunden.'];
+            }
+        } catch (PDOException $e) {
+            return ['error' => 'Datenbankfehler: ' . $e->getMessage()];
+        }
+    }
     
 
     public function getResponse() {
