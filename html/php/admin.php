@@ -96,13 +96,13 @@ class QuestionManager extends Database {
             if ($question) {
                 return [
                     'info' => [
-                        'frage' => $question['Question'],
-                        'category' => $question['Category'],
+                        'frage' => $question['question'],
+                        'category' => $question['category'],
                         'antwort' => [
-                            '1' => $question['Answer1'],
-                            '2' => $question['Answer2'],
-                            '3' => $question['Answer3'],
-                            '4' => $question['Answer4']
+                            '1' => $question['answer1'],
+                            '2' => $question['answer2'],
+                            '3' => $question['answer3'],
+                            '4' => $question['answer4']
                         ],
                         'richtig' => $question['correctAnswer']
                     ]
