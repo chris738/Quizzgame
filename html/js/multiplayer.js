@@ -76,6 +76,8 @@ function waitForOtherPlayers(message = 'Warte auf Mitspieler...') {
 }
 
 async function loadNextQuestion() {
+
+    //Holen der Frage und Antworten vom Server
     const response = await fetch('php/quiz.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -90,8 +92,8 @@ async function loadNextQuestion() {
 
     const result = await response.json();
 
+    //Prüfen, ob die Frage angezeigt werden kann
     if (result.wait) {
-        // Spezielle Info: Der andere Spieler hat bereits gespielt → Frage überspringen
         if (result.skipped) {
             console.log(`[loadNextQuestion] Frage ${questionNumber} wurde vom Gegner gespielt. Überspringe.`);
             if (questionNumber < 16) {
@@ -99,35 +101,19 @@ async function loadNextQuestion() {
                 loadNextQuestion();
             } else {
                 console.log('[loadNextQuestion] Alle 16 Fragen beantwortet.');
-                // Hier z. B. Endbildschirm anzeigen
                 showFinalScore();
                 return;
             }
-            loadNextQuestion(); // direkt erneut laden
             return;
         }
 
-        // Normaler Fall: Spieler muss noch warten
+        //Warten auf andere Spieler
         waitForOtherPlayers(result.message);
         return;
     }
 
-    // Wenn Frage kommt: Quiz anzeigen, Wartebereich ausblenden
-    document.getElementById('waitingRoom').style.display = 'none';
-    document.getElementById('quizContainer').style.display = 'block';
-
-    const q = result.info;
-    currentQuestionId = q.id;
-    correctAnswer = parseInt(q.richtig);
-
-    document.getElementById('Question').textContent = q.frage;
-    document.getElementById('answer1').textContent = q.antwort["1"];
-    document.getElementById('answer2').textContent = q.antwort["2"];
-    document.getElementById('answer3').textContent = q.antwort["3"];
-    document.getElementById('answer4').textContent = q.antwort["4"];
-
-    // UI zurücksetzen
-    resetUI();
+    //Anzeie der Frage
+    displayQuestion(result.info);
 }
 
 async function submitAnswer(answerNumber) {

@@ -43,11 +43,7 @@ function loadNewQuestion() {
                 correctAnswer = parseInt(data.info.richtig, 10);
 
                 // Frage-Text und Antworten befüllen
-                document.getElementById('Question').textContent = data.info.frage;
-                document.getElementById('answer1').textContent = data.info.antwort["1"];
-                document.getElementById('answer2').textContent = data.info.antwort["2"];
-                document.getElementById('answer3').textContent = data.info.antwort["3"];
-                document.getElementById('answer4').textContent = data.info.antwort["4"];
+                displayQuestion(data.info);
 
                 questionStartTime = Date.now();
 
@@ -102,6 +98,22 @@ window.showAnswerFeedback = function(isCorrect, selectedAnswer, score) {
     feedbackDiv.focus();
 };
 
+//Anzeigen der Frage und der Antworten
+window.displayQuestion = function displayQuestion(q) {
+    document.getElementById('waitingRoom').style.display = 'none';
+    document.getElementById('quizContainer').style.display = 'block';
+
+    currentQuestionId = q.id;
+    correctAnswer = parseInt(q.richtig);
+
+    document.getElementById('Question').textContent = q.frage;
+    for (let i = 1; i <= 4; i++) {
+        document.getElementById(`answer${i}`).textContent = q.antwort[i.toString()];
+    }
+
+    resetUI();
+}
+
 
 function nextQuestion() {
     // Wenn wir unsere max. Anzahl an Fragen erreicht haben, dann Endergebnis anzeigen
@@ -112,7 +124,7 @@ function nextQuestion() {
     }
 }
 
-function showFinalScore() {
+window.showFinalScore = function showFinalScore() {
     setNavVisibility(true);
     document.getElementById('quizContainer').style.display = 'none';
     document.getElementById('gameResult').style.display = 'block';
@@ -131,10 +143,6 @@ function showFinalScore() {
         document.getElementById('finalScore').focus();
     }, 400);
 }
-
-// Funktion global machen
-window.showFinalScore = showFinalScore;
-
 
 function resetGame() {
     // Navigations bereich wieder einblenden
