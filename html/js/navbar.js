@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadNavbar();
   });
   
-  async function loadNavbar() {
+  window.loadNavbar = async function loadNavbar() {
     const container = document.getElementById('navbar-container');
     if (!container) return;
   

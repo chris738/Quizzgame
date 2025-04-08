@@ -17,7 +17,7 @@ async function login(name, password) {
       alert("Spieler 1 eingeloggt!");
     }
 
-    window.location.href = 'quiz.html';
+    if (typeof loadNavbar === 'function') loadNavbar();
   } else {
     alert(result.message || "Login fehlgeschlagen");
   }
@@ -38,4 +38,5 @@ function logout() {
     localStorage.removeItem('playerId');
     alert("Spieler 1 ausgeloggt!");
   }
+  if (typeof loadNavbar === 'function') loadNavbar();
 }
