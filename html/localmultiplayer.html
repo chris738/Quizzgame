@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="css/highscore.css">
   <script src="js/quiz.js" defer></script>
   <script src="js/localmultiplayer.js" defer></script>
+  <script src="js/highscore.js"></script>
 </head>
 <body>
 
@@ -113,20 +114,24 @@
     </div>
   </div>
 
-  <!-- Highscore-Sektion -->
-  <section id="highscoreSection" class="highscore-section" style="display: none; margin-top: 4rem;">
-    <div class="container">
-      <h1>Highscores</h1>
-      <table class="highscore-table">
-        <thead>
-          <tr><th>Platz</th><th>Spieler</th><th>Punkte</th></tr>
-        </thead>
-        <tbody>
-          <tr><td colspan="3">Lade Highscores...</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+    <!-- 4) Highscore-Bereich (zunächst versteckt) -->
+    <section id="highscoreSection" class="highscore-section" style="display: none; margin-top: 4rem;">
+        <div class="container">
+            <h1>Highscores</h1>
+            <table class="highscore-table">
+            <thead>
+                <tr>
+                <th>Platz</th>
+                <th>Spieler</th>
+                <th>Punkte</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td colspan="3">Lade Highscores...</td></tr>
+            </tbody>
+            </table>
+        </div>
+    </section>
 
   <!-- Multiplayer-Wartebereich ausgeblendet -->
   <div id="waitingRoom" style="display:none;"></div>

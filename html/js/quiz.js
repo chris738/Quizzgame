@@ -213,7 +213,6 @@ window.resetUI = function resetUI() {
     }, 250);
 };
 
-
 // Multiplayer-Check beim Start
 document.addEventListener('DOMContentLoaded', () => {
     const currentPlayerId = parseInt(localStorage.getItem('playerId')) || 0;
