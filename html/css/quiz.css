@@ -131,3 +131,14 @@ input {
     transform: scale(1.05);
     box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
 }
+
+.vs-screen {
+    text-align: center;
+    margin: 4rem auto;
+  }
+  
+  .vs-screen h1 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+  

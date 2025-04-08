@@ -73,3 +73,28 @@ function showLocalFinalScore() {
     document.getElementById('finalScore').focus();
   }, 400);
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const name1 = localStorage.getItem('playerName');
+    const name2 = localStorage.getItem('player2Name');
+  
+    const vsStatus = document.getElementById('vsStatus');
+    const startBtn = document.getElementById('startLocalGameBtn');
+  
+    if (!name1 || !name2) {
+      vsStatus.textContent = "❌ Nicht genügend Spieler eingeloggt.";
+      startBtn.style.display = 'none';
+    } else {
+      vsStatus.textContent = `${name1} 🆚 ${name2}`;
+      startBtn.style.display = 'inline-block';
+  
+      startBtn.addEventListener('click', () => {
+        document.getElementById('vsScreen').style.display = 'none';
+        document.getElementById('categorySelection').style.display = 'block';
+      });
+    }
+  
+    // Kategorieauswahl erstmal ausblenden
+    document.getElementById('categorySelection').style.display = 'none';
+    setNavVisibility(false);
+  });
