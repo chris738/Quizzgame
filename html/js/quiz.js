@@ -218,14 +218,15 @@ window.resetUI = function resetUI() {
 document.addEventListener('DOMContentLoaded', () => {
     const currentPlayerId = parseInt(localStorage.getItem('playerId')) || 0;
   
-    // Wenn multiplayer.html geladen ist
+    /*/ Wenn multiplayer.html geladen ist
     if (window.location.pathname.includes('multiplayer.html')) {
       if (currentPlayerId > 0) {
-        initMultiplayer(currentPlayerId);
+        //initMultiplayer(currentPlayerId);
       } else {
         alert('Fehler: Spieler-ID nicht gefunden. Bitte erneut einloggen.');
         window.location.href = 'login.html'; // oder zur Startseite
       }
     }
+    */
   });
   

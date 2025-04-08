@@ -55,10 +55,12 @@ document.addEventListener('DOMContentLoaded', () => {
   
       if (p1 && p1.success && p1.username) {
         lines.push(`🧑 Spieler 1: ${p1.username}`);
+        localStorage.setItem('playerName', p1.username);
       }
   
       if (p2 && p2.success && p2.username) {
         lines.push(`🧑 Spieler 2: ${p2.username}`);
+        localStorage.setItem('player2Name', p2.username);
       }
   
       if (lines.length > 0) {
