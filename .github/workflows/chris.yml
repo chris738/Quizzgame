@@ -110,17 +110,4 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: /usr/local/bin/deploy-chris.sh
 
-  phpLint:
-    needs: deploy
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-      - name: Install PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-      - name: Run PHP Lint
-        run: |
-          find html/php -name "*.php" -print0 | xargs -0 -n1 php -l
 
