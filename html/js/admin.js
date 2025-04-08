@@ -84,6 +84,41 @@ function initDeleteQuestionForm() {
     });
 }
 
+function loadQuestionData(questionId) {
+    if (!questionId) {
+        alert("Bitte gib eine Frage-ID ein.");
+        return;
+    }
+
+    console.log("Lade Frage mit ID: ", questionId); 
+
+    fetch(`php/admin.php?action=loadQuestion&id=${questionId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert(data.error);
+            } else {
+                
+                fillFormWithQuestionData(data.info);
+            }
+        })
+        .catch(error => {
+            console.error("Fehler beim Laden der Frage:", error);
+            alert("Es gab ein Problem beim Laden der Frage.");
+        });
+}
+
+function fillFormWithQuestionData(questionData) {
+    document.getElementById("editquestion").value = questionData.frage;
+    document.getElementById("editcategory").value = questionData.category;
+    document.getElementById("editanswer1").value = questionData.antwort['1'];
+    document.getElementById("editanswer2").value = questionData.antwort['2'];
+    document.getElementById("editanswer3").value = questionData.antwort['3'];
+    document.getElementById("editanswer4").value = questionData.antwort['4'];
+    document.getElementById("editcorrectAnswer").value = questionData.richtig;
+}
+
+
 function initAddUserForm() {
     const form = document.getElementById("addUserForm");
 
@@ -112,6 +147,18 @@ function initAddUserForm() {
     });
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+    const loadButton = document.getElementById("loadQuestionBtn");
+    if (loadButton) {
+        loadButton.addEventListener('click', function() {
+            const questionId = document.getElementById("id").value;
+            loadQuestionData(questionId);
+        });
+    } else {
+        console.log('Button nicht gefunden!');
+    }
+});
+
 
 document.addEventListener("DOMContentLoaded", () => {
     initAddQuestionForm();
@@ -119,3 +166,4 @@ document.addEventListener("DOMContentLoaded", () => {
     initEditQuestionForm();
     initDeleteQuestionForm(); 
 });
+

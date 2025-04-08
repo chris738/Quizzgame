@@ -8,6 +8,9 @@ interface DatabaseInterface {
     public function getUserByName($name);
     public function getTopHighscores($limit);
     public function getUserById($id);
+    public function editQuestion($id, $question, $category, $a1, $a2, $a3, $a4, $correctAnswer);
+    public function dbdeleteQuestion($id);
+    public function getQuestionById($id);
 }
 
 class Database implements DatabaseInterface {
@@ -124,6 +127,15 @@ class Database implements DatabaseInterface {
             ':correct' => $correctAnswer
         ]);
     }
+
+    public function getQuestionById($id) {
+    $stmt = $this->conn->prepare("
+    SELECT * FROM Question WHERE QuestionID = :id"
+    );
+    $stmt->execute([':id' => $id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
 
     public function dbdeleteQuestion($id) {
         $stmt = $this->conn->prepare("UPDATE MultiplayerAnswer SET QuestionID = NULL WHERE QuestionID = :id");
