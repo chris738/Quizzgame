@@ -5,7 +5,7 @@ class HighscoreApiTest extends TestCase
 {
     public function testHighscoreApiReturnsValidJson()
     {
-        $url = 'https://chris.quizz.tuxchen.de/php/highscore.php';
+        $url = 'https://quizz.tuxchen.de/php/highscore.php';
 
         $response = @file_get_contents($url);
         $this->assertNotFalse($response, "Fehler beim Abrufen von $url");
