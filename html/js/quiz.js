@@ -220,7 +220,7 @@ window.resetUI = function resetUI() {
 };
 
 window.updateProgressBar = function updateProgressBar() {
-    const percent = (questionCount / maxQuestions) * 100;
+    const percent = ((questionCount +1 )/ maxQuestions) * 100;
     document.getElementById('progressBar').style.width = `${percent}%`;
     document.getElementById('progressBarContainer').style.display = 'block';
 }
