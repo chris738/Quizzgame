@@ -66,7 +66,6 @@ function handleAnswerClick(spanID) {
     const isCorrect = (selectedAnswer === correctAnswer);
     const score = calculateScore(isCorrect);
 
-    updateProgressBar();
     showAnswerFeedback(isCorrect, selectedAnswer, score);
 
     totalScore += score;
@@ -123,6 +122,7 @@ window.nextQuestion = function nextQuestion() {
     if (questionCount >= maxQuestions) {
         showFinalScore();
     } else {
+        updateProgressBar();
         loadNewQuestion();
     }
 }
