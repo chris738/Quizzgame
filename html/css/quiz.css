@@ -146,7 +146,7 @@ input {
     color: #333;
   }
   
-  #progressBarContainer {
+#progressBarContainer {
     height: 6px;
     background-color: #ddd;
     border-radius: 3px;
@@ -158,6 +158,6 @@ input {
 #progressBar {
     height: 100%;
     width: 0%;
-    background-color: #4caf50;
+    background-color: #47acff;
     transition: width 0.3s ease;
 }

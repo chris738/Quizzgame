@@ -66,6 +66,7 @@ function handleAnswerClick(spanID) {
     const isCorrect = (selectedAnswer === correctAnswer);
     const score = calculateScore(isCorrect);
 
+    updateProgressBar();
     showAnswerFeedback(isCorrect, selectedAnswer, score);
 
     totalScore += score;
@@ -100,11 +101,10 @@ window.showAnswerFeedback = function(isCorrect, selectedAnswer, score) {
 
 //Anzeigen der Frage und der Antworten
 window.displayQuestion = function displayQuestion(q) {
-    //Progressbar Aktualisieren
-    updateProgressBar();
-    document.getElementById('progressBarContainer').style.display = 'block';
+
     document.getElementById('waitingRoom').style.display = 'none';
     document.getElementById('quizContainer').style.display = 'block';
+    document.getElementById('progressBarContainer').style.display = 'block';
 
     currentQuestionId = q.id;
     correctAnswer = parseInt(q.richtig);
@@ -117,7 +117,6 @@ window.displayQuestion = function displayQuestion(q) {
 
     resetUI();
 }
-
 
 window.nextQuestion = function nextQuestion() {
     // Wenn wir unsere max. Anzahl an Fragen erreicht haben, dann Endergebnis anzeigen
@@ -224,6 +223,7 @@ window.resetUI = function resetUI() {
 window.updateProgressBar = function updateProgressBar() {
     const percent = (questionCount / maxQuestions) * 100;
     document.getElementById('progressBar').style.width = `${percent}%`;
+    document.getElementById('progressBarContainer').style.display = 'block';
 }
 
 // Multiplayer-Check beim Start
