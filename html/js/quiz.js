@@ -151,6 +151,8 @@ window.showFinalScore = function showFinalScore() {
 window.resetGame = function resetGame() {
     // Navigations bereich wieder einblenden
     setNavVisibility(false);
+    //Progress Balken Ausbleden
+    document.getElementById('progressBarContainer').style.display = 'none';
     // Ergebnis-Bereich ausblenden
     document.getElementById('gameResult').style.display = 'none';
     // Kategorieauswahl wieder anzeigen
@@ -196,9 +198,6 @@ function saveGameResult(playerId, questionID, selectedAnswer, correctAnswer, sco
 }
 
 window.resetUI = function resetUI() {
-    
-    //progressbar Ausblenden
-    document.getElementById('progressBarContainer').style.display = 'none';
     
     setNavVisibility(false);
 
