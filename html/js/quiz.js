@@ -51,7 +51,6 @@ window.loadNewQuestion = function loadNewQuestion() {
                 questionCount++;
 
                 // UI zurücksetzen
-                updateProgressBar();
                 resetUI();
             } else {
                 console.error('Fehler:', data.info ? data.info.error : data);
@@ -101,6 +100,9 @@ window.showAnswerFeedback = function(isCorrect, selectedAnswer, score) {
 
 //Anzeigen der Frage und der Antworten
 window.displayQuestion = function displayQuestion(q) {
+    //Progressbar Aktualisieren
+    updateProgressBar();
+    document.getElementById('progressBarContainer').style.display = 'block';
     document.getElementById('waitingRoom').style.display = 'none';
     document.getElementById('quizContainer').style.display = 'block';
 
@@ -131,6 +133,7 @@ window.showFinalScore = function showFinalScore() {
     document.getElementById('quizContainer').style.display = 'none';
     document.getElementById('gameResult').style.display = 'block';
     document.getElementById('restartBtn').style.display = 'block';
+    document.getElementById('progressBarContainer').style.display = 'none';
 
     document.getElementById('finalScore').textContent =
         `Du hast ${maxQuestions} Fragen beantwortet und insgesamt ${totalScore} Punkte erreicht!`;
@@ -194,6 +197,10 @@ function saveGameResult(playerId, questionID, selectedAnswer, correctAnswer, sco
 }
 
 window.resetUI = function resetUI() {
+    
+    //progressbar Ausblenden
+    document.getElementById('progressBarContainer').style.display = 'none';
+    
     setNavVisibility(false);
 
     // CSS-Klassen entfernen
