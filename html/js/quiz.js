@@ -221,7 +221,7 @@ window.resetUI = function resetUI() {
     }, 250);
 };
 
-windows.updateProgressBar = function updateProgressBar() {
+window.updateProgressBar = function updateProgressBar() {
     const percent = (questionCount / maxQuestions) * 100;
     document.getElementById('progressBar').style.width = `${percent}%`;
 }
