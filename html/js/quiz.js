@@ -149,6 +149,7 @@ window.showFinalScore = function showFinalScore() {
 }
 
 window.resetGame = function resetGame() {
+    questionCount = 0;
     // Navigations bereich wieder einblenden
     setNavVisibility(false);
     //Progress Balken Ausbleden
