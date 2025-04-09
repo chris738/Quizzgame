@@ -8,7 +8,7 @@ let currentPlayerId = parseInt(localStorage.getItem('playerId')) || 0;
 let questionStartTime = null;
 
 let selectedCategory = null;    // gewählte Kategorie
-let questionCount = 0;          // wie viele Fragen wurden schon gestellt?
+let questionCount = 1;          // wie viele Fragen wurden schon gestellt?
 const maxQuestions = 4;         // wie viele Fragen pro Spiel?
 let totalScore = 0;             // gesamter Score über alle Fragen
 
