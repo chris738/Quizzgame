@@ -64,6 +64,11 @@
         </div>
     </div>
 
+    <!-- 1.5) Balken -->
+    <div id="progressBarContainer" style="display:none;">
+        <div id="progressBar"></div>
+    </div>
+
     <!-- 2) Quiz-Bereich (zunächst versteckt) aria-live="polite" //war main statt div-->
     <div class="quiz-container" id="quizContainer" style="display:none;">
         <div id="Question" 
@@ -107,6 +112,7 @@
         <div id="newQuestionBtn"
              class="button"
              style="display: none; margin-top: 20px;"
+             role="button"
              tabindex="0"
              onclick="nextQuestion()"
              onkeydown="if (event.key === 'Enter' || event.key === ' ') nextQuestion()">

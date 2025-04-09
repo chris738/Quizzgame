@@ -80,7 +80,7 @@ input {
 .button {
     padding: 10px;
     font-size: 16px;
-    background: #4CAF50;
+    background: #5cd360;
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -130,4 +130,34 @@ input {
 .category-card:hover {
     transform: scale(1.05);
     box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+}
+
+.vs-screen {
+    text-align: center;
+    margin: 4rem auto;
+  }
+  
+.vs-screen h1 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+.active-player {
+    color: #333;
+  }
+  
+#progressBarContainer {
+    height: 6px;
+    background-color: #ddd;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    width: 100%;
+}
+
+#progressBar {
+    height: 100%;
+    width: 0%;
+    background-color: #47acff;
+    transition: width 0.3s ease;
 }

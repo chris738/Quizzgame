@@ -57,9 +57,9 @@
              role="link">
              Quiz starten
       </a></li>
-      <li><a href="multiplayer.html" 
+      <li><a href="localmultiplayer.html" 
              aria-hidden="true">
-             Multiplayer
+             (Local) Multiplayer
       </a></li>
       <li><a href="admin.html" 
              aria-hidden="true">
@@ -77,22 +77,36 @@
              aria-hidden="true">
              Login
       </a></li>
-      <li id="nav-username" 
-          class="nav-username" 
-          style="margin-left:auto;">
-        </li></ul>
+      <li id="nav-username" class="nav-username"></li>
+    </ul>
   </nav>
   
   <script>
-    // Markiere die aktuelle Seite automatisch
+    // Aktive Seite markieren
     const links = document.querySelectorAll('.navbar a');
     const path = location.pathname.split('/').pop();
-  
     links.forEach(link => {
       if (link.getAttribute('href') === path) {
         link.classList.add('active');
       }
     });
-  </script>
   
-</html>
+    // Benutzer anzeigen
+    const player1Id = localStorage.getItem('playerId');
+    const player2Id = localStorage.getItem('player2Id');
+    const playerNames = [];
+  
+    if (player1Id) {
+      playerNames.push(`Spieler 1: ${player1Id}`);
+    }
+  
+    if (player2Id) {
+      playerNames.push(`Spieler 2: ${player2Id}`);
+    }
+  
+    const userDisplay = document.getElementById('nav-username');
+    if (playerNames.length > 0) {
+      userDisplay.innerHTML = playerNames.join('<br>');
+    }
+  </script>
+  </html>

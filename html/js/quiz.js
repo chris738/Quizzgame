@@ -29,7 +29,7 @@ function selectCategory(categoryName) {
     setNavVisibility(false);
 }
 
-function loadNewQuestion() {
+window.loadNewQuestion = function loadNewQuestion() {
     let url = 'php/quiz.php';
     if (selectedCategory) {
         url += '?category=' + encodeURIComponent(selectedCategory);
@@ -100,8 +100,10 @@ window.showAnswerFeedback = function(isCorrect, selectedAnswer, score) {
 
 //Anzeigen der Frage und der Antworten
 window.displayQuestion = function displayQuestion(q) {
+
     document.getElementById('waitingRoom').style.display = 'none';
     document.getElementById('quizContainer').style.display = 'block';
+    document.getElementById('progressBarContainer').style.display = 'block';
 
     currentQuestionId = q.id;
     correctAnswer = parseInt(q.richtig);
@@ -115,12 +117,12 @@ window.displayQuestion = function displayQuestion(q) {
     resetUI();
 }
 
-
-function nextQuestion() {
+window.nextQuestion = function nextQuestion() {
     // Wenn wir unsere max. Anzahl an Fragen erreicht haben, dann Endergebnis anzeigen
     if (questionCount >= maxQuestions) {
         showFinalScore();
     } else {
+        updateProgressBar();
         loadNewQuestion();
     }
 }
@@ -130,6 +132,7 @@ window.showFinalScore = function showFinalScore() {
     document.getElementById('quizContainer').style.display = 'none';
     document.getElementById('gameResult').style.display = 'block';
     document.getElementById('restartBtn').style.display = 'block';
+    document.getElementById('progressBarContainer').style.display = 'none';
 
     document.getElementById('finalScore').textContent =
         `Du hast ${maxQuestions} Fragen beantwortet und insgesamt ${totalScore} Punkte erreicht!`;
@@ -145,9 +148,11 @@ window.showFinalScore = function showFinalScore() {
     }, 400);
 }
 
-function resetGame() {
+window.resetGame = function resetGame() {
     // Navigations bereich wieder einblenden
     setNavVisibility(false);
+    //Progress Balken Ausbleden
+    document.getElementById('progressBarContainer').style.display = 'none';
     // Ergebnis-Bereich ausblenden
     document.getElementById('gameResult').style.display = 'none';
     // Kategorieauswahl wieder anzeigen
@@ -158,7 +163,7 @@ function resetGame() {
     document.getElementById('categorySelection').focus();
 }
 
-function calculateScore(isCorrect) {
+window.calculateScore = function calculateScore(isCorrect) {
     if (!isCorrect) return 0;
     const responseTime = Math.floor((Date.now() - questionStartTime) / 1000);
     const basePoints = 100;
@@ -193,6 +198,7 @@ function saveGameResult(playerId, questionID, selectedAnswer, correctAnswer, sco
 }
 
 window.resetUI = function resetUI() {
+    
     setNavVisibility(false);
 
     // CSS-Klassen entfernen
@@ -213,19 +219,25 @@ window.resetUI = function resetUI() {
     }, 250);
 };
 
+window.updateProgressBar = function updateProgressBar() {
+    const percent = ((questionCount +1 )/ maxQuestions) * 100;
+    document.getElementById('progressBar').style.width = `${percent}%`;
+    document.getElementById('progressBarContainer').style.display = 'block';
+}
 
 // Multiplayer-Check beim Start
 document.addEventListener('DOMContentLoaded', () => {
     const currentPlayerId = parseInt(localStorage.getItem('playerId')) || 0;
   
-    // Wenn multiplayer.html geladen ist
+    /*/ Wenn multiplayer.html geladen ist
     if (window.location.pathname.includes('multiplayer.html')) {
       if (currentPlayerId > 0) {
-        initMultiplayer(currentPlayerId);
+        //initMultiplayer(currentPlayerId);
       } else {
         alert('Fehler: Spieler-ID nicht gefunden. Bitte erneut einloggen.');
         window.location.href = 'login.html'; // oder zur Startseite
       }
     }
+    */
   });
   

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lokaler Mehrspieler</title>
+  <link rel="preload" href="navbar.html" as="fetch" crossorigin="anonymous">
+  <script defer src="js/navbar.js"></script>
+  <link rel="stylesheet" href="css/quiz.css">
+  <link rel="stylesheet" href="css/highscore.css">
+  <script src="js/quiz.js" defer></script>
+  <script src="js/localmultiplayer.js" defer></script>
+  <script src="js/highscore.js"></script>
+</head>
+<body>
+
+  <div id="navbar-container"></div>
+
+<!-- VS-Screen -->
+<div id="vsScreen" class="vs-screen">
+    <h1 id="vsStatus">Spieler laden...</h1>
+    <button id="startLocalGameBtn" class="button" style="display:none;">Spiel starten</button>
+</div>
+
+  <!-- Kategorieauswahl -->
+<div id="categorySelection">
+    <h1>Wähle eine Kategorie</h1>
+    <div class="category-grid">
+        <div class="category-card" 
+             role="button" 
+             tabindex="0"
+             onclick="selectCategory('Allgemein')"
+             onkeydown="if (event.key === 'Enter' || event.key === ' ') selectCategory('Allgemein')">
+             Allgemein
+        </div>
+        <div class="category-card" 
+             role="button" 
+             tabindex="0"
+             onclick="selectCategory('Musik')"
+             onkeydown="if (event.key === 'Enter' || event.key === ' ') selectCategory('Musik')">
+             Musik
+        </div>
+        <div class="category-card" 
+             role="button" 
+             tabindex="0"
+             onclick="selectCategory('Gaming')"
+             onkeydown="if (event.key === 'Enter' || event.key === ' ') selectCategory('Gaming')">
+             Gaming
+        </div>
+        <div class="category-card" 
+             role="button" 
+             tabindex="0"
+             onclick="selectCategory('Europa')"
+             onkeydown="if (event.key === 'Enter' || event.key === ' ') selectCategory('Europa')">
+             Europa
+        </div>
+        <div class="category-card" 
+             role="button" 
+             tabindex="0"
+             onclick="selectCategory('Medien')"
+             onkeydown="if (event.key === 'Enter' || event.key === ' ') selectCategory('Medien')">
+             Medien
+        </div>
+        <div class="category-card" 
+             role="button" 
+             tabindex="0"
+             onclick="selectCategory('Technik')"
+             onkeydown="if (event.key === 'Enter' || event.key === ' ') selectCategory('Technik')">
+             Technik
+        </div>
+    </div>
+</div>
+
+    <!-- 1.5) Balken -->
+    <div id="progressBarContainer" style="display:none;">
+      <div id="progressBar"></div>
+  </div>
+
+<!-- Aktueller Spieler -->
+<div id="activePlayer" class="active-player" style="display:none; text-align: center; font-size: 1.4rem; font-weight: bold; margin-top: 2rem;"></div>
+
+  <!-- Quiz-Bereich -->
+  <div class="quiz-container" id="quizContainer" style="display:none;">
+    <div id="Question" class="question-text" tabindex="-1">Frage</div>
+    <div class="answers">
+      <div class="answer" data-color="answer1" tabindex="0"
+           onclick="handleLocalAnswer('answer1')"
+           onkeydown="if (event.key === 'Enter' || event.key === ' ') handleLocalAnswer('answer1')">
+        <span id="answer1">Antwort 1</span>
+      </div>
+      <div class="answer" data-color="answer2" tabindex="0"
+           onclick="handleLocalAnswer('answer2')"
+           onkeydown="if (event.key === 'Enter' || event.key === ' ') handleLocalAnswer('answer2')">
+        <span id="answer2">Antwort 2</span>
+      </div>
+      <div class="answer" data-color="answer3" tabindex="0"
+           onclick="handleLocalAnswer('answer3')"
+           onkeydown="if (event.key === 'Enter' || event.key === ' ') handleLocalAnswer('answer3')">
+        <span id="answer3">Antwort 3</span>
+      </div>
+      <div class="answer" data-color="answer4" tabindex="0"
+           onclick="handleLocalAnswer('answer4')"
+           onkeydown="if (event.key === 'Enter' || event.key === ' ') handleLocalAnswer('answer4')">
+        <span id="answer4">Antwort 4</span>
+      </div>
+    </div>
+    <div id="feedback" role="status" aria-live="polite"></div>
+    <div id="newQuestionBtn" class="button" style="display:none;" role="button" tabindex="0"
+         onclick="nextLocalQuestion()"
+         onkeydown="if (event.key === 'Enter' || event.key === ' ') nextLocalQuestion()">
+      Nächste Frage
+    </div>
+  </div>
+
+  <!-- Endergebnis -->
+  <div id="gameResult" style="display:none; text-align: center;">
+    <h2>Spiel beendet!</h2>
+    <p id="finalScore"></p>
+    <div id="restartBtn" class="button" style="display: none;" tabindex="0"
+         onclick="resetGameMultiplayer()" onkeydown="if (event.key === 'Enter' || event.key === ' ') resetGameMultiplayer()">
+      Nochmal spielen
+    </div>
+  </div>
+
+    <!-- 4) Highscore-Bereich (zunächst versteckt) -->
+    <section id="highscoreSection" class="highscore-section" style="display: none; margin-top: 4rem;">
+        <div class="container">
+            <h1>Highscores</h1>
+            <table class="highscore-table">
+            <thead>
+                <tr>
+                <th>Platz</th>
+                <th>Spieler</th>
+                <th>Punkte</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td colspan="3">Lade Highscores...</td></tr>
+            </tbody>
+            </table>
+        </div>
+    </section>
+
+  <!-- Multiplayer-Wartebereich ausgeblendet -->
+  <div id="waitingRoom" style="display:none;"></div>
+</body>
+</html>
