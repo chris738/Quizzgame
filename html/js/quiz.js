@@ -51,6 +51,7 @@ window.loadNewQuestion = function loadNewQuestion() {
                 questionCount++;
 
                 // UI zurücksetzen
+                updateProgressBar();
                 resetUI();
             } else {
                 console.error('Fehler:', data.info ? data.info.error : data);
@@ -212,6 +213,11 @@ window.resetUI = function resetUI() {
         questionHeading.focus();
     }, 250);
 };
+
+windows.updateProgressBar = function updateProgressBar() {
+    const percent = (questionCount / maxQuestions) * 100;
+    document.getElementById('progressBar').style.width = `${percent}%`;
+}
 
 // Multiplayer-Check beim Start
 document.addEventListener('DOMContentLoaded', () => {

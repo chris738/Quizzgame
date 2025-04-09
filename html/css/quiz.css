@@ -146,4 +146,18 @@ input {
     color: #333;
   }
   
-  
+  #progressBarContainer {
+    height: 6px;
+    background-color: #ddd;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    width: 100%;
+}
+
+#progressBar {
+    height: 100%;
+    width: 0%;
+    background-color: #4caf50;
+    transition: width 0.3s ease;
+}
