@@ -40,6 +40,8 @@ window.handleLocalAnswer = function(spanID) {
   showAnswerFeedback(isCorrect, selectedAnswer, score);
   localScore[currentPlayer] += score;
   hasAnswered = true;
+  
+  saveGameResult(currentPlayerId, currentQuestionID, selectedAnswer, correctAnswer, score);
 };
 
 // Nächste Frage für lokalen Modus laden

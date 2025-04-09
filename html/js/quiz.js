@@ -8,7 +8,7 @@ let currentPlayerId = parseInt(localStorage.getItem('playerId')) || 0;
 let questionStartTime = null;
 
 let selectedCategory = null;    // gewählte Kategorie
-let questionCount = 0;          // wie viele Fragen wurden schon gestellt?
+let questionCount = 1;          // wie viele Fragen wurden schon gestellt?
 const maxQuestions = 4;         // wie viele Fragen pro Spiel?
 let totalScore = 0;             // gesamter Score über alle Fragen
 
@@ -122,8 +122,8 @@ window.nextQuestion = function nextQuestion() {
     if (questionCount >= maxQuestions) {
         showFinalScore();
     } else {
-        updateProgressBar();
         loadNewQuestion();
+        updateProgressBar();
     }
 }
 
@@ -149,6 +149,7 @@ window.showFinalScore = function showFinalScore() {
 }
 
 window.resetGame = function resetGame() {
+    questionCount = 1; 
     // Navigations bereich wieder einblenden
     setNavVisibility(false);
     //Progress Balken Ausbleden
@@ -220,7 +221,7 @@ window.resetUI = function resetUI() {
 };
 
 window.updateProgressBar = function updateProgressBar() {
-    const percent = ((questionCount +1 )/ maxQuestions) * 100;
+    const percent = ((questionCount)/ maxQuestions) * 100;
     document.getElementById('progressBar').style.width = `${percent}%`;
     document.getElementById('progressBarContainer').style.display = 'block';
 }
