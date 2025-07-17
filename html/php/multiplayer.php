@@ -31,7 +31,17 @@ class MultiplayerHandler extends Database {
                 (int)$correctAnswer,
                 (int)$questionNumber
             );
-            return ['success' => true, 'correct' => (bool)$isCorrect, 'nr' => (int)$questionNumber];
+            
+            // Check for newly unlocked achievements
+            $newlyUnlocked = $this->checkAndUnlockAchievements((int)$playerId);
+            
+            return [
+                'success' => true, 
+                'correct' => (bool)$isCorrect, 
+                'nr' => (int)$questionNumber,
+                'newAchievements' => $newlyUnlocked,
+                'achievementCount' => count($newlyUnlocked)
+            ];
         }
     
         return ['success' => false, 'message' => '[Multiplayer] Ungültige oder fehlende Felder'];

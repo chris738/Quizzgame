@@ -2,7 +2,7 @@ let gameId = null;
 let playerId = null;
 let currentQuestionId = null;
 let questionNumber = 1;
-//let correctAnswer = null;
+let correctAnswer = null; // Add this global variable
 
 // Initialisiert den Multiplayer-Modus für den aktuellen Spieler
 async function initMultiplayer(currentPlayerId) {
@@ -112,7 +112,9 @@ async function loadNextQuestion() {
         return;
     }
 
-    //Anzeie der Frage
+    //Anzeige der Frage
+    currentQuestionId = result.info.id;
+    correctAnswer = parseInt(result.info.richtig);
     displayQuestion(result.info);
 }
 
@@ -144,6 +146,17 @@ async function submitAnswer(answerNumber) {
     if (result.success) {
         console.log(`[submitAnswer] Antwort war ${result.correct ? 'richtig' : 'falsch'} - Frage Nr: ${result.nr}`);
         
+        // Check for new achievements
+        if (result.newAchievements && result.newAchievements.length > 0) {
+            result.newAchievements.forEach(achievement => {
+                if (typeof showAchievementNotification === 'function') {
+                    showAchievementNotification(achievement);
+                } else {
+                    console.log(`Achievement unlocked: ${achievement.Name}`);
+                }
+            });
+        }
+        
         if (questionNumber < 16) {
             questionNumber++;
             document.getElementById('newQuestionBtn').onclick = loadNextQuestion;
@@ -160,7 +173,6 @@ async function submitAnswer(answerNumber) {
 
 // ✅ Automatisch starten beim Seitenladen
 document.addEventListener('DOMContentLoaded', () => {
-    /*
     const storedId = parseInt(localStorage.getItem('playerId')) || 0;
     console.log(`[Info] Stored Player ID ist: ${storedId}`);
     if (storedId > 0) {
@@ -169,5 +181,4 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('[DOMContentLoaded] Keine gültige Spieler-ID gefunden. Abbruch.');
         window.location.href = 'login.html';
     }
-        */
 });
