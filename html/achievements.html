@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Achievements - Quiz Game</title>
+
+  <link rel="preload" href="navbar.html" as="fetch" crossorigin="anonymous">
+  <script defer src="js/navbar.js"></script>
+
+  <link rel="stylesheet" href="css/achievements.css">
+  <script defer src="js/achievements.js"></script>
+
+</head>
+<body>
+  <div id="navbar-container"></div>
+  
+  <div class="container">
+    <h1>Achievements</h1>
+    
+    <div class="stats-container">
+      <div class="stat-card">
+        <h3>Erreichte Achievements</h3>
+        <p id="achievementProgress">0 / 0</p>
+      </div>
+      <div class="stat-card">
+        <h3>Gesamte Punkte</h3>
+        <p id="totalPoints">0</p>
+      </div>
+      <div class="stat-card">
+        <h3>Beantwortete Fragen</h3>
+        <p id="totalQuestions">0</p>
+      </div>
+      <div class="stat-card">
+        <h3>Richtige Antworten</h3>
+        <p id="correctAnswers">0</p>
+      </div>
+    </div>
+
+    <div class="achievements-container">
+      <h2>Alle Achievements</h2>
+      <div id="achievementsList">
+        <p>Lade Achievements...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Achievement Unlock Modal -->
+  <div id="achievementModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <h2>🏆 Achievement freigeschaltet!</h2>
+      <div id="achievementDetails">
+        <h3 id="achievementName"></h3>
+        <p id="achievementDescription"></p>
+        <p id="achievementPoints"></p>
+      </div>
+      <button onclick="closeAchievementModal()">Schließen</button>
+    </div>
+  </div>
+
+</body>
+</html>

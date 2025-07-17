@@ -11,6 +11,14 @@ interface DatabaseInterface {
     public function editQuestion($id, $question, $category, $a1, $a2, $a3, $a4, $correctAnswer);
     public function dbdeleteQuestion($id);
     public function getQuestionById($id);
+    public function getAllQuestions($limit = 50, $offset = 0);
+    
+    // Achievement methods
+    public function getAchievements();
+    public function getPlayerAchievements($playerId);
+    public function checkAndUnlockAchievements($playerId);
+    public function unlockAchievement($playerId, $achievementId);
+    public function getPlayerStats($playerId);
 }
 
 class Database implements DatabaseInterface {
@@ -183,6 +191,155 @@ class Database implements DatabaseInterface {
         $stmt = $this->conn->prepare("SELECT PlayerID, name FROM player WHERE PlayerID = ?");
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getAllQuestions($limit = 50, $offset = 0) {
+        $stmt = $this->conn->prepare("
+            SELECT QuestionID, Question, Category, Answer1, Answer2, Answer3, Answer4, correctAnswer
+            FROM Question
+            ORDER BY QuestionID DESC
+            LIMIT :limit OFFSET :offset
+        ");
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Achievement Methods
+    public function getAchievements() {
+        $stmt = $this->conn->prepare("
+            SELECT AchievementID, Name, Description, Icon, RequirementType, RequirementValue, RequirementCategory, Points
+            FROM Achievement
+            ORDER BY Points ASC, AchievementID ASC
+        ");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getPlayerAchievements($playerId) {
+        $stmt = $this->conn->prepare("
+            SELECT a.AchievementID, a.Name, a.Description, a.Icon, a.Points, pa.UnlockedAt
+            FROM Achievement a
+            JOIN PlayerAchievement pa ON a.AchievementID = pa.AchievementID
+            WHERE pa.PlayerID = :playerId
+            ORDER BY pa.UnlockedAt DESC
+        ");
+        $stmt->execute([':playerId' => $playerId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function unlockAchievement($playerId, $achievementId) {
+        try {
+            $stmt = $this->conn->prepare("
+                INSERT IGNORE INTO PlayerAchievement (PlayerID, AchievementID)
+                VALUES (:playerId, :achievementId)
+            ");
+            $stmt->execute([
+                ':playerId' => $playerId,
+                ':achievementId' => $achievementId
+            ]);
+            return $stmt->rowCount() > 0; // Returns true if a new row was inserted
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
+    public function getPlayerStats($playerId) {
+        // Get basic stats
+        $stmt = $this->conn->prepare("
+            SELECT 
+                COUNT(*) as totalQuestions,
+                SUM(CASE WHEN IsCorrect = 1 THEN 1 ELSE 0 END) as correctAnswers,
+                COUNT(DISTINCT SUBSTRING_INDEX(Timestamp, ' ', 1)) as gamesPlayed
+            FROM Game
+            WHERE PlayerID = :playerId
+        ");
+        $stmt->execute([':playerId' => $playerId]);
+        $basicStats = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Get current streak
+        $currentStreak = $this->getCurrentStreak($playerId);
+
+        // Get multiplayer wins (placeholder for now)
+        $multiplayerWins = 0; // TODO: Implement multiplayer win counting
+
+        return [
+            'totalQuestions' => (int)$basicStats['totalQuestions'],
+            'correctAnswers' => (int)$basicStats['correctAnswers'],
+            'gamesPlayed' => (int)$basicStats['gamesPlayed'],
+            'currentStreak' => $currentStreak,
+            'multiplayerWins' => $multiplayerWins
+        ];
+    }
+
+    private function getCurrentStreak($playerId) {
+        $stmt = $this->conn->prepare("
+            SELECT IsCorrect
+            FROM Game
+            WHERE PlayerID = :playerId
+            ORDER BY Timestamp DESC
+            LIMIT 20
+        ");
+        $stmt->execute([':playerId' => $playerId]);
+        $results = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+        $streak = 0;
+        foreach ($results as $isCorrect) {
+            if ($isCorrect == 1) {
+                $streak++;
+            } else {
+                break;
+            }
+        }
+        return $streak;
+    }
+
+    public function checkAndUnlockAchievements($playerId) {
+        $stats = $this->getPlayerStats($playerId);
+        $achievements = $this->getAchievements();
+        $newlyUnlocked = [];
+
+        foreach ($achievements as $achievement) {
+            $isUnlocked = $this->isAchievementUnlocked($playerId, $achievement['AchievementID']);
+            
+            if (!$isUnlocked && $this->isAchievementEarned($stats, $achievement)) {
+                if ($this->unlockAchievement($playerId, $achievement['AchievementID'])) {
+                    $newlyUnlocked[] = $achievement;
+                }
+            }
+        }
+
+        return $newlyUnlocked;
+    }
+
+    private function isAchievementUnlocked($playerId, $achievementId) {
+        $stmt = $this->conn->prepare("
+            SELECT 1 FROM PlayerAchievement 
+            WHERE PlayerID = :playerId AND AchievementID = :achievementId
+        ");
+        $stmt->execute([
+            ':playerId' => $playerId,
+            ':achievementId' => $achievementId
+        ]);
+        return $stmt->fetch() !== false;
+    }
+
+    private function isAchievementEarned($stats, $achievement) {
+        switch ($achievement['RequirementType']) {
+            case 'QUESTIONS_ANSWERED':
+                return $stats['totalQuestions'] >= $achievement['RequirementValue'];
+            case 'CORRECT_ANSWERS':
+                return $stats['correctAnswers'] >= $achievement['RequirementValue'];
+            case 'GAMES_PLAYED':
+                return $stats['gamesPlayed'] >= $achievement['RequirementValue'];
+            case 'MULTIPLAYER_WINS':
+                return $stats['multiplayerWins'] >= $achievement['RequirementValue'];
+            case 'STREAK':
+                return $stats['currentStreak'] >= $achievement['RequirementValue'];
+            default:
+                return false;
+        }
     }
 
     // Mulitplayer Funktionen

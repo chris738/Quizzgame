@@ -214,4 +214,45 @@ END //
 
 DELIMITER ;
 
+-- Achievement System Tables
+
+CREATE TABLE Achievement (
+    AchievementID INT AUTO_INCREMENT PRIMARY KEY,
+    Name VARCHAR(100) NOT NULL,
+    Description VARCHAR(500) NOT NULL,
+    Icon VARCHAR(50) DEFAULT 'trophy',
+    RequirementType ENUM('QUESTIONS_ANSWERED', 'CORRECT_ANSWERS', 'GAMES_PLAYED', 'MULTIPLAYER_WINS', 'STREAK', 'CATEGORY_MASTER') NOT NULL,
+    RequirementValue INT NOT NULL,
+    RequirementCategory VARCHAR(100) DEFAULT NULL,
+    Points INT DEFAULT 10,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE PlayerAchievement (
+    PlayerAchievementID INT AUTO_INCREMENT PRIMARY KEY,
+    PlayerID INT NOT NULL,
+    AchievementID INT NOT NULL,
+    UnlockedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (PlayerID) REFERENCES player(PlayerID) ON DELETE CASCADE,
+    FOREIGN KEY (AchievementID) REFERENCES Achievement(AchievementID) ON DELETE CASCADE,
+    UNIQUE KEY unique_player_achievement (PlayerID, AchievementID)
+);
+
+-- Insert default achievements
+INSERT INTO Achievement (Name, Description, RequirementType, RequirementValue, Points) VALUES
+('Erste Schritte', 'Beantworte deine erste Frage', 'QUESTIONS_ANSWERED', 1, 5),
+('Quiz-Neuling', 'Beantworte 10 Fragen', 'QUESTIONS_ANSWERED', 10, 10),
+('Quiz-Enthusiast', 'Beantworte 50 Fragen', 'QUESTIONS_ANSWERED', 50, 25),
+('Quiz-Experte', 'Beantworte 100 Fragen', 'QUESTIONS_ANSWERED', 100, 50),
+('Quiz-Meister', 'Beantworte 500 Fragen', 'QUESTIONS_ANSWERED', 500, 100),
+('Treffsicher', 'Beantworte 10 Fragen richtig', 'CORRECT_ANSWERS', 10, 15),
+('Präzise', 'Beantworte 50 Fragen richtig', 'CORRECT_ANSWERS', 50, 30),
+('Perfektionist', 'Beantworte 100 Fragen richtig', 'CORRECT_ANSWERS', 100, 60),
+('Spieler', 'Spiele 5 komplette Spiele', 'GAMES_PLAYED', 5, 15),
+('Ausdauernd', 'Spiele 25 komplette Spiele', 'GAMES_PLAYED', 25, 40),
+('Unermüdlich', 'Spiele 100 komplette Spiele', 'GAMES_PLAYED', 100, 80),
+('Mehrspieler-Neuling', 'Gewinne dein erstes Mehrspieler-Spiel', 'MULTIPLAYER_WINS', 1, 20),
+('Mehrspieler-Champion', 'Gewinne 10 Mehrspieler-Spiele', 'MULTIPLAYER_WINS', 10, 50),
+('Glückssträhne', 'Beantworte 5 Fragen hintereinander richtig', 'STREAK', 5, 25),
+('Unschlagbar', 'Beantworte 10 Fragen hintereinander richtig', 'STREAK', 10, 50);
 
