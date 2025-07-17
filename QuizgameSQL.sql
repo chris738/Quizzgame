@@ -2,15 +2,20 @@
 	
 	    -- Löschen der bestehenden Datenbank
 	    DROP DATABASE IF EXISTS quizgame;
+	    DROP DATABASE IF EXISTS browsergame;
 	
 	    -- Erstellung einer neuen Datenbank
 	    CREATE DATABASE quizgame;
+	    
+	    -- Erstelle auch browsergame Datenbank für Kompatibilität
+	    CREATE DATABASE browsergame;
 	
 	    -- Erstellung eines neuen Benutzers
 	    CREATE USER IF NOT EXISTS 'quizgame'@'localhost' IDENTIFIED BY 'sicheresPasswort';
 	
 	    -- Berechtigungen für den Benutzer
 	    GRANT ALL PRIVILEGES ON quizgame.* TO 'quizgame'@'localhost';
+	    GRANT ALL PRIVILEGES ON browsergame.* TO 'quizgame'@'localhost';
 	
 	    -- Wechsel zur neuen Datenbank
 	    USE quizgame;
@@ -210,6 +215,173 @@ CREATE PROCEDURE DeleteQuestion(
 )
 BEGIN
     DELETE FROM Question WHERE QuestionID = p_QuestionID;
+END //
+
+DELIMITER ;
+
+-- Dupliziere Schema in browsergame Datenbank für Kompatibilität
+USE browsergame;
+
+-- Tabelle: Fragen
+    CREATE TABLE Question (
+        QuestionID INT AUTO_INCREMENT PRIMARY KEY,
+        Question VARCHAR(1000) NOT NULL,
+	    Category VARCHAR(100) NOT NULL,
+        Answer1 VARCHAR(1000) NOT NULL,
+        Answer2 VARCHAR(1000) NOT NULL,
+        Answer3 VARCHAR(1000) NOT NULL,
+        Answer4 VARCHAR(1000) NOT NULL,
+	    correctAnswer VARCHAR(1000) NOT NULL
+    );
+
+-- Tabelle: player
+    CREATE TABLE player (
+        PlayerID INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(100) NOT NULL UNIQUE,
+        password VARCHAR(1000) NOT NULL,
+        points INT DEFAULT 0
+    );
+
+    CREATE TABLE MultiplayerGame (
+        GameID INT AUTO_INCREMENT PRIMARY KEY,
+        RoomCode VARCHAR(10) NOT NULL UNIQUE,
+        Player1ID INT NOT NULL,
+        Player2ID INT DEFAULT NULL,
+        IsStarted BOOLEAN DEFAULT FALSE,
+        CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (Player1ID) REFERENCES player(PlayerID),
+        FOREIGN KEY (Player2ID) REFERENCES player(PlayerID)
+    );
+
+    CREATE TABLE MultiplayerQuestion (
+        ID INT AUTO_INCREMENT PRIMARY KEY,
+        GameID INT NOT NULL,
+        QuestionNumber INT NOT NULL,     -- 1 bis 16
+        QuestionID INT NOT NULL,
+        RoundNumber INT NOT NULL,        -- 1 bis 4
+        AnsweredBy INT,                  -- Player1ID oder Player2ID
+        ShownAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (GameID) REFERENCES MultiplayerGame(GameID),
+        FOREIGN KEY (QuestionID) REFERENCES Question(QuestionID),
+        FOREIGN KEY (AnsweredBy) REFERENCES player(PlayerID)
+    );
+
+    CREATE TABLE MultiplayerAnswer (
+        ID INT AUTO_INCREMENT PRIMARY KEY,
+        GameID INT NOT NULL,
+        PlayerID INT NOT NULL,
+        QuestionID INT NOT NULL,
+        SelectedAnswer INT,
+        IsCorrect BOOLEAN,
+        QuestionNumber INT,  -- NULL erlaubt
+        AnsweredAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (GameID) REFERENCES MultiplayerGame(GameID),
+        FOREIGN KEY (PlayerID) REFERENCES player(PlayerID),
+        FOREIGN KEY (QuestionID) REFERENCES Question(QuestionID)
+    );
+
+    -- Neue Tabelle: Game (gespielte Spiele)
+    CREATE TABLE Game (
+        GameID INT AUTO_INCREMENT PRIMARY KEY,
+        PlayerID INT NOT NULL,
+        QuestionID INT NOT NULL,
+        SelectedAnswer INT NOT NULL,
+        CorrectAnswer INT NOT NULL,
+        IsCorrect BOOLEAN NOT NULL,
+        Score INT NULL,
+        Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (PlayerID) REFERENCES player(PlayerID),
+        FOREIGN KEY (QuestionID) REFERENCES Question(QuestionID)
+    );
+
+    CREATE OR REPLACE VIEW TopHighscores AS
+    SELECT 
+        p.name AS username,
+        SUM(g.Score) AS totalScore
+    FROM Game g
+    JOIN player p ON g.PlayerID = p.PlayerID
+    WHERE g.Score IS NOT NULL
+    GROUP BY g.PlayerID
+    ORDER BY totalScore DESC;
+
+-- Prozeduren für browsergame Datenbank
+DELIMITER //
+
+CREATE PROCEDURE UpgradeBuilding(
+    IN p_PlayerID INT,
+    IN p_BuildingType VARCHAR(100),
+    IN p_Level INT
+)
+BEGIN
+    DECLARE current_points INT DEFAULT 0;
+    DECLARE upgrade_cost INT DEFAULT 0;
+    
+    -- Aktuelle Punkte des Spielers holen
+    SELECT points INTO current_points 
+    FROM player 
+    WHERE PlayerID = p_PlayerID;
+    
+    -- Upgrade-Kosten basierend auf Level berechnen
+    SET upgrade_cost = p_Level * 100;
+    
+    -- Prüfen ob Spieler genug Punkte hat
+    IF current_points >= upgrade_cost THEN
+        -- Punkte abziehen für das Upgrade
+        UPDATE player 
+        SET points = points - upgrade_cost 
+        WHERE PlayerID = p_PlayerID;
+        
+        -- Erfolg zurückgeben
+        SELECT 'Building upgrade successful!' AS message, 
+               (current_points - upgrade_cost) AS remaining_points;
+    ELSE
+        -- Nicht genug Punkte
+        SELECT 'Insufficient points for upgrade!' AS message, 
+               current_points AS current_points,
+               upgrade_cost AS required_points;
+    END IF;
+END //
+
+DELIMITER ;
+
+-- Wechsle zurück zur quizgame Datenbank
+USE quizgame;
+-- Prozedur: Upgrade Building für Spieler
+DELIMITER //
+
+CREATE PROCEDURE UpgradeBuilding(
+    IN p_PlayerID INT,
+    IN p_BuildingType VARCHAR(100),
+    IN p_Level INT
+)
+BEGIN
+    DECLARE current_points INT DEFAULT 0;
+    DECLARE upgrade_cost INT DEFAULT 0;
+    
+    -- Aktuelle Punkte des Spielers holen
+    SELECT points INTO current_points 
+    FROM player 
+    WHERE PlayerID = p_PlayerID;
+    
+    -- Upgrade-Kosten basierend auf Level berechnen
+    SET upgrade_cost = p_Level * 100;
+    
+    -- Prüfen ob Spieler genug Punkte hat
+    IF current_points >= upgrade_cost THEN
+        -- Punkte abziehen für das Upgrade
+        UPDATE player 
+        SET points = points - upgrade_cost 
+        WHERE PlayerID = p_PlayerID;
+        
+        -- Erfolg zurückgeben
+        SELECT 'Building upgrade successful!' AS message, 
+               (current_points - upgrade_cost) AS remaining_points;
+    ELSE
+        -- Nicht genug Punkte
+        SELECT 'Insufficient points for upgrade!' AS message, 
+               current_points AS current_points,
+               upgrade_cost AS required_points;
+    END IF;
 END //
 
 DELIMITER ;
