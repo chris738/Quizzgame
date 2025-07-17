@@ -32,7 +32,15 @@ class SingleplayerHandler extends Database {
 
         if ($playerId && $questionId && $selectedAnswer !== null && $correctAnswer !== null) {
             $this->saveGameResult((int)$playerId, (int)$questionId, (int)$selectedAnswer, (int)$correctAnswer, is_numeric($score) ? (int)$score : null);
-            return ['success' => true];
+            
+            // Check for newly unlocked achievements
+            $newlyUnlocked = $this->checkAndUnlockAchievements((int)$playerId);
+            
+            return [
+                'success' => true,
+                'newAchievements' => $newlyUnlocked,
+                'achievementCount' => count($newlyUnlocked)
+            ];
         }
 
         return ['success' => false, 'message' => '[Singleplayer] Ungültige Daten'];

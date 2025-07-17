@@ -191,6 +191,17 @@ function saveGameResult(playerId, questionID, selectedAnswer, correctAnswer, sco
     .then(data => {
         if (!data.success) {
             console.error("Fehler beim Speichern des Spiels:", data.message);
+        } else {
+            // Check for new achievements
+            if (data.newAchievements && data.newAchievements.length > 0) {
+                data.newAchievements.forEach(achievement => {
+                    if (typeof showAchievementNotification === 'function') {
+                        showAchievementNotification(achievement);
+                    } else {
+                        console.log(`Achievement unlocked: ${achievement.Name}`);
+                    }
+                });
+            }
         }
     })
     .catch(error => {
