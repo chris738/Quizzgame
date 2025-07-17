@@ -11,6 +11,7 @@ interface DatabaseInterface {
     public function editQuestion($id, $question, $category, $a1, $a2, $a3, $a4, $correctAnswer);
     public function dbdeleteQuestion($id);
     public function getQuestionById($id);
+    public function getAllQuestions($limit = 50, $offset = 0);
 }
 
 class Database implements DatabaseInterface {
@@ -183,6 +184,19 @@ class Database implements DatabaseInterface {
         $stmt = $this->conn->prepare("SELECT PlayerID, name FROM player WHERE PlayerID = ?");
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getAllQuestions($limit = 50, $offset = 0) {
+        $stmt = $this->conn->prepare("
+            SELECT QuestionID, Question, Category, Answer1, Answer2, Answer3, Answer4, correctAnswer
+            FROM Question
+            ORDER BY QuestionID DESC
+            LIMIT :limit OFFSET :offset
+        ");
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // Mulitplayer Funktionen

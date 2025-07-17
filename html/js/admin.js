@@ -147,6 +147,104 @@ function initAddUserForm() {
     });
 }
 
+function loadAllQuestions() {
+    fetch('php/admin.php?action=listQuestions')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                displayQuestionsTable(data.questions);
+            } else {
+                alert("Fehler beim Laden der Fragen: " + data.message);
+            }
+        })
+        .catch(error => {
+            console.error("Fehler beim Laden der Fragen:", error);
+            alert("Es gab ein Problem beim Laden der Fragen.");
+        });
+}
+
+function displayQuestionsTable(questions) {
+    const tableContainer = document.getElementById('questionsTable');
+    
+    if (questions.length === 0) {
+        tableContainer.innerHTML = '<p>Keine Fragen gefunden.</p>';
+        return;
+    }
+
+    let tableHTML = `
+        <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+            <thead>
+                <tr style="background-color: #f0f0f0;">
+                    <th style="border: 1px solid #ddd; padding: 8px;">ID</th>
+                    <th style="border: 1px solid #ddd; padding: 8px;">Frage</th>
+                    <th style="border: 1px solid #ddd; padding: 8px;">Kategorie</th>
+                    <th style="border: 1px solid #ddd; padding: 8px;">Korrekte Antwort</th>
+                    <th style="border: 1px solid #ddd; padding: 8px;">Aktionen</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    questions.forEach(question => {
+        const correctAnswerText = question[`Answer${question.correctAnswer}`] || 'N/A';
+        tableHTML += `
+            <tr>
+                <td style="border: 1px solid #ddd; padding: 8px;">${question.QuestionID}</td>
+                <td style="border: 1px solid #ddd; padding: 8px; max-width: 300px; word-wrap: break-word;">${question.Question}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">${question.Category}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">${correctAnswerText}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">
+                    <button onclick="editQuestionFromTable(${question.QuestionID})" style="margin-right: 5px;">Bearbeiten</button>
+                    <button onclick="deleteQuestionFromTable(${question.QuestionID})" style="background-color: #ff4444; color: white;">Löschen</button>
+                </td>
+            </tr>
+        `;
+    });
+
+    tableHTML += `
+            </tbody>
+        </table>
+    `;
+
+    tableContainer.innerHTML = tableHTML;
+}
+
+function editQuestionFromTable(questionId) {
+    // ID in das Bearbeitungsfeld eintragen
+    document.getElementById("id").value = questionId;
+    
+    // Frage laden
+    loadQuestionData(questionId);
+    
+    // Zum Bearbeitungsbereich scrollen
+    document.getElementById("editQuestionForm").scrollIntoView({ behavior: 'smooth' });
+}
+
+function deleteQuestionFromTable(questionId) {
+    if (confirm(`Möchten Sie die Frage mit ID ${questionId} wirklich löschen?`)) {
+        const formData = new FormData();
+        formData.append('action', 'deleteQuestion');
+        formData.append('deleteQuestionID', questionId);
+        
+        fetch("php/admin.php", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                alert("Frage erfolgreich gelöscht!");
+                loadAllQuestions(); // Liste neu laden
+            } else {
+                alert("Fehler: " + result.message);
+            }
+        })
+        .catch(err => {
+            alert("Netzwerkfehler: " + err.message);
+        });
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const loadButton = document.getElementById("loadQuestionBtn");
     if (loadButton) {
@@ -156,6 +254,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     } else {
         console.log('Button nicht gefunden!');
+    }
+
+    const loadAllQuestionsButton = document.getElementById("loadAllQuestionsBtn");
+    if (loadAllQuestionsButton) {
+        loadAllQuestionsButton.addEventListener('click', function() {
+            loadAllQuestions();
+        });
     }
 });
 

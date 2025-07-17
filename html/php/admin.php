@@ -200,6 +200,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['act
     exit;
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['action'] === 'listQuestions') {
+    $limit = $_GET['limit'] ?? 50;
+    $offset = $_GET['offset'] ?? 0;
+    
+    try {
+        $db = new Database();
+        $questions = $db->getAllQuestions($limit, $offset);
+        echo json_encode(['success' => true, 'questions' => $questions]);
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'message' => 'Fehler beim Laden der Fragen: ' . $e->getMessage()]);
+    }
+    exit;
+}
+
 
 
 ?>
