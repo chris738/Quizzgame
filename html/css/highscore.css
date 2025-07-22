@@ -1,53 +1,93 @@
 /* Grundlegende Einstellungen */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-  }
+}
   
-  body {
-    font-family: Arial, sans-serif;
-    background: #f4f4f4;
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
     padding: 0px;
-  }
+}
   
-  /* Container für Highscore-Seite */
-  .container {
-    max-width: 800px;
-    margin: 0 auto;
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  }
+/* Container für Highscore-Seite */
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
   
-  h1 {
+h1 {
     text-align: center;
-    margin-bottom: 20px;
-  }
+    margin-bottom: 30px;
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
   
-  /* Tabellenstil */
-  table {
+/* Tabellenstil */
+.highscore-table {
     width: 100%;
     border-collapse: collapse;
-  }
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+}
   
-  thead {
-    background: #4CAF50;
+.highscore-table thead {
+    background: linear-gradient(135deg, #667eea, #764ba2);
     color: #fff;
-  }
+}
   
-  th, td {
-    padding: 10px;
-    border: 1px solid #ddd;
+.highscore-table th, .highscore-table td {
+    padding: 18px 15px;
     text-align: center;
-  }
+    font-weight: 500;
+}
+
+.highscore-table th {
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
   
-  tbody tr:nth-child(even) {
-    background: #f9f9f9;
-  }
+.highscore-table tbody tr {
+    background: rgba(255, 255, 255, 0.8);
+    border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+    transition: all 0.3s ease;
+}
+
+.highscore-table tbody tr:nth-child(even) {
+    background: rgba(102, 126, 234, 0.05);
+}
   
-  tbody tr:hover {
-    background: #f1f1f1;
-  }
+.highscore-table tbody tr:hover {
+    background: rgba(102, 126, 234, 0.1);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Highscore section styling for quiz page */
+.highscore-section {
+    margin: 40px auto;
+    max-width: 900px;
+    padding: 0 20px;
+}
+
+.highscore-section .container {
+    margin: 0;
+}
   

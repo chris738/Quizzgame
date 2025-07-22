@@ -1,4 +1,6 @@
 /* Reset und Grundlayout */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -6,46 +8,74 @@
 }
 
 body {
-  font-family: Arial, sans-serif;
-  background: #f4f4f4;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
   padding: 0;
 }
 
 .container {
-  max-width: 400px;
+  max-width: 450px;
   margin: 100px auto;
-  background: #fff;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  background: rgba(255, 255, 255, 0.95);
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 h1 {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 20px;
 }
 
 label {
-  font-weight: bold;
+  font-weight: 500;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-input {
-  padding: 10px;
+input[type="text"], input[type="password"] {
+  padding: 15px 20px;
   font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  border: 2px solid rgba(102, 126, 234, 0.3);
+  border-radius: 10px;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s ease;
+}
+
+input[type="text"]:focus, input[type="password"]:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
+}
+
+input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #667eea;
 }
 
 .button-group {
   display: flex;
   justify-content: space-between;
-  gap: 10px;
+  gap: 15px;
+  margin-top: 10px;
 }
 
 .button-group button {
@@ -53,24 +83,31 @@ input {
 }
 
 button {
-  padding: 10px;
+  padding: 15px 25px;
   font-size: 16px;
-  background: #4CAF50;
+  font-weight: 600;
+  background: linear-gradient(135deg, #667eea, #764ba2);
   color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 50px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  font-family: 'Poppins', sans-serif;
 }
 
 button:hover {
-  background: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+  background: linear-gradient(135deg, #764ba2, #667eea);
 }
 
 button.logout {
-  background: #e53935;
+  background: linear-gradient(135deg, #f44336, #d32f2f);
+  box-shadow: 0 8px 25px rgba(244, 67, 54, 0.3);
 }
 
 button.logout:hover {
-  background: #c62828;
+  background: linear-gradient(135deg, #d32f2f, #f44336);
+  box-shadow: 0 12px 35px rgba(244, 67, 54, 0.4);
 }
